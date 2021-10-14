@@ -1,5 +1,7 @@
 import os
-from line import settings
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 def get_dir(full_path):
@@ -29,7 +31,7 @@ def logging():
                 "level": "ERROR",
                 "class": "logging.FileHandler",
                 "formatter": "verbose",
-                "filename": get_dir(os.path.join(settings.BASE_DIR, "log"))
+                "filename": get_dir(os.path.join(BASE_DIR, "log"))
             },
             "null": {
                 "level": "DEBUG",
