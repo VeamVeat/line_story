@@ -81,9 +81,9 @@ class Profile(models.Model):
                                          "of space and requires country "
                                          "code. eg : +79546748973")
 
-    phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
-    age = models.IntegerField()
-    region = models.CharField(max_length=50)
+    phone = models.CharField(validators=[phone_regex], max_length=17, blank=True, verbose_name="Телефон")
+    age = models.PositiveIntegerField(default=0, verbose_name="Возраст")
+    region = models.CharField(max_length=50, verbose_name="Регион проживания")
     user = models.OneToOneField(User,
                                 on_delete=models.CASCADE,
                                 primary_key=True)
