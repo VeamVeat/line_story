@@ -1,4 +1,6 @@
 from django.db import models
+from line import settings
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
@@ -70,4 +72,26 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+
+class Profile(models.Model):
+
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
+                                 message="Phone number must not consist "
+                                         "of space and requires country "
+                                         "code. eg : +6591258565")
+
+    phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
+    age = models.IntegerField()
+    region = models.CharField(max_length=50)
+    user = models.OneToOneField(User,
+                                on_delete=models.CASCADE,
+                                primary_key=True)
+
+    def __str__(self):
+        return 'Profile for user {}'.format(self.user.email)
+
+
+
+
 
