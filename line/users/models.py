@@ -89,7 +89,7 @@ class Profile(models.Model):
                                 primary_key=True)
 
     def __str__(self):
-        return 'Profile for user {}'.format(self.user)
+        return 'Profile for user {}'.format(self.user.email)
 
 
 
