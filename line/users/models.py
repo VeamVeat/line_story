@@ -79,7 +79,7 @@ class Profile(models.Model):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
                                  message="Phone number must not consist "
                                          "of space and requires country "
-                                         "code. eg : +6591258565")
+                                         "code. eg : +79546748973")
 
     phone = models.CharField(validators=[phone_regex], max_length=17, blank=True)
     age = models.IntegerField()
