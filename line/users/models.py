@@ -4,9 +4,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import  AbstractUser
+from django.contrib.auth.models import AbstractUser
 
 from .managers import UserManager
+from line.settings import AUTH_USER_MODEL
 
 
 class User(AbstractUser):
@@ -56,14 +57,34 @@ class Profile(models.Model):
         return 'Profile for user {}'.format(self.user.email)
 
 
+class WalletModel(models.Model):
+    user_id = models.OneToOneField(AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                   related_name='wallet', verbose_name='Кошелёк пользователя')
+    ballance = models.PositiveIntegerField(verbose_name='баланс пользователя', default=0)
+
+    class Meta:
+        unique_together = (("user_id", "id"),)
+        permissions = (("can_add_money", "Top up balance"),)
+
+    def __str__(self):
+        return f'{self.user_id.last_name} - {self.ballance}'
+
+    @property
+    def full_name(self):
+        return f'{self.user_id.first_name} {self.user_id.last_name}'
+
+
 @receiver(post_save, sender=User)
 def save_or_create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
+        WalletModel.objects.create(user_id=instance)
     else:
         try:
             instance.profile.save()
+            instance.wallet.save()
         except ObjectDoesNotExist:
             Profile.objects.create(user=instance)
+            WalletModel.objects.create(user_id=instance)
 
 
