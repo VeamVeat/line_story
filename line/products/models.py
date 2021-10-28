@@ -29,10 +29,18 @@ class File(models.Model):
         return self.file
 
 
-class Product(models.Model):
+class TimedModel(models.Model):
+
+    created_at = models.DateTimeField(auto_now_add=True, auto_now=False)
+
+    class Meta:
+        abstract = True
+
+
+class Product(TimedModel):
 
     product_type = models.ForeignKey(ProductType, models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True, auto_now=False)
+    slug = models.SlugField(null=False, unique=True)
     title = models.CharField(max_length=255, verbose_name="Наименование")
     description = models.TextField(verbose_name="Описание", null=True)
     file = models.ForeignKey(File, models.CASCADE)
@@ -42,6 +50,7 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
+        unique_together = ('product_type ', 'file ',)
 
     def __str__(self):
         return self.title
