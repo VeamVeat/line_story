@@ -5,14 +5,17 @@ from django.dispatch import receiver
 
 from line.settings import AUTH_USER_MODEL
 from products.models import Product, TimedModel
+from .menagers import OrderManager
 
 
 class Order(TimedModel):
-    user = models.ForeignKey(AUTH_USER_MODEL, models.CASCADE)
+    user_id = models.ForeignKey(AUTH_USER_MODEL, models.CASCADE)
     slug = models.SlugField(null=False, unique=True)
     quantity = models.IntegerField(default=1)
     final_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Общая стоимость заказа")
     list_product = JSONField()
+
+    object = OrderManager()
 
     class Meta:
         verbose_name = 'Заказ'
@@ -24,7 +27,7 @@ class Order(TimedModel):
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(AUTH_USER_MODEL, models.CASCADE)
+    user_id = models.ForeignKey(AUTH_USER_MODEL, models.CASCADE)
     slug = models.SlugField(null=False, unique=True)
     quantity = models.IntegerField(default=1)
     product = models.ManyToManyField(Product, models.CASCADE)
