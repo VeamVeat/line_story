@@ -2,10 +2,21 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from mixins import TimeMixin
+from products.menagers import PersonQuerySet
 
 
 class ProductType(models.Model):
-    name = models.CharField(max_length=15, verbose_name=_('name of product'))
+    W_B = _('BLACK_AND_WHITE')
+    COLORED = _('COLORED')
+
+    COLOR_CHOICES = (
+        (W_B, _('BLACK_AND_WHITE')),
+        (COLORED, _('COLORED'))
+    )
+
+    name = models.CharField(max_length=15, choices=COLOR_CHOICES, verbose_name=_('name of product'))
+
+    product_type = PersonQuerySet.as_manager()
 
     class Meta:
         verbose_name = _('type of product')
@@ -40,7 +51,6 @@ class File(models.Model):
 
 
 class Product(TimeMixin):
-
     product_type = models.ForeignKey(ProductType, models.CASCADE)
     slug = models.SlugField(null=False, unique=True)
     title = models.CharField(max_length=255, verbose_name=_('name of product'))
