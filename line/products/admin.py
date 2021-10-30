@@ -12,15 +12,6 @@ class ProductTypeAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-@admin.register(File)
-class FileAdmin(admin.ModelAdmin):
-    list_display = ('type', 'file', 'size', 'name')
-
-    list_filter = ('size',)
-
-    search_fields = ('type', 'size')
-
-
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'description', 'price', 'year_issue', 'created_at')

@@ -1,56 +1,58 @@
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
+
+from mixins import TimeMixin
 
 
 class ProductType(models.Model):
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=15, verbose_name=_('name of product'))
 
     class Meta:
-        verbose_name = 'Тип продукта'
-        verbose_name_plural = 'Типы продуктов'
+        verbose_name = _('type of product')
+        verbose_name_plural = _('type of products')
 
     def __str__(self):
         return self.name
 
 
 class File(models.Model):
+    JPG = 'jpg'
+    PNG = 'png'
 
-    type = models.CharField(max_length=10, verbose_name="Тип файла")
+    FILE_TYPE_CHOICES = (
+        (JPG, 'jpg'),
+        (PNG, 'png')
+    )
+
+    type = models.CharField(max_length=10, choices=FILE_TYPE_CHOICES, verbose_name=_('type of file'))
     file = models.ImageField(
         upload_to=lambda instance, filename: '/'.join(['users', 'product', str(instance.type), filename])
     )
-    size = models.CharField(max_length=10, verbose_name="размер файла")
-    name = models.CharField(max_length=10, verbose_name="Имя файла")
+    size = models.CharField(max_length=10, verbose_name=_('size of file'))
+    name = models.CharField(max_length=10, verbose_name=_('name of file'))
 
     class Meta:
-        verbose_name = 'Файл'
-        verbose_name_plural = 'Файлы'
+        verbose_name = _('file')
+        verbose_name_plural = _('files')
 
     def __str__(self):
-        return self.file
+        return self.name
 
 
-class TimedModel(models.Model):
-
-    created_at = models.DateTimeField(auto_now_add=True, auto_now=False)
-
-    class Meta:
-        abstract = True
-
-
-class Product(TimedModel):
+class Product(TimeMixin):
 
     product_type = models.ForeignKey(ProductType, models.CASCADE)
     slug = models.SlugField(null=False, unique=True)
-    title = models.CharField(max_length=255, verbose_name="Наименование")
-    description = models.TextField(verbose_name="Описание", null=True)
+    title = models.CharField(max_length=255, verbose_name=_('name of product'))
+    description = models.TextField(verbose_name=_('name of description'), null=True)
     file = models.ForeignKey(File, models.CASCADE)
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Цена")
-    year_issue = models.DateTimeField(verbose_name="Год выпуска")
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name=_('price of product'))
+    year_issue = models.DateTimeField(verbose_name=_('year of product release'))
 
     class Meta:
-        verbose_name = 'Продукт'
-        verbose_name_plural = 'Продукты'
-        unique_together = ('product_type ', 'file ',)
+        verbose_name = _('product')
+        verbose_name_plural = _('products')
+        unique_together = ('product_type ', 'file',)
 
     def __str__(self):
         return self.title
