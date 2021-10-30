@@ -58,7 +58,7 @@ class Product(TimeMixin):
     description = models.TextField(verbose_name=_('name of description'), null=True)
     file = models.ForeignKey(File, models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name=_('price of product'))
-    year_issue = models.DateTimeField(verbose_name=_('year of product release'))
+    year_issue = models.DateTimeField(db_index=True, verbose_name=_('year of product release'))
 
     class Meta:
         verbose_name = _('product')
