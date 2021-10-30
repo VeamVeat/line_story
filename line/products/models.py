@@ -39,6 +39,7 @@ class File(models.Model):
     file = models.ImageField(
         upload_to=lambda instance, filename: '/'.join(['users', 'product', str(instance.type), filename])
     )
+
     size = models.CharField(max_length=10, verbose_name=_('size of file'))
     name = models.CharField(max_length=10, verbose_name=_('name of file'))
 
