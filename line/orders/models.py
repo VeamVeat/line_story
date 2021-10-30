@@ -12,7 +12,7 @@ class Order(TimeMixin):
     user = models.ForeignKey(get_user_model, models.CASCADE)
     slug = models.SlugField(null=False, unique=True)
     quantity = models.IntegerField(default=1, verbose_name=_('number of products in the order'))
-    final_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="total order price")
+    final_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name=_('total order price'))
     list_product = JSONField()
 
     object = OrderManager()
