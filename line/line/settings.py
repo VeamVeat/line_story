@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-+&&u628#uiwivawo*==k9u2l_wv3p1=lf-b!957avw(rgk*i(r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -75,13 +75,13 @@ WSGI_APPLICATION = 'line.wsgi.application'
 
 DATABASES = {
     'default': {
-                    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                    'NAME': 'online_shope',
-                    'USER': 'postgres',
-                    'PASSWORD': 'veamveat',
-                    'HOST': 'localhost',
-                    'PORT': '5432'
-                }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv("DATABASE_NAME"),
+        'USER': os.getenv("DATABASE_USER"),
+        'PASSWORD': os.getenv("DATABASE_PASSWORD"),
+        'HOST': os.getenv("DATABASE_HOST"),
+        'PORT': os.getenv("DATABASE_PORT")
+    }
 }
 
 
