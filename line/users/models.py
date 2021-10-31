@@ -5,9 +5,9 @@ from django.dispatch import receiver
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth import get_user_model
 
 from users.managers import UserManager
-from django.contrib.auth import get_user_model
 
 
 class User(AbstractUser):
@@ -58,7 +58,7 @@ class Profile(models.Model):
                                            'requires country code.'
                                            ' eg : +79546748973'))
 
-    phone = models.CharField(validators=[phone_regex], max_length=17, blank=True, verbose_name=_('email address'))
+    phone = models.CharField(validators=[phone_regex], max_length=17, blank=True, verbose_name=_('phone'))
     age = models.PositiveIntegerField(validators=[validate_age], default=0, verbose_name=_('age'))
     region = models.CharField(max_length=50, verbose_name=_('region of residence'))
     user = models.OneToOneField(User,
@@ -74,7 +74,7 @@ class Profile(models.Model):
 
 
 class Wallet(models.Model):
-    user = models.OneToOneField(get_user_model, on_delete=models.CASCADE,
+    user = models.OneToOneField(User, on_delete=models.CASCADE,
                                 related_name='wallet', verbose_name=_('user`s wallet'))
     ballance = models.PositiveIntegerField(verbose_name=_('user balance'), default=0)
 
