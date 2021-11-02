@@ -1,3 +1,7 @@
 /.idea/
 /venv/
-**/__pychach__/
+/line/.env/
+**/pycache/
+/line/media/
+/line/static/
+/log/
