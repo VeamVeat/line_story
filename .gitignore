@@ -1,4 +1,6 @@
 /.idea/
 /venv/
 /line/.env/
-**/__pycache__
+**/__pycache__/
+/line/media/
+/line/static/
