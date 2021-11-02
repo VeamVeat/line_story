@@ -8,6 +8,8 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
 
 from users.managers import UserManager
+from orders.models import Cart
+from products.models import File
 
 
 class User(AbstractUser):
@@ -29,21 +31,17 @@ class User(AbstractUser):
 
     @property
     def full_name(self):
-        return '%s %s' % (self.first_name, self.last_name)
-
-    @full_name.setter
-    def full_name(self, value: str):
-        names = value.split(' ')
-        self.first_name = names[0]
-        self.last_name = names[1]
+        return f"{self.first_name}, {self.last_name}"
 
 
 def _user_directory_path(instance, filename):
-    return 'users/image_profile/user_{0}/{1}'.format(instance.user.id, filename)
+    return f"users/image_profile/user_{instance.user.id}/{filename}"
 
 
 def validate_age(value):
-    if value < 18:
+    min_age = 18
+
+    if value < min_age:
         raise ValidationError(
             _('age must be at least 18.'),
             params={'value': value},
@@ -66,11 +64,7 @@ class Profile(models.Model):
                                 null=False,
                                 unique=True)
 
-    image = models.ImageField(
-        default='users/image_profile/default.png',
-        upload_to=_user_directory_path,
-        verbose_name=_('profile photo')
-    )
+    image = models.OneToOneField(File, on_delete=models.CASCADE, verbose_name=_('profile photo'))
 
 
 class Wallet(models.Model):
@@ -91,10 +85,9 @@ def create_profile_and_wallet(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
         Wallet.objects.create(user=instance)
+        Cart.objects.create(user=instance)
 
 
 @receiver(post_save, sender=User)
 def save_profile_and_wallet(sender, instance, **kwargs):
     instance.profile.save()
-    instance.wallet.save()
-
