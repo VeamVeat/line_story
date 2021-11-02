@@ -5,7 +5,6 @@ from django.dispatch import receiver
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth import get_user_model
 
 from users.managers import UserManager
 from orders.models import Cart
