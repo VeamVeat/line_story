@@ -2,5 +2,5 @@
 /venv/
 /line/.env/
 **/__pycache__/
-/line/media/
-/line/static/
+/line/media/*
+/line/static/*
