@@ -1,4 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -7,8 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 
 from users.managers import UserManager
-from orders.models import Cart
-from products.models import File
+# from orders.models import Cart todo: раскомментировать, когда будут добавлено приложение orders (CN-46)
+# from products.models import File todo: раскомментировать, когда будут добавлено приложение product (CN-46)
 
 
 class User(AbstractUser):
@@ -48,7 +48,6 @@ def validate_age(value):
 
 
 class Profile(models.Model):
-
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
                                  message=_('phone number must not'
                                            ' consist of space and '
@@ -63,7 +62,8 @@ class Profile(models.Model):
                                 null=False,
                                 unique=True)
 
-    image = models.OneToOneField(File, on_delete=models.CASCADE, verbose_name=_('profile photo'))
+    # image = models.OneToOneField(File, on_delete=models.CASCADE, verbose_name=_('profile photo'))
+    # todo: раскомментировать, когда будут добавлено приложение product (CN-46)
 
 
 class Wallet(models.Model):
@@ -84,7 +84,7 @@ def create_profile_and_wallet(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
         Wallet.objects.create(user=instance)
-        Cart.objects.create(user=instance)
+        # Cart.objects.create(user=instance) todo: раскомментировать, когда будут добавлено приложение orders (CN-46)
 
 
 @receiver(post_save, sender=User)
