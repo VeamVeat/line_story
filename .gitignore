@@ -3,5 +3,6 @@
 **/__pycache__/
 /line/media/
 /line/static/
+
 /line/.env/
 /line/log/
