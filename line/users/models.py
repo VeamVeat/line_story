@@ -85,8 +85,3 @@ def create_profile_and_wallet(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
         Wallet.objects.create(user=instance)
         # Cart.objects.create(user=instance) todo: раскомментировать, когда будут добавлено приложение orders (CN-46)
-
-
-@receiver(post_save, sender=User)
-def save_profile(sender, instance, **kwargs):
-    instance.profile.save()
