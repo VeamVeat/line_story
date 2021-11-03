@@ -1,22 +1,31 @@
+import datetime
+
+from decimal import Decimal
+
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from mixins import TimeMixin
-from products.menagers import PersonQuerySet
+from mixins import CreatedAtMixin
+
+
+class PersonQuerySet(models.QuerySet):
+    def black_and_white(self):
+        return self.filter(name=ProductType.Color.W_B)
+
+    def colored(self):
+        return self.filter(name=ProductType.Color.COLORED)
 
 
 class ProductType(models.Model):
-    W_B = _('BLACK_AND_WHITE')
-    COLORED = _('COLORED')
 
-    COLOR_CHOICES = (
-        (W_B, _('BLACK_AND_WHITE')),
-        (COLORED, _('COLORED'))
-    )
+    class Color(models.TextChoices):
+        W_B = 'BLACK_AND_WHITE', _('BLACK_AND_WHITE')
+        COLORED = 'COLORED', _('COLORED')
 
-    name = models.CharField(max_length=15, choices=COLOR_CHOICES, verbose_name=_('name of product'))
+    name = models.CharField(max_length=15, choices=Color.choices, verbose_name=_('name of product'))
 
-    product_type = PersonQuerySet.as_manager()
+    objects = PersonQuerySet.as_manager()
 
     class Meta:
         verbose_name = _('type of product')
@@ -27,20 +36,17 @@ class ProductType(models.Model):
 
 
 class File(models.Model):
-    JPG = 'jpg'
-    PNG = 'png'
 
-    FILE_TYPE_CHOICES = (
-        (JPG, 'jpg'),
-        (PNG, 'png')
-    )
+    class Type(models.TextChoices):
+        JPG = 'jpg'
+        PNG = 'png'
 
-    type = models.CharField(max_length=10, choices=FILE_TYPE_CHOICES, verbose_name=_('type of file'))
+    type = models.CharField(max_length=10, choices=Type.choices, verbose_name=_('type of file'))
     file = models.ImageField(
         upload_to=lambda instance, filename: '/'.join(['users', 'product', str(instance.type), filename])
     )
 
-    size = models.CharField(max_length=10, verbose_name=_('size of file'))
+    size = models.IntegerField(default=0, verbose_name=_('size of file'))
     name = models.CharField(max_length=10, verbose_name=_('name of file'))
 
     class Meta:
@@ -51,14 +57,25 @@ class File(models.Model):
         return self.name
 
 
-class Product(TimeMixin):
-    product_type = models.ForeignKey(ProductType, models.CASCADE)
+def current_year():
+    return datetime.date.today().year
+
+
+def max_value_current_year(value):
+    return MaxValueValidator(current_year())(value)
+
+
+class Product(CreatedAtMixin):
+    type = models.ForeignKey(ProductType, models.SET_NULL)
     slug = models.SlugField(null=False, unique=True)
     title = models.CharField(max_length=255, verbose_name=_('name of product'))
-    description = models.TextField(verbose_name=_('name of description'), null=True)
-    file = models.ForeignKey(File, models.CASCADE)
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name=_('price of product'))
-    year_issue = models.DateTimeField(db_index=True, verbose_name=_('year of product release'))
+    description = models.TextField(verbose_name=_('name of description'))
+    file = models.ForeignKey(File, models.SET_NULL)
+    price = models.DecimalField(max_digits=10, decimal_places=2,
+                                validators=[MinValueValidator(Decimal('0.01'))],
+                                default=0, verbose_name=_('price of product'))
+    year_issue = models.IntegerField(db_index=True, validators=[MinValueValidator(2020), max_value_current_year],
+                                     verbose_name=_('year of product release'))
 
     class Meta:
         verbose_name = _('product')
