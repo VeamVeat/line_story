@@ -72,8 +72,7 @@ class Product(CreatedAtMixin):
     description = models.TextField(verbose_name=_('name of description'))
     file = models.ForeignKey(File, models.SET_NULL)
     price = models.DecimalField(max_digits=10, decimal_places=2,
-                                validators=[MinValueValidator(Decimal('0.01'))],
-                                default=0, verbose_name=_('price of product'))
+                                validators=[MinValueValidator(Decimal('0.01'))], verbose_name=_('price of product'))
     year_issue = models.IntegerField(db_index=True, validators=[MinValueValidator(2020), max_value_current_year],
                                      verbose_name=_('year of product release'))
 
