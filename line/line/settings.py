@@ -33,6 +33,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = bool(os.getenv("DEBUG"))
 
 ALLOWED_HOSTS = ['*']
+AUTH_USER_MODEL = 'users.User'
 
 # Application definition
 
@@ -43,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -90,6 +93,7 @@ DATABASES = {
         'PORT': os.getenv("DB_PORT")
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

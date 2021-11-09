@@ -31,7 +31,7 @@ def logging():
                 "level": "ERROR",
                 "class": "logging.FileHandler",
                 "formatter": "verbose",
-                "filename": get_dir(os.path.join(ROOT_DIR, "log"))
+                "filename": get_logfile(os.path.join(ROOT_DIR, "log"))
             },
             "null": {
                 "level": "DEBUG",
