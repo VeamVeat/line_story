@@ -30,7 +30,7 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv("DEBUG"))
+DEBUG = bool(int(os.getenv("DEBUG")))
 
 ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'users.User'
@@ -120,7 +120,7 @@ EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS"))
+EMAIL_USE_TLS = bool(int(os.getenv("EMAIL_USE_TLS")))
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
