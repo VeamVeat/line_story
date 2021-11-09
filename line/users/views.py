@@ -1,5 +1,6 @@
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
 
 
-def index(request):
-    return HttpResponse("Главная страница")
+def home(request):
+    return render(request, "users/dashboard.html")
