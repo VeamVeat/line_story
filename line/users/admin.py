@@ -17,4 +17,4 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'image', 'age', 'phone', 'region']
+    list_display = ['user', 'age', 'phone', 'region']
