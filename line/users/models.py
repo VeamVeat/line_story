@@ -7,8 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 
 from users.managers import UserManager
-# from orders.models import Cart todo: раскомментировать, когда будут добавлено приложение orders (CN-46)
-# from products.models import File todo: раскомментировать, когда будут добавлено приложение product (CN-46)
+from orders.models import Cart
+from products.models import File
 
 
 class User(AbstractUser):
@@ -62,8 +62,7 @@ class Profile(models.Model):
                                 null=False,
                                 unique=True)
 
-    # image = models.OneToOneField(File, on_delete=models.CASCADE, verbose_name=_('profile photo'))
-    # todo: раскомментировать, когда будут добавлено приложение product (CN-46)
+    image = models.OneToOneField(File, on_delete=models.CASCADE, verbose_name=_('profile photo'))
 
 
 class Wallet(models.Model):
@@ -84,4 +83,4 @@ def create_profile_and_wallet(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
         Wallet.objects.create(user=instance)
-        # Cart.objects.create(user=instance) todo: раскомментировать, когда будут добавлено приложение orders (CN-46)
+        Cart.objects.create(user=instance)
