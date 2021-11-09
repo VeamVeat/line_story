@@ -30,7 +30,7 @@ class Order(CreatedAtMixin):
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     slug = models.SlugField(null=False, unique=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL)
 
