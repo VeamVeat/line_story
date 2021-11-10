@@ -3,6 +3,12 @@
 {% block content %}
 <h2>Login</h2>
 
+{% for message in messages %}
+    {% if 'success' in message.tags %}
+    <div class="success-message">{{ message }}</div>
+    {% endif %}
+{% endfor %}
+
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

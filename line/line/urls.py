@@ -18,13 +18,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf import settings
 
-from users.views import register
+from users.views import ActivateAccount, SignUpView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('register/', register, name="register"),
+    path('register/', SignUpView.as_view(), name='register'),
+    path('activate/<uidb64>/<token>/', ActivateAccount.as_view(), name='activate'),
 ]
 
 if settings.DEBUG:
