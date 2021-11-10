@@ -16,7 +16,7 @@ from users.tokens import account_activation_token
 from users.models import User
 
 
-def home(request):
+def home_page(request):
     return render(request, "users/dashboard.html")
 
 
