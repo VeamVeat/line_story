@@ -18,9 +18,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf import settings
 
-from users.views import ActivateAccount, SignUpView
+from users.views import ActivateAccount, SignUpView, home_page
 
 urlpatterns = [
+    path('', home_page, name='home'),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
