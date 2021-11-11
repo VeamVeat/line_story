@@ -4,7 +4,7 @@ from orders.models import Order, Cart
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('user', 'created_at', 'quantity', 'final_price', 'list_product')
+    list_display = ('user', 'quantity', 'final_price', 'product_list')
 
     list_filter = ('final_price',)
 
@@ -13,9 +13,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
-    list_display = ('user', 'quantity', 'product')
-
-    list_filter = ('quantity',)
+    list_display = ('user', 'product')
 
     search_fields = ('product',)
 

@@ -8,7 +8,8 @@ from django.contrib.auth.models import AbstractUser
 
 from users.managers import UserManager
 from orders.models import Cart
-from products.models import File
+
+import products.models
 
 
 class User(AbstractUser):
@@ -62,7 +63,7 @@ class Profile(models.Model):
                                 null=False,
                                 unique=True)
 
-    image = models.OneToOneField(File, on_delete=models.CASCADE, verbose_name=_('profile photo'))
+    image = models.OneToOneField(products.models.File, on_delete=models.CASCADE, verbose_name=_('profile photo'))
 
 
 class Wallet(models.Model):
