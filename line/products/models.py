@@ -36,7 +36,7 @@ class ProductType(models.Model):
 
 
 def get_path_file(instance, filename):
-    return '/'.join(['users', 'product', str(instance.type), filename])
+    return '/'.join([str(instance.__name__), filename])
 
 
 class File(models.Model):
@@ -46,7 +46,7 @@ class File(models.Model):
         PNG = 'png'
 
     type = models.CharField(max_length=10, choices=Type.choices, verbose_name=_('type of file'))
-    file = models.ImageField(upload_to=get_path_file)
+    file = models.ImageField(default='default image', upload_to=get_path_file)
 
     size = models.IntegerField(default=0, verbose_name=_('size of file'))
     name = models.CharField(max_length=10, verbose_name=_('name of file'))
