@@ -72,7 +72,8 @@ class Product(CreatedAtMixin):
     slug = models.SlugField(null=False, unique=True)
     title = models.CharField(max_length=255, verbose_name=_('name of product'))
     description = models.TextField(verbose_name=_('name of description'))
-    file = models.ForeignKey(File, null=True, on_delete=models.SET_NULL)
+    file = models.ForeignKey(File, null=True, blank=True, on_delete=models.SET_NULL,
+                             verbose_name=_('product photo'))
     price = models.DecimalField(max_digits=10, decimal_places=2,
                                 validators=[MinValueValidator(Decimal('0.01'))], verbose_name=_('price of product'))
     year_issue = models.IntegerField(db_index=True, validators=[MinValueValidator(2020), max_value_current_year],
