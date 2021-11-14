@@ -40,7 +40,6 @@ def get_path_file(instance, filename):
 
 
 class File(models.Model):
-
     class Type(models.TextChoices):
         JPG = 'jpg'
         PNG = 'png'
@@ -49,7 +48,7 @@ class File(models.Model):
     file = models.ImageField(default='default image', upload_to=get_path_file)
 
     size = models.IntegerField(default=0, verbose_name=_('size of file'))
-    name = models.CharField(max_length=10, verbose_name=_('name of file'))
+    name = models.CharField(max_length=30, verbose_name=_('name of file'))
 
     class Meta:
         verbose_name = _('file')
