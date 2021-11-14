@@ -5,7 +5,6 @@ from django.db import models
 from django.db.models import JSONField
 from django.utils.translation import ugettext_lazy as _
 
-from orders.menagers import OrderManager
 from mixins import CreatedAtMixin
 from line import settings
 
@@ -18,8 +17,6 @@ class Order(CreatedAtMixin):
                                       validators=[MinValueValidator(Decimal('0.01'))],
                                       verbose_name=_('total order price'))
     product_list = JSONField()
-
-    object = OrderManager()
 
     class Meta:
         verbose_name = _('order')
