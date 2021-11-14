@@ -46,7 +46,6 @@ class File(models.Model):
 
     type = models.CharField(max_length=10, choices=Type.choices, verbose_name=_('type of file'))
     file = models.ImageField(default='default image', upload_to=get_path_file)
-
     size = models.IntegerField(default=0, verbose_name=_('size of file'))
     name = models.CharField(max_length=30, verbose_name=_('name of file'))
 
