@@ -7,10 +7,11 @@ from django.utils.translation import ugettext_lazy as _
 
 from orders.menagers import OrderManager
 from mixins import CreatedAtMixin
+from line import settings
 
 
 class Order(CreatedAtMixin):
-    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     slug = models.SlugField(null=False, unique=True)
     quantity = models.PositiveIntegerField(default=1, verbose_name=_('number of products in the order'))
     final_price = models.DecimalField(max_digits=12, decimal_places=2,
@@ -26,7 +27,7 @@ class Order(CreatedAtMixin):
 
 
 class Cart(models.Model):
-    user = models.OneToOneField("users.User", on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     slug = models.SlugField(null=False, unique=True)
     product = models.ForeignKey("products.Product", null=True, on_delete=models.SET_NULL)
 
