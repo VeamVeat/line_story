@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models import JSONField
 from django.utils.translation import ugettext_lazy as _
 
-from mixins import CreatedAtMixin
+from utils.mixins import CreatedAtMixin
 from line import settings
 
 
@@ -26,7 +26,7 @@ class Order(CreatedAtMixin):
 class Cart(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     slug = models.SlugField(null=False, unique=True)
-    product = models.ForeignKey("products.Product", null=True, on_delete=models.SET_NULL)
+    product = models.ForeignKey("products.Product", null=True, on_delete=models.SET_NULL, related_name='*')
 
     class Meta:
         verbose_name = _('cart')
