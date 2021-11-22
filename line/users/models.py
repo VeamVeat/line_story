@@ -7,8 +7,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 
 from users.managers import UserManager
-# from orders.models import Cart todo: раскомментировать, когда будут добавлено приложение orders (CN-46)
-# from products.models import File todo: раскомментировать, когда будут добавлено приложение product (CN-46)
+from orders.models import Cart
+
+from products.models import File
 
 
 class User(AbstractUser):
@@ -56,14 +57,14 @@ class Profile(models.Model):
 
     phone = models.CharField(validators=[phone_regex], max_length=17, blank=True, verbose_name=_('phone'))
     age = models.PositiveIntegerField(validators=[validate_age], default=0, verbose_name=_('age'))
-    region = models.CharField(max_length=50, verbose_name=_('region of residence'))
+    region = models.CharField(max_length=255, verbose_name=_('region of residence'))
     user = models.OneToOneField(User,
                                 on_delete=models.CASCADE,
                                 null=False,
                                 unique=True)
 
-    # image = models.OneToOneField(File, on_delete=models.CASCADE, verbose_name=_('profile photo'))
-    # todo: раскомментировать, когда будут добавлено приложение product (CN-46)
+    image = models.ForeignKey(File, null=True, blank=True, on_delete=models.SET_NULL,
+                              verbose_name=_('profile photo'))
 
 
 class Wallet(models.Model):
@@ -84,4 +85,4 @@ def create_profile_and_wallet(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
         Wallet.objects.create(user=instance)
-        # Cart.objects.create(user=instance) todo: раскомментировать, когда будут добавлено приложение orders (CN-46)
+        Cart.objects.create(user=instance)
