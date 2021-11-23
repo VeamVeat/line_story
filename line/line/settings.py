@@ -67,7 +67,7 @@ ROOT_URLCONF = 'line.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': os.path.join(BASE_DIR, 'templates'),
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,6 +85,7 @@ WSGI_APPLICATION = 'line.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
 
 DATABASES = {
     'default': {
@@ -119,11 +120,18 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
-EMAIL_PORT = os.getenv("EMAIL_PORT", "587")
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "linestorywis@gmail.com")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "veamveatwis")
-EMAIL_USE_TLS = bool(int(os.getenv("EMAIL_USE_TLS")), '1')
+if DEBUG:
+    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_PORT = "587"
+    EMAIL_HOST_USER = "linestorywis@gmail.com"
+    EMAIL_HOST_PASSWORD = "veamveatwis"
+    EMAIL_USE_TLS = 1
+else:
+    EMAIL_HOST = os.getenv("EMAIL_HOST")
+    EMAIL_PORT = os.getenv("EMAIL_PORT")
+    EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+    EMAIL_USE_TLS = bool(int(os.getenv("EMAIL_USE_TLS")))
 
 
 # Internationalization

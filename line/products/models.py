@@ -25,7 +25,7 @@ def get_path_file(instance, filename):
 
 class File(models.Model):
     type = models.CharField(max_length=255, verbose_name=_('type of file'))
-    file = models.ImageField(default='default image', upload_to=get_path_file)
+    file = models.ImageField(upload_to=get_path_file)
     size = models.IntegerField(default=0, verbose_name=_('size of file'))
     name = models.CharField(max_length=255, verbose_name=_('name of file'))
 

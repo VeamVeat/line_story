@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, tokens
 from django.views import View
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -12,7 +12,6 @@ from django.utils.translation import ugettext_lazy as _
 
 
 from users.forms import RegisterUserForm
-from users.tokens import account_activation_token
 from users.models import User
 
 
@@ -27,8 +26,7 @@ class ActivateAccount(View):
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError):
             user = None
-
-        if user is not None and account_activation_token.check_token(user, token):
+        if user is not None and tokens.default_token_generator.check_token(user, token):
             user.is_active = True
             user.save()
             login(request, user)
@@ -61,7 +59,7 @@ class SignUpView(View):
                 'user': user,
                 'domain': current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
+                'token': tokens.default_token_generator.make_token(user),
             })
             user.email_user(subject, message)
 
