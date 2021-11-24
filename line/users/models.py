@@ -83,8 +83,7 @@ class Wallet(models.Model):
 @receiver(post_save, sender=User)
 def create_profile_and_wallet(sender, instance, created, **kwargs):
     if created:
-        file = File.objects.create(file='photo_profile/default.jpg')
-        file.save()
+        file = File.objects.create(image='photo_profile/default.jpg')
         Profile.objects.create(user=instance, image=file)
         Wallet.objects.create(user=instance)
         Cart.objects.create(user=instance)

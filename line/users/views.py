@@ -10,7 +10,6 @@ from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.utils.translation import ugettext_lazy as _
 
-
 from users.forms import RegisterUserForm
 from users.models import User
 
@@ -26,7 +25,7 @@ class ActivateAccount(View):
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError):
             user = None
-        if user is not None and tokens.default_token_generator.check_token(user, token):
+        if user and tokens.default_token_generator.check_token(user, token):
             user.is_active = True
             user.save()
             login(request, user)
