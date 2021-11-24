@@ -34,10 +34,6 @@ class User(AbstractUser):
         return f"{self.first_name}, {self.last_name}"
 
 
-def _user_directory_path(instance, filename):
-    return f"users/image_profile/user_{instance.user.id}/{filename}"
-
-
 def validate_age(value):
     min_age = 18
 
