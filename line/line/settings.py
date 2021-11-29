@@ -39,6 +39,7 @@ AUTH_USER_MODEL = 'users.User'
 
 INSTALLED_APPS = [
     'users',
+    'products',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,7 +49,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'orders',
-    'products',
 ]
 
 MIDDLEWARE = [

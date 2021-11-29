@@ -59,7 +59,7 @@ class Profile(models.Model):
                                 null=False,
                                 unique=True)
 
-    image = models.ForeignKey(File, null=True, blank=True, on_delete=models.SET_NULL,
+    image = models.OneToOneField(File, null=True, blank=True, on_delete=models.SET_NULL,
                               verbose_name=_('profile photo'))
 
 
