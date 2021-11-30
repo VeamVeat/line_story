@@ -1,8 +1,9 @@
 from decimal import Decimal
 
 from django.core.validators import MinValueValidator
-from django.db import models
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.db import models
 
 from utils.mixins import CreatedAtMixin
 
@@ -23,15 +24,32 @@ def get_path_file(instance, filename):
     return '/'.join([str(instance.name), filename])
 
 
+def validate_image(field_file_obj):
+    file_size = field_file_obj.file.size
+    mega_byte_limit = 2.0
+    kilo_byte = mega_byte_limit*1024*1024
+    if file_size > kilo_byte:
+        raise ValidationError("Max file size is %sMB" % str(mega_byte_limit))
+
+
 class File(models.Model):
     type = models.CharField(max_length=255, verbose_name=_('type of file'))
-    image = models.ImageField(upload_to=get_path_file)
+    image = models.ImageField(validators=[validate_image], upload_to=get_path_file)
     size = models.IntegerField(default=0, verbose_name=_('size of file'))
     name = models.CharField(max_length=255, verbose_name=_('name of file'))
 
     class Meta:
         verbose_name = _('file')
         verbose_name_plural = _('files')
+
+    def save(self, *args, **kwargs):
+        self.size = self.image.size
+        self.name, self.type = self.image.name.split('.')
+        super(File, self).save(*args, **kwargs)
+
+    @property
+    def product_image(self):
+        return self.image
 
     def __str__(self):
         return self.name
