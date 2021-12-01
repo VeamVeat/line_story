@@ -34,10 +34,6 @@ class User(AbstractUser):
         return f"{self.first_name}, {self.last_name}"
 
 
-def _user_directory_path(instance, filename):
-    return f"users/image_profile/user_{instance.user.id}/{filename}"
-
-
 def validate_age(value):
     min_age = 18
 
@@ -63,7 +59,7 @@ class Profile(models.Model):
                                 null=False,
                                 unique=True)
 
-    image = models.ForeignKey(File, null=True, blank=True, on_delete=models.SET_NULL,
+    image = models.OneToOneField(File, null=True, blank=True, on_delete=models.SET_NULL,
                               verbose_name=_('profile photo'))
 
 
@@ -83,6 +79,7 @@ class Wallet(models.Model):
 @receiver(post_save, sender=User)
 def create_profile_and_wallet(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
+        file = File.objects.create(image='photo_profile/default.jpg')
+        Profile.objects.create(user=instance, image=file)
         Wallet.objects.create(user=instance)
         Cart.objects.create(user=instance)

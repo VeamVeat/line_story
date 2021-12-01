@@ -25,7 +25,7 @@ def get_path_file(instance, filename):
 
 class File(models.Model):
     type = models.CharField(max_length=255, verbose_name=_('type of file'))
-    file = models.ImageField(default='default image', upload_to=get_path_file)
+    image = models.ImageField(upload_to=get_path_file)
     size = models.IntegerField(default=0, verbose_name=_('size of file'))
     name = models.CharField(max_length=255, verbose_name=_('name of file'))
 
@@ -42,8 +42,6 @@ class Product(CreatedAtMixin):
     slug = models.SlugField(null=False, unique=True)
     title = models.CharField(max_length=255, verbose_name=_('name of product'))
     description = models.TextField(verbose_name=_('name of description'))
-    file = models.ForeignKey(File, null=True, blank=True, on_delete=models.SET_NULL,
-                             verbose_name=_('product photo'))
     price = models.DecimalField(max_digits=10, decimal_places=2,
                                 validators=[MinValueValidator(Decimal('0.01'))], verbose_name=_('price of product'))
     year = models.IntegerField(db_index=True, verbose_name=_('year of product release'))
@@ -51,7 +49,10 @@ class Product(CreatedAtMixin):
     class Meta:
         verbose_name = _('product')
         verbose_name_plural = _('products')
-        unique_together = ('type', 'file',)
 
     def __str__(self):
         return self.title
+
+
+class ProductFile(File):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_file')

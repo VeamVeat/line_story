@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from products.models import Product, ProductType, File
+from products.models import Product, ProductType
 
 
 @admin.register(ProductType)
@@ -14,10 +14,10 @@ class ProductTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'description', 'price', 'year_issue', 'created_at')
+    list_display = ('id', 'title', 'description', 'price', 'year', 'created_at')
 
-    list_filter = ('title', 'price', 'year_issue')
+    list_filter = ('title', 'price', 'year')
 
-    search_fields = ('title', 'price', 'year_issue')
+    search_fields = ('title', 'price', 'year')
 
 
