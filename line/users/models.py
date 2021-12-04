@@ -7,7 +7,6 @@ from django.utils import timezone
 from django.core.validators import RegexValidator, MinValueValidator
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser
-from django.templatetags.static import static
 
 from users.managers import UserManager
 from orders.models import Cart
