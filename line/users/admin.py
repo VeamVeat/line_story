@@ -25,10 +25,6 @@ class UserAdmin(admin.ModelAdmin):
     inlines = [WalletInline]
 
 
-def get_path_file(obj, filename):
-    return '/'.join([f'{obj}', str(filename)])
-
-
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'age', 'phone', 'region', 'balance_user']

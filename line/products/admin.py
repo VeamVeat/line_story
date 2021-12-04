@@ -29,14 +29,8 @@ class ProductAdmin(admin.ModelAdmin):
         }),
     )
 
-    @admin.action(description=_('reset the number of selected products'))
-    def set_quantity_zero(self, request, queryset):
-        for product in queryset:
-            product.quantity = 0
-            product.save()
-
     def save_model(self, request, obj, form, change):
-        if form.cleaned_data['image'] and request.user.is_superuser:
+        if form.cleaned_data['image']:
             file = form.cleaned_data['image']
             ProductFile.objects.create(product_id=obj.id, image=file)
         return super(ProductAdmin, self).save_model(request, obj, form, change)

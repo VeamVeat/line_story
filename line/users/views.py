@@ -90,5 +90,4 @@ class CustomActionView(PermissionRequiredMixin, View):
             amount = form.cleaned_data.get('amount')
             wallet = Wallet.objects.get(user=object_id)
             wallet.increase_balance(amount)
-            wallet.save()
             return redirect('../')

@@ -6,6 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
 from utils.mixins import CreatedAtMixin
+from utils.helpers import convert_from_megabyte_to_kilobyte
+from line import settings
 
 
 class ProductType(models.Model):
@@ -26,10 +28,9 @@ def get_path_file(instance, filename):
 
 def validate_image(field_file_obj):
     file_size = field_file_obj.file.size
-    mega_byte_limit = 2.0
-    kilo_byte = mega_byte_limit*1024*1024
+    kilo_byte = convert_from_megabyte_to_kilobyte(settings.MEGA_BYTE_LIMIT)
     if file_size > kilo_byte:
-        raise ValidationError("Max file size is %sMB" % str(mega_byte_limit))
+        raise ValidationError("Max file size is %sMB" % str(settings.MEGA_BYTE_LIMIT))
 
 
 class File(models.Model):
@@ -46,10 +47,6 @@ class File(models.Model):
         self.size = self.image.size
         self.name, self.type = self.image.name.split('.')
         super(File, self).save(*args, **kwargs)
-
-    @property
-    def product_image(self):
-        return self.image
 
     def __str__(self):
         return self.name

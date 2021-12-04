@@ -31,15 +31,6 @@ class User(AbstractUser):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
-    @transaction.atomic
-    def diminish_balance(self, value):
-        Transaction.objects.create(user=self,
-                                   descriptions=f"списание счёта на самму {value} от пользователя {self.email}",
-                                   amount=value)
-        wallet = Wallet.objects.get(user=self)
-        wallet.ballance -= value
-        wallet.save()
-
     @property
     @admin.display(
         ordering=_('last_name'),
@@ -89,7 +80,7 @@ class Profile(models.Model):
 
 
 class Transaction(models.Model):
-    user = models.ForeignKey(User, related_name='balance_changes', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='transactions', on_delete=models.CASCADE)
     amount = models.PositiveIntegerField(_('amount'), default=0, validators=[MinValueValidator(0)])
     descriptions = models.CharField(max_length=255, verbose_name=_('transaction description'))
     datetime = models.DateTimeField(_('date'), default=timezone.now)
@@ -107,12 +98,27 @@ class Wallet(models.Model):
         unique_together = (("user", "id"),)
         permissions = (("can_add_money", "top up balance"),)
 
+    def queryset(self, db):
+        return self.__class__.objects.using(db).filter(id=self.id)
+
+    def increase_balance(self, value, db='default'):
+        with transaction.atomic(using=db):
+            Transaction.objects.create(user=self.user,
+                                       descriptions=f"пополнение счёта на самму {value} "
+                                                    f"от пользователя {self.user.email}",
+                                       amount=value)
+            wallet = self.queryset(db).select_for_update().get()
+            wallet.ballance += value
+            wallet.save()
+
     @transaction.atomic
-    def increase_balance(self, value):
-        Transaction.objects.create(user=self.user,
-                                   descriptions=f"пополнение счёта на самму {value} от пользователя {self.user.email}",
+    def decrease_balance(self, value, db='default'):
+        Transaction.objects.create(user=self,
+                                   descriptions=f"списание счёта на самму {value} от пользователя {self.email}",
                                    amount=value)
-        self.ballance += value
+        wallet = self.queryset(db).select_for_update().get()
+        wallet.ballance -= value
+        wallet.save()
 
     def __str__(self):
         return f'{self.ballance}'
