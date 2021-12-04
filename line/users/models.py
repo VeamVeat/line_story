@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.core.validators import RegexValidator, MinValueValidator
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser
+from django.templatetags.static import static
 
 from users.managers import UserManager
 from orders.models import Cart
@@ -111,14 +112,14 @@ class Wallet(models.Model):
             wallet.ballance += value
             wallet.save()
 
-    @transaction.atomic
     def decrease_balance(self, value, db='default'):
-        Transaction.objects.create(user=self,
-                                   descriptions=f"списание счёта на самму {value} от пользователя {self.email}",
-                                   amount=value)
-        wallet = self.queryset(db).select_for_update().get()
-        wallet.ballance -= value
-        wallet.save()
+        with transaction.atomic(using=db):
+            Transaction.objects.create(user=self,
+                                       descriptions=f"списание счёта на самму {value} от пользователя {self.email}",
+                                       amount=value)
+            wallet = self.queryset(db).select_for_update().get()
+            wallet.ballance -= value
+            wallet.save()
 
     def __str__(self):
         return f'{self.ballance}'

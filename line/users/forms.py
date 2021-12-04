@@ -26,7 +26,7 @@ class GrantMoneyForm(forms.Form):
 
 
 class ProfileAdminForm(forms.ModelForm):
-    picture = forms.ImageField(widget=forms.FileInput, max_length=255, required=False)
+    picture = forms.ImageField(widget=forms.FileInput, max_length=255)
 
     class Meta:
         fields = '__all__'
