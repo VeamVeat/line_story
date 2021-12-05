@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path
-from django.utils.translation import ugettext_lazy as _
 
 from products.forms import ProductAdminForm
 from products.models import Product, ProductType, ProductFile
@@ -24,7 +23,7 @@ class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': ('title', 'slug', 'price', 'year',
-                       'type', 'image', 'description'),
+                       'type', 'product_type', 'image', 'description'),
         }),
     )
 
@@ -32,6 +31,10 @@ class ProductAdmin(admin.ModelAdmin):
         if form.cleaned_data['image']:
             file = form.cleaned_data['image']
             ProductFile.objects.create(product_id=obj.id, image=file)
+        elif form.cleaned_data['product_type']:
+            product_type = form.cleaned_data['product_type']
+            product_type_object = ProductType.objects.create(name=product_type)
+            Product.objects.filter(id=obj.id).update(type=product_type_object)
         return super(ProductAdmin, self).save_model(request, obj, form, change)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
