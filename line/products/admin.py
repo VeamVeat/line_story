@@ -15,7 +15,6 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ('title', 'price', 'year')
     radio_fields = {"type": admin.VERTICAL}
     search_fields = ('title', 'price', 'year')
-    actions = ["set_quantity_zero", ]
     prepopulated_fields = {'slug': ('title',)}
 
     form = ProductAdminForm
