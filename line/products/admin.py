@@ -48,8 +48,8 @@ class ProductAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
-            path('<path:object_id>/<path:objects_product_id>/product_photo/',
+            path('<pk>/<int:product_id>',
                  self.admin_site.admin_view(DeleteProductFile.as_view()),
-                 name='product_photo'),
+                 name='delete_product_photo'),
         ]
         return my_urls + urls
