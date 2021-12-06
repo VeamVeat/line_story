@@ -31,7 +31,7 @@ class ProductAdmin(admin.ModelAdmin):
         if form.cleaned_data['image']:
             file = form.cleaned_data['image']
             ProductFile.objects.create(product_id=obj.id, image=file)
-        elif form.cleaned_data['product_type']:
+        if form.cleaned_data['product_type']:
             product_type = form.cleaned_data['product_type']
             product_type_object = ProductType.objects.create(name=product_type)
             Product.objects.filter(id=obj.id).update(type=product_type_object)
