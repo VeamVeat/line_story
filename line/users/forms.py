@@ -5,6 +5,18 @@ from django import forms
 from users.models import User, Wallet, Profile
 
 
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('email', 'first_name', 'last_name')
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('age', 'phone', 'region', )
+
+
 class RegisterUserForm(UserCreationForm):
     email = forms.EmailField(label=_('Email'), widget=forms.EmailInput(attrs={'class': 'form-input'}))
     first_name = forms.CharField(label=_('first name'), widget=forms.TextInput(attrs={'class': 'form-input'}))

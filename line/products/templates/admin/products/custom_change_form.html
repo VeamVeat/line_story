@@ -9,9 +9,10 @@
         </span>
 
         <span>
-            <a href="{% url 'admin:product_photo' object_id=product_image.id objects_product_id=product_image.product_id %}">
-            <img src="{% static '/admin/img/icon-no.svg' %}" width=15 height=15/>
-            </a>
+            <form action="{% url 'admin:delete_product_photo' pk=product_image.id product_id=product_image.product.id%}" method="POST">
+            {% csrf_token %}
+            <input type="image" src="{% static '/admin/img/icon-no.svg' %}" value='DELETE'/>
+            </form>
         </span>
     </div>
   {% endfor %}

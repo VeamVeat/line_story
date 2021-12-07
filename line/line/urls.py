@@ -18,12 +18,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.conf import settings
 
-from users.views import ActivateAccount, SignUpView, home_page
+from users.views import ActivateAccount, SignUpView, BaseView
 
 urlpatterns = [
-    path('', home_page, name='home'),
+    path('', BaseView.as_view(), name='home'),
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
+    path('products/', include('products.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('register/', SignUpView.as_view(), name='register'),
     path('activate/<uidb64>/<token>/', ActivateAccount.as_view(), name='activate'),

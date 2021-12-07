@@ -4,7 +4,7 @@ from products.models import Product
 
 class ProductAdminForm(forms.ModelForm):
 
-    image = forms.ImageField(widget=forms.FileInput, max_length=255)
+    image = forms.ImageField(widget=forms.FileInput)
 
     class Meta:
         fields = '__all__'

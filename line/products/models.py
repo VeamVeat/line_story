@@ -1,10 +1,13 @@
 from decimal import Decimal
 
+from django.core.files.storage import FileSystemStorage
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
+from line.settings import STATIC_ROOT, STATIC_URL
 from utils.mixins import CreatedAtMixin
 
 
@@ -32,6 +35,7 @@ def validate_image(field_file_obj):
         raise ValidationError("Max file size is %sMB" % str(mega_byte_limit))
 
 
+# storage = FileSystemStorage(location=STATIC_ROOT, base_url=STATIC_URL)
 class File(models.Model):
     type = models.CharField(max_length=255, verbose_name=_('type of file'))
     image = models.ImageField(validators=[validate_image], upload_to=get_path_file)
@@ -70,6 +74,9 @@ class Product(CreatedAtMixin):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('products:product', kwargs={'product_slug': self.slug})
 
 
 class ProductFile(File):

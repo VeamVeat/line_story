@@ -1,14 +1,6 @@
 {% extends 'users/base.html' %}
+{% load static %}
 
 {% block content %}
-
-<div>
-    {% if user.is_authenticated %}
-         Hello, {{ user.email }}!
-       <p><a href="{% url 'logout' %}">Logout</a></p>
-    {% else %}
-        <a href="{% url 'login' %}">Login</a>
-    {% endif %}
-</div>
 
 {% endblock %}

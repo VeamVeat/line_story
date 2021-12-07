@@ -10,14 +10,36 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views import View
+from django.views.generic import ListView, DetailView, TemplateView
 
-from users.forms import RegisterUserForm, GrantMoneyForm
-from users.models import User, Wallet
+from users.forms import RegisterUserForm, GrantMoneyForm, UserForm, ProfileForm
+from users.models import User, Wallet, Profile
 
 
-def home_page(request):
-    return render(request, "users/dashboard.html")
+class BaseView(View):
 
+    def get(self, request, *args, **kwargs):
+        return render(request, "users/base.html", {})
+
+
+class ProfileView(DetailView):
+    model = Profile
+    template_name = "users/profile.html"
+    context_object_name = 'user_profile'
+
+
+# def products(request):
+#     if request.method == "POST":
+#         product_id = request.POST.get("product_pk")
+#         product = Product.objects.get(id = product_id)
+#         request.user.profile.products.add(product)
+#         messages.success(request,(f'{product} added to wishlist.'))
+#         return redirect ('main:products')
+# 	products = Product.objects.all()
+# 	paginator = Paginator(products, 18)
+# 	page_number = request.GET.get('page')
+# 	page_obj = paginator.get_page(page_number)
+# 	return render(request = request, template_name="main/products.html", context = { "page_obj":page_obj})
 
 class ActivateAccount(View):
     def get(self, request, uidb64, token, *args, **kwargs):

@@ -7,13 +7,18 @@ from products.models import Product, ProductType, ProductFile
 from products.views import DeleteProductFile
 
 
+@admin.register(ProductType)
+class ProductTypeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'price',
                     'year', 'created_at', 'type')
 
     list_filter = ('title', 'price', 'year')
-    radio_fields = {"type": admin.VERTICAL}
+    # radio_fields = {"type": admin.VERTICAL}
     search_fields = ('title', 'price', 'year')
     actions = ["set_quantity_zero", ]
     prepopulated_fields = {'slug': ('title',)}
@@ -36,14 +41,19 @@ class ProductAdmin(admin.ModelAdmin):
             product.save()
 
     def save_model(self, request, obj, form, change):
-        if form.cleaned_data['image'] and request.user.is_superuser:
+        super(ProductAdmin, self).save_model(request, obj, form, change)
+        obj.refresh_from_db()
+        if form.cleaned_data['image']:
             file = form.cleaned_data['image']
             ProductFile.objects.create(product_id=obj.id, image=file)
-        return super(ProductAdmin, self).save_model(request, obj, form, change)
+        if form.cleaned_data['product_type']:
+            product_type = form.cleaned_data['product_type']
+            product_type_object = ProductType.objects.create(name=product_type)
+            Product.objects.filter(id=obj.id).update(type=product_type_object)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         all_product_photo = ProductFile.objects.filter(product_id=object_id)
-
+        print(all_product_photo)
         if extra_context is None:
             extra_context = {"all_photo_product": all_product_photo}
         return super(ProductAdmin, self).change_view(
@@ -52,8 +62,8 @@ class ProductAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
-            path('<path:object_id>/<path:objects_product_id>/product_photo/',
+            path('<pk>/<int:product_id>',
                  self.admin_site.admin_view(DeleteProductFile.as_view()),
-                 name='product_photo'),
+                 name='delete_product_photo'),
         ]
         return my_urls + urls
