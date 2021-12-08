@@ -27,7 +27,7 @@ class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': ('title', 'slug', 'price', 'year',
-                       'type', 'product_type', 'image', 'description'),
+                       'type', 'image', 'description'),
         }),
     )
 

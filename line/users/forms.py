@@ -28,6 +28,10 @@ class GrantMoneyForm(forms.Form):
 class ProfileAdminForm(forms.ModelForm):
     picture = forms.ImageField(widget=forms.FileInput, max_length=255)
 
+    def __init__(self, *args, **kwargs):
+        super(ProfileAdminForm, self).__init__(*args, **kwargs)
+        self.fields['picture'].required = False
+
     class Meta:
         fields = '__all__'
         model = Profile

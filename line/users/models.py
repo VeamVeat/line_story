@@ -9,8 +9,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 
 from users.managers import UserManager
-from orders.models import Cart
-
 from products.models import File
 
 
@@ -66,7 +64,7 @@ class Profile(models.Model):
                                 unique=True)
 
     image = models.OneToOneField(File, null=True, blank=True, on_delete=models.SET_NULL,
-                              verbose_name=_('profile photo'))
+                                 verbose_name=_('profile photo'))
 
     class Meta:
         ordering = ('age',)
@@ -130,4 +128,3 @@ def create_profile_and_wallet(sender, instance, created, **kwargs):
         file = File.objects.create(image='users/photo_profile/default.jpg')
         Profile.objects.create(user=instance, image=file)
         Wallet.objects.create(user=instance)
-        Cart.objects.create(user=instance)

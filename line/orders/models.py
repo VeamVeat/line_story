@@ -23,14 +23,14 @@ class Order(CreatedAtMixin):
         verbose_name_plural = _('orders')
 
 
-class Cart(models.Model):
+class CartItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     product = models.ForeignKey("products.Product", null=True, on_delete=models.SET_NULL, related_name='+')
     quantity = models.PositiveIntegerField(default=1, verbose_name=_('number of products in the cart'))
 
     class Meta:
-        verbose_name = _('cart')
-        verbose_name_plural = _('carts')
+        verbose_name = _('cart item')
+        verbose_name_plural = _('cart items')
 
     def __str__(self):
-        return self.user
+        return self.user.email
