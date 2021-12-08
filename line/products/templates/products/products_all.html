@@ -35,8 +35,14 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ product.title }}</h5>
                             <p class="card-text text-muted" style="font-size:12px">{{ product.price }}</p>
-                            <a href="{{ p.affiliate_url }}" class="btn btn-dark">Buy</a>
-                            <a href="{{ p.affiliate_url }}" class="btn btn-dark">Add to cart</a>
+<!--                            <a href="{{ p.affiliate_url }}" class="btn btn-dark">Buy</a>-->
+<!--                            <form action="{% url 'products:add_product'}">-->
+<!--                                <input  name="product_id" value="{{product.id}}" id="product_id"/>-->
+                               <a href="{% url 'products:add_to_cart' product_id=product.id %}">
+								<button class="btn btn-dark">Add</button>
+							</a>
+<!--                            </form>-->
+<!--                                 <a href="{{ p.affiliate_url }}" class="btn btn-dark">Add to cart</a>-->
                         </div>
                     </div>
                 </div>

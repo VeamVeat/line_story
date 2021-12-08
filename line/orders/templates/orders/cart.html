@@ -1,0 +1,40 @@
+{% extends 'users/base.html' %}
+<!--{% load cart_tags %}-->
+{% load static %}
+
+{% block content %}
+
+<div class="col-sm-12 col-md-12 col-lg-9 pb-4">
+    <div class="row">
+            <div class="col-6 my-auto">
+                <h2 class="font-weight-bold pt-4">Cart</h2>
+            </div>
+    </div>
+
+        <br>
+        <div class="row">
+
+            {% for product_in_cart in products_all %}
+                <div class="col-sm-12 col-md-6 col-lg-4 pb-4">
+                    <div class="h-100">
+
+                        <a href="{{ product_in_cart.product.get_absolute_url }}">
+                        <img src="{{ product_in_cart.product.product_file.filter.first.image.url }}" class="card-img-top" alt="{{ product_in_cart.product.title }}" style="width: auto; height: 225px; object-fit: scale-down;">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product_in_cart.product.title }}</h5>
+                            <p class="card-text text-muted" style="font-size:12px">{{ product_in_cart.product.price }}</p>
+                            <input type="number" value="{{ product_in_cart.quantity}}" min="0" max="1000"/>
+                            <a href="{% url 'orders:delete_product' product_id=product_in_cart.product.id %}">
+								<button class="btn btn-dark">Delete</button>
+							</a>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+            <a href="#"><button class="btn btn-dark">Buy</button> </a>
+        </div>
+</div>
+
+{% endblock %}

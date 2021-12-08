@@ -21,8 +21,10 @@
 						<p class="vote"> Year: <strong>{{ detail_product.year }}</strong></p>
 
 						<div class="action">
-							<a href="{{ p.affiliate_url }}" class="btn btn-dark">Buy</a>
-                            <a href="{{ p.affiliate_url }}" class="btn btn-dark">Add to cart</a>
+<!--							<a href="{{ p.affiliate_url }}" class="btn btn-dark">Buy</a>-->
+                            <a href="{% url 'products:add_to_cart' product_id=detail_product.id %}">
+								<button class="btn btn-dark">Add</button>
+							</a>
 						</div>
 					</div>
 				</div>

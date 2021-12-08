@@ -121,6 +121,6 @@ class Wallet(models.Model):
 @receiver(post_save, sender=User)
 def create_profile_and_wallet(sender, instance, created, **kwargs):
     if created:
-        file = File.objects.create(image='admin/default/default.jpg')
+        file = File.objects.create(image='users/photo_profile/default.jpg')
         Profile.objects.create(user=instance, image=file)
         Wallet.objects.create(user=instance)
