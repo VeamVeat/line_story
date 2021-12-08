@@ -52,7 +52,7 @@ class ProfileAdmin(admin.ModelAdmin):
         )
 
     def save_model(self, request, obj, form, change):
-        if form.cleaned_data['picture'] and request.user.is_superuser:
+        if form.cleaned_data['picture']:
             file = form.cleaned_data['picture']
             profile_image = File.objects.get(id=obj.image.id)
             profile_image.image = file

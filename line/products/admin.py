@@ -17,7 +17,6 @@ class ProductAdmin(admin.ModelAdmin):
                     'year', 'created_at', 'type')
 
     list_filter = ('title', 'price', 'year')
-    radio_fields = {"type": admin.VERTICAL}
     search_fields = ('title', 'price', 'year')
     prepopulated_fields = {'slug': ('title',)}
 
@@ -38,14 +37,9 @@ class ProductAdmin(admin.ModelAdmin):
         if form.cleaned_data['image']:
             file = form.cleaned_data['image']
             ProductFile.objects.create(product_id=obj.id, image=file)
-        if form.cleaned_data['product_type']:
-            product_type = form.cleaned_data['product_type']
-            product_type_object = ProductType.objects.create(name=product_type)
-            Product.objects.filter(id=obj.id).update(type=product_type_object)
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         all_product_photo = ProductFile.objects.filter(product_id=object_id)
-        print(all_product_photo)
         if extra_context is None:
             extra_context = {"all_photo_product": all_product_photo}
         return super(ProductAdmin, self).change_view(

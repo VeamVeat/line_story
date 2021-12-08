@@ -24,8 +24,9 @@ class Order(CreatedAtMixin):
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     product = models.ForeignKey("products.Product", null=True, on_delete=models.SET_NULL, related_name='+')
+    quantity = models.PositiveIntegerField(default=1, verbose_name=_('number of products in the cart'))
 
     class Meta:
         verbose_name = _('cart')

@@ -1,6 +1,4 @@
-from django.shortcuts import redirect
 from django.urls import reverse
-from django.views import View
 from django.views.generic import DeleteView
 
 from products.models import ProductFile
