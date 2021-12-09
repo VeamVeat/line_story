@@ -6,7 +6,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView
 
 from products.models import ProductFile, Product
-from orders.models import Cart
+from orders.models import CartItem
 
 
 class DeleteProductFile(DeleteView):
@@ -60,7 +60,7 @@ class AddProduct(View):
     def get(self, request, *args, **kwargs):
         product_id = kwargs.get('product_id')
         product_cart = Product.objects.get(pk=product_id)
-        object_cart, create_cart = Cart.objects.get_or_create(user=request.user, product_id=product_cart.id)
+        object_cart, create_cart = CartItem.objects.get_or_create(user=request.user, product_id=product_cart.id)
         if not create_cart:
             object_cart.quantity += 1
             object_cart.save()

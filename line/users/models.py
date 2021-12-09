@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 
 from users.managers import UserManager
-from orders.models import Cart
+from orders.models import CartItem
 
 from products.models import File
 

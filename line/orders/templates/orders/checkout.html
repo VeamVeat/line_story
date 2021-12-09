@@ -1,0 +1,42 @@
+{% extends 'users/base.html' %}
+<!--{% load cart_tags %}-->
+{% load static %}
+
+{% block content %}
+<h3 class="text-center mt-5 mb-5">Ordering</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Image</th>
+      <th scope="col">Price</th>
+      <th scope="col">Count</th>
+        <th scope="col">Total Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in products %}
+        <tr>
+          <th scope="row">{{ item.title }}</th>
+          <td class="w-25"><img src="{{ item.image }}" class="img-fluid" style="width: 250px; height: 250px;"></td>
+          <td>{{ item.price  }} RUB.</td>
+          <td>{{ item.quantity }}</td>
+            <td>{{ item.price }} RUB.</td>
+        </tr>
+    {% endfor %}
+        <tr>
+          <td colspan="2"></td>
+          <td>Итого:</td>
+          <td>{{ total_count }}</td>
+          <td><strong>{{ total_price }} руб.</strong></td>
+        </tr>
+  </tbody>
+</table>
+<hr>
+<h3 class="text-center mt-5 mb-5">Форма заказа</h3>
+<form action="{% url 'orders:make_order' %}" method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" class="btn btn-success btn-block mb-3" >
+</form>
+{% endblock content %}
