@@ -34,6 +34,7 @@ class DeleteProduct(View):
     def get(self, request, *args, **kwargs):
         product_id = kwargs.get('product_id')
         product_in_cart = get_object_or_404(self.model, user=request.user, product_id=product_id)
+        # что возвращает get_object_or_404
         product_in_cart.delete()
         return redirect('orders:cart')
 
@@ -93,7 +94,8 @@ class MakeOrderView(View):
             order_user = Order.objects.get(user=request.user)
             order_user.address = address
             order_user.save()
-            CartItem.objects.filter(user=request.user).delete()
+            CartItem.objects.get(user=request.user).delete()
             return redirect('home')
         return HttpResponseRedirect('orders:checkout')
         # рассылка
+        #списание денег (проверка условия)
