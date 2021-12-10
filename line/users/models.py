@@ -1,12 +1,12 @@
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator, MinValueValidator
 from django.db import models, transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib import admin
-from django.utils import timezone
-from django.core.validators import RegexValidator, MinValueValidator
-from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 from users.managers import UserManager
 from products.models import File
