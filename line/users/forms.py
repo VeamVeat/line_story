@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 
-from users.models import User
+from users.models import User, Wallet, Profile
 
 
 class RegisterUserForm(UserCreationForm):
@@ -15,3 +15,23 @@ class RegisterUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name', 'password1', 'password2')
+
+
+class GrantMoneyForm(forms.Form):
+    amount = forms.DecimalField()
+
+    class Meta:
+        model = Wallet
+        fields = ('balance',)
+
+
+class ProfileAdminForm(forms.ModelForm):
+    picture = forms.ImageField(widget=forms.FileInput, max_length=255)
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileAdminForm, self).__init__(*args, **kwargs)
+        self.fields['picture'].required = False
+
+    class Meta:
+        fields = '__all__'
+        model = Profile

@@ -1,17 +1,18 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, tokens
-from django.views import View
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from django.contrib import messages
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth import login, tokens
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from django.views import View
 
-from users.forms import RegisterUserForm
-from users.models import User
+from users.forms import RegisterUserForm, GrantMoneyForm
+from users.models import User, Wallet
 
 
 def home_page(request):
@@ -67,3 +68,26 @@ class SignUpView(View):
             return redirect('login')
 
         return render(request, self.template_name, {'form': form})
+
+
+class CustomActionView(PermissionRequiredMixin, View):
+    permission_required = ['change_profile']
+
+    @staticmethod
+    def get(request, object_id):
+        form = GrantMoneyForm()
+        return render(
+            request,
+            'admin/users/grant_money.html',
+            {'form': form}
+        )
+
+    @staticmethod
+    def post(request, object_id):
+        form = GrantMoneyForm(request.POST)
+
+        if form.is_valid():
+            amount = form.cleaned_data.get('amount')
+            wallet = Wallet.objects.get(user=object_id)
+            wallet.increase_balance(amount)
+            return redirect('../')

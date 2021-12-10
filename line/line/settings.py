@@ -157,11 +157,11 @@ LOCALE_PATHS = (
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
-STATICFILES_DIR = (
-    os.path.join(BASE_DIR, 'staticfiles'),
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
 )
 
 MEDIA_URL = '/media/'
@@ -174,4 +174,4 @@ LOGGING = logging()
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+MEGA_BYTE_LIMIT = float(os.getenv("MEGA_BYTE_LIMIT"))

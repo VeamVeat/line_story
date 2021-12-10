@@ -1,5 +1,6 @@
 from django.contrib import admin
-from orders.models import Order, Cart
+
+from orders.models import Order, CartItem
 
 
 @admin.register(Order)
@@ -11,10 +12,8 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ('final_price',)
 
 
-@admin.register(Cart)
-class CartAdmin(admin.ModelAdmin):
+@admin.register(CartItem)
+class CartItemAdmin(admin.ModelAdmin):
     list_display = ('user', 'product')
 
     search_fields = ('product',)
-
-
