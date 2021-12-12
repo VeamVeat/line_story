@@ -6,7 +6,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView
 
 from products.models import ProductFile, Product, ProductType
-from orders.models import CartItem
+from products.services import ProductServices
 
 
 class TypeYearsProduct:
@@ -27,16 +27,16 @@ class DeleteProductFile(DeleteView):
 
 
 class ProductView(TypeYearsProduct, ListView):
-    # queryset
     model = Product
     template_name = 'products/products_all.html'
     context_object_name = 'products'
 
     def get_context_data(self, **kwargs):
         contex = super().get_context_data(**kwargs)
-        all_product_in_cart = CartItem.objects.filter(user=self.request.user)
-        cart_product = [product_in_cart.product.id for product_in_cart in all_product_in_cart]
-        contex['all_product_in_cart'] = cart_product
+        product_services = ProductServices(user=self.request.user,
+                                           model=Product)
+
+        contex['all_product_in_cart'] = product_services.get_all_product_id_in_cart()
 
         return contex
 
@@ -51,13 +51,12 @@ class ShowProductView(DetailView):
         contex = super().get_context_data(**kwargs)
         contex['title'] = 'detail product'
 
-        all_product_in_cart = CartItem.objects.filter(user=self.request.user)
-        cart_product = [product_in_cart.product.id for product_in_cart in all_product_in_cart]
-        print(cart_product)
-        contex['all_product_in_cart'] = cart_product
+        product_services = ProductServices(user=self.request.user,
+                                           model=self.model,
+                                           odject_id=self.object.id)
 
-        current_product = self.model.objects.get(id=self.object.id)
-        contex['all_photo_product'] = current_product.product_file.all()
+        contex['all_product_in_cart'] = product_services.get_all_product_id_in_cart()
+        contex['all_photo_product'] = product_services.get_all_product_photo()
         return contex
 
 
@@ -80,8 +79,11 @@ class AddProduct(View):
 
     def get(self, request, *args, **kwargs):
         product_id = kwargs.get('product_id')
-        product_cart = Product.objects.get(pk=product_id)
-        object_cart, create_cart = CartItem.objects.get_or_create(user=request.user, product_id=product_cart.id)
+        product_services = ProductServices(user=self.request.user,
+                                           model=Product,
+                                           product_id=product_id)
+
+        object_cart, create_cart = product_services.get_or_create_cart_item()
         if not create_cart:
             object_cart.quantity += 1
             object_cart.save()
