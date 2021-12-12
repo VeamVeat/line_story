@@ -28,10 +28,10 @@
       </li>
       {% if user.is_authenticated %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'users:profile' user.id %}">Profile</a>
+        <a class="nav-link" href="{% url 'users:profile' pk=user.profile.id %}">Profile</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'products:product_all' %}">Product</a>
+        <a class="nav-link" href="{% url 'products:products_all' %}">Product</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'orders:cart' %}">Cart</a>

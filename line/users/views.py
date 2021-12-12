@@ -1,18 +1,24 @@
+from io import StringIO
+from PIL import Image
+
+from django.http import Http404
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
+from django.urls import reverse_lazy, reverse
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import login, tokens
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.views import View
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, DetailView, TemplateView, UpdateView
 
-from users.forms import RegisterUserForm, GrantMoneyForm, UserForm, ProfileForm
+from products.models import File
+from users.forms import RegisterUserForm, GrantMoneyForm, UserForm, ProfileForm, ProfileEditForm
 from users.models import User, Wallet, Profile
 
 
@@ -28,18 +34,47 @@ class ProfileView(DetailView):
     context_object_name = 'user_profile'
 
 
-# def products(request):
-#     if request.method == "POST":
-#         product_id = request.POST.get("product_pk")
-#         product = Product.objects.get(id = product_id)
-#         request.user.profile.products.add(product)
-#         messages.success(request,(f'{product} added to wishlist.'))
-#         return redirect ('main:products')
-# 	products = Product.objects.all()
-# 	paginator = Paginator(products, 18)
-# 	page_number = request.GET.get('page')
-# 	page_obj = paginator.get_page(page_number)
-# 	return render(request = request, template_name="main/products.html", context = { "page_obj":page_obj})
+class ProfileUpdateView(View):
+
+    def get(self, request, *args, **kwargs):
+        form = ProfileEditForm()
+        return render(
+            request,
+            'users/update_profile.html',
+            {'form': form}
+        )
+
+    def post(self, request, *args, **kwargs):
+        form = ProfileEditForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            # image = form.cleaned_data['image']
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
+            phone = form.cleaned_data.get('phone')
+            region = form.cleaned_data.get('region')
+
+            user = User.objects.get(id=request.user.id)
+            user.first_name = first_name
+            user.last_name = last_name
+            user.save(update_fields=['first_name', 'last_name', 'birthday'])
+
+            user_profile = Profile.objects.get(user=request.user)
+            user_profile.phone = phone
+            user_profile.region = region
+            user_profile.save(update_fields=['phone', 'region'])
+
+            # if user_profile.image:
+            #     profile_file = File.objects.get(id=user_profile.image.id)
+            #     profile_file.image = image
+            #     profile_file.save(update_fields=['image'])
+            # else:
+            #     profile_file = File.objects.create(image=g_image)
+            #     user_profile.image = profile_file
+            #     profile_file.save(update_fields=['image'])
+
+            return redirect('home')
+
 
 class ActivateAccount(View):
     def get(self, request, uidb64, token, *args, **kwargs):
@@ -114,3 +149,16 @@ class CustomActionView(PermissionRequiredMixin, View):
             wallet.increase_balance(amount)
             wallet.save()
             return redirect('../')
+
+
+# class ProfileUpdateView(UpdateView):
+#     model = Profile
+#     form_class = ProfileForm
+#     template_name = 'users/update_profile.html'
+#     success_url = '/'
+
+    # def get_object(self, **kwargs):
+    #     username = self.kwargs.get("username")
+    #     if username is None:
+    #         raise Http404
+    #     return get_object_or_404(Profile, user__username__iexact=username)

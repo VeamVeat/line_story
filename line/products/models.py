@@ -3,12 +3,17 @@ from decimal import Decimal
 from django.core.files.storage import FileSystemStorage
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.template.loader import render_to_string
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
 from line.settings import STATIC_ROOT, STATIC_URL
 from utils.mixins import CreatedAtMixin
+from line import settings
 
 
 class ProductType(models.Model):
@@ -67,6 +72,7 @@ class Product(CreatedAtMixin):
     price = models.DecimalField(max_digits=10, decimal_places=2,
                                 validators=[MinValueValidator(Decimal('0.01'))], verbose_name=_('price of product'))
     year = models.IntegerField(db_index=True, verbose_name=_('year of product release'))
+    quantity = models.PositiveIntegerField(default=1, verbose_name=_('number of products'))
 
     class Meta:
         verbose_name = _('product')
@@ -81,3 +87,18 @@ class Product(CreatedAtMixin):
 
 class ProductFile(File):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_file')
+
+
+@receiver(post_save, sender=Product)
+def send_mails(sender, instance, created, **kwargs):
+    User = get_user_model()
+    all_user = User.objects.all()
+
+    if created:
+        subject = 'New Product'
+        for user in all_user:
+            message = render_to_string('products/new_product_notification.html', {
+                'user': user,
+                'product': instance.title
+            })
+            user.email_user(subject, message)

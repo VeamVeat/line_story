@@ -5,8 +5,16 @@ from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView
 
-from products.models import ProductFile, Product
+from products.models import ProductFile, Product, ProductType
 from orders.models import CartItem
+
+
+class TypeYearsProduct:
+    def get_type(self):
+        return ProductType.objects.all()
+
+    def get_years(self):
+        return Product.objects.all().values("year").distinct()
 
 
 class DeleteProductFile(DeleteView):
@@ -18,11 +26,19 @@ class DeleteProductFile(DeleteView):
         return reverse('admin:products_product_change', kwargs={'object_id': product_id})
 
 
-class ProductView(ListView):
+class ProductView(TypeYearsProduct, ListView):
     # queryset
     model = Product
     template_name = 'products/products_all.html'
     context_object_name = 'products'
+
+    def get_context_data(self, **kwargs):
+        contex = super().get_context_data(**kwargs)
+        all_product_in_cart = CartItem.objects.filter(user=self.request.user)
+        cart_product = [product_in_cart.product.id for product_in_cart in all_product_in_cart]
+        contex['all_product_in_cart'] = cart_product
+
+        return contex
 
 
 class ShowProductView(DetailView):
@@ -34,7 +50,12 @@ class ShowProductView(DetailView):
     def get_context_data(self, **kwargs):
         contex = super().get_context_data(**kwargs)
         contex['title'] = 'detail product'
-        contex['ct_model'] = self.model._meta.model_name # информация о конкретной модели
+
+        all_product_in_cart = CartItem.objects.filter(user=self.request.user)
+        cart_product = [product_in_cart.product.id for product_in_cart in all_product_in_cart]
+        print(cart_product)
+        contex['all_product_in_cart'] = cart_product
+
         current_product = self.model.objects.get(id=self.object.id)
         contex['all_photo_product'] = current_product.product_file.all()
         return contex
@@ -65,7 +86,19 @@ class AddProduct(View):
             object_cart.quantity += 1
             object_cart.save()
 
-        # messages.success(request, "product add to cart!")
         return redirect('orders:cart')
 
-# товар добавлен
+
+class FilterMoviesView(TypeYearsProduct, ListView):
+    model = Product
+    template_name = 'products/products_all.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+
+        queryset = super().get_queryset()
+        queryset = queryset.filter(
+            Q(year__in=self.request.GET.getlist("year")) |
+            Q(type__name__in=self.request.GET.getlist("type"))
+        )
+        return queryset

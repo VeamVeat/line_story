@@ -4,7 +4,7 @@ from orders.models import Order, CartItem
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('user', 'quantity', 'final_price', 'product_list', 'address')
+    list_display = ('user', 'quantity', 'final_price', 'product_list', 'address', 'is_active')
 
     list_filter = ('final_price',)
 

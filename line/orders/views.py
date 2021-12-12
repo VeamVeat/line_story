@@ -1,10 +1,12 @@
 # from django.core.serializers import json
 import json
+
+from django.contrib.auth import get_user_model
 from django.forms.models import model_to_dict
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.views import View
-# Create your views here.
 from django.views.generic import TemplateView, ListView
 from django.shortcuts import render, get_object_or_404
 from django.db import models
@@ -13,6 +15,7 @@ from django.db.models import F
 from orders.models import CartItem, Order
 from products.models import Product, ProductFile
 from orders.forms import OrderForm
+from users.models import Wallet
 
 
 class CartView(ListView):
@@ -53,7 +56,7 @@ class CheckoutView(View):
         total_count_product = total_price_and_total_count['total_count']
 
         form = OrderForm()
-
+        #колличество добавленного товара привышает колличество имеющегося на складе
         product_all = []
         for products in cart_item_current_user:
             current_product_image = ProductFile.objects.filter(product_id=products.product.id).first()
@@ -70,8 +73,6 @@ class CheckoutView(View):
             product_all.append(product)
         context = {'products': product_all, 'total_price': float(total_price_product),
                    'total_count': total_count_product, 'form': form}
-
-        print(context)
 
         Order.objects.create(
             user=request.user,
@@ -91,11 +92,29 @@ class MakeOrderView(View):
         form = OrderForm(request.POST or None)
         if form.is_valid():
             address = form.cleaned_data.get('address')
-            order_user = Order.objects.get(user=request.user)
-            order_user.address = address
-            order_user.save()
-            CartItem.objects.get(user=request.user).delete()
+
+            order_user = self.model.objects.get(user=request.user, is_active=True)
+            money = Wallet.objects.get(user=request.user)
+
+            if order_user.final_price > money.ballance:
+                self.model.objects.get(user=request.user, is_active=True).delete()
+                redirect('home')
+            else:
+                request.user.diminish_balance(order_user.final_price)
+                order_user.address = address
+                order_user.is_active = False
+                order_user.save(update_fields=['address', 'is_active'])
+
+                subject = 'your order has been completed'
+                message = render_to_string('orders/new_order_notification.html', {
+                    'user': request.user,
+                    'count': order_user.quantity,
+                    'price': order_user.final_price
+                })
+                request.user.email_user(subject, message)
+
+                CartItem.objects.filter(user=request.user).delete()
             return redirect('home')
         return HttpResponseRedirect('orders:checkout')
-        # рассылка
-        #списание денег (проверка условия)
+
+#HttpResponseRedirect / redirect

@@ -1,3 +1,6 @@
+from datetime import datetime, date
+import time
+from django.utils.timezone import now
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.db.models.signals import post_save
@@ -10,7 +13,6 @@ from django.contrib.auth.models import AbstractUser
 
 from users.managers import UserManager
 from orders.models import CartItem
-
 from products.models import File
 
 
@@ -21,6 +23,7 @@ class User(AbstractUser):
         max_length=255,
         unique=True,
     )
+    birthday = models.DateField(_('birthday'))
 
     objects = UserManager()
 
@@ -49,16 +52,6 @@ class User(AbstractUser):
         return self.first_name + ' ' + self.last_name
 
 
-def validate_age(value):
-    min_age = 18
-
-    if value < min_age:
-        raise ValidationError(
-            _('age must be at least 18.'),
-            params={'value': value},
-        )
-
-
 class Profile(models.Model):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
                                  message=_('phone number must not'
@@ -67,7 +60,6 @@ class Profile(models.Model):
                                            ' eg : +79546748973'))
 
     phone = models.CharField(validators=[phone_regex], max_length=17, blank=True, verbose_name=_('phone'))
-    age = models.PositiveIntegerField(validators=[validate_age], default=0, verbose_name=_('age'))
     region = models.CharField(max_length=255, verbose_name=_('region of residence'))
     user = models.OneToOneField(User,
                                 on_delete=models.CASCADE,
@@ -77,11 +69,17 @@ class Profile(models.Model):
     image = models.OneToOneField(File, null=True, blank=True, on_delete=models.SET_NULL,
                               verbose_name=_('profile photo'))
 
-    class Meta:
-        ordering = ('age',)
-
     def __str__(self):
         return f'{self.user}'
+
+    @property
+    def age(self):
+        if self.user.birthday:
+            today = now()
+            return today.year - self.user.birthday.year - (
+                    (today.month, today.day) < (self.user.birthday.month, self.user.birthday.day))
+        return 0
+
 
     @property
     def balance_user(self):

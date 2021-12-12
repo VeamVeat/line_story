@@ -29,7 +29,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ('title', 'slug', 'price', 'year',
+            'fields': ('title', 'slug', 'price', 'quantity', 'year',
                        'type', 'image', 'description'),
         }),
     )

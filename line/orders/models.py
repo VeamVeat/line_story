@@ -18,6 +18,7 @@ class Order(CreatedAtMixin):
                                       verbose_name=_('total order price'))
     product_list = JSONField()
     address = models.CharField(max_length=1800, verbose_name=_('address'), null=True, blank=True)
+    is_active = models.BooleanField(default=True, verbose_name=_('active order'))
 
     class Meta:
         verbose_name = _('order')

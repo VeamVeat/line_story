@@ -31,8 +31,8 @@ def get_path_file(obj, filename):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'age', 'phone', 'region', 'balance_user']
-    readonly_fields = ('balance_user', 'file_image')
+    list_display = ['id', 'user', 'age', 'phone', 'region', 'balance_user']
+    readonly_fields = ('balance_user', 'file_image', 'age')
     change_form_template = 'admin/users/custom_change_form.html'
 
     form = ProfileAdminForm
@@ -66,8 +66,8 @@ class ProfileAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)

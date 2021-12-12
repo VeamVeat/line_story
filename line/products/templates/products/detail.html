@@ -21,10 +21,23 @@
 						<p class="vote"> Year: <strong>{{ detail_product.year }}</strong></p>
 
 						<div class="action">
-<!--							<a href="{{ p.affiliate_url }}" class="btn btn-dark">Buy</a>-->
-                            <a href="{% url 'products:add_to_cart' product_id=detail_product.id %}">
-								<button class="btn btn-dark">Add</button>
-							</a>
+						{% if request.user.is_authenticated %}
+                              {% if detail_product.quantity %}
+
+								    <a href="{% url 'products:add_to_cart' product_id=detail_product.id %}">
+									<button class="btn btn-primary">Add to cart </button>
+								    </a>
+                                    {% if detail_product.id  in all_product_in_cart %}
+                                        <a href="#" class="btn btn-default" disabled="">Added to cart</a>
+                                    {% endif %}
+							  {% else %}
+							      <a href="#" class="btn btn-default" disabled="">product out of stock</a>
+                              {% endif %}
+                        {% else %}
+                            <a href="#" class="btn btn-default" disabled="">
+                            Авторизуйтесь или зарегистрируйтесь
+                            </a>
+                        {% endif %}
 						</div>
 					</div>
 				</div>
