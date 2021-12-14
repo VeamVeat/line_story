@@ -1,10 +1,11 @@
 from django.db.models import Q
-from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse_lazy, reverse
+from django.shortcuts import redirect
+from django.urls import reverse
 from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView
 
+from orders.models import CartItem
+from orders.services import CartItemServices
 from products.models import ProductFile, Product, ProductType
 from products.services import ProductServices
 
@@ -31,15 +32,6 @@ class ProductView(TypeYearsProduct, ListView):
     template_name = 'products/products_all.html'
     context_object_name = 'products'
 
-    def get_context_data(self, **kwargs):
-        contex = super().get_context_data(**kwargs)
-        product_services = ProductServices(user=self.request.user,
-                                           model=Product)
-
-        contex['all_product_in_cart'] = product_services.get_all_product_id_in_cart()
-
-        return contex
-
 
 class ShowProductView(DetailView):
     model = Product
@@ -54,21 +46,20 @@ class ShowProductView(DetailView):
         product_services = ProductServices(user=self.request.user,
                                            model=self.model,
                                            odject_id=self.object.id)
-
         contex['all_product_in_cart'] = product_services.get_all_product_id_in_cart()
         contex['all_photo_product'] = product_services.get_all_product_photo()
         return contex
 
 
-class SearchResultsView(ListView):
+class SearchResultsView(TypeYearsProduct, ListView):
     model = Product
-    template_name = 'products/search.html'
-    context_object_name = 'search_products'
+    template_name = 'products/products_all.html'
+    context_object_name = 'products'
 
     def get_queryset(self):
         queryset = super().get_queryset()
-
         text_search = self.request.GET.get('search')
+
         if text_search:
             queryset = queryset.filter(Q(title__icontains=text_search) |
                                        Q(type__name__icontains=text_search))
@@ -77,21 +68,17 @@ class SearchResultsView(ListView):
 
 class AddProduct(View):
 
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         product_id = kwargs.get('product_id')
-        product_services = ProductServices(user=self.request.user,
-                                           model=Product,
-                                           product_id=product_id)
+        cart_item_services = CartItemServices(user=self.request.user,
+                                              model=CartItem,
+                                              product_id=product_id)
 
-        object_cart, create_cart = product_services.get_or_create_cart_item()
-        if not create_cart:
-            object_cart.quantity += 1
-            object_cart.save()
-
+        cart_item_services.add_product()
         return redirect('orders:cart')
 
 
-class FilterMoviesView(TypeYearsProduct, ListView):
+class FilterProductView(TypeYearsProduct, ListView):
     model = Product
     template_name = 'products/products_all.html'
     context_object_name = 'products'

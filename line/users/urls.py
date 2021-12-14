@@ -8,5 +8,3 @@ urlpatterns = [
     path("profile_update/<int:id>", ProfileUpdateView.as_view(), name="profile_update"),
     path("profile/<int:pk>", ProfileView.as_view(), name="profile")
 ]
-
-# при изменении профиля срабатывает не тот url

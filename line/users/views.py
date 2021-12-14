@@ -12,14 +12,14 @@ from django.contrib.auth import login, tokens
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views import View
-from django.views.generic import ListView, DetailView, TemplateView, UpdateView
+from django.views.generic import  DetailView
 
-from products.models import File
-from users.forms import RegisterUserForm, GrantMoneyForm, UserForm, ProfileForm, ProfileEditForm
-from users.models import User, Wallet, Profile
+from users.forms import RegisterUserForm, GrantMoneyForm, ProfileEditForm
+from users.models import User, Profile
+from users.services import UserServices, ProfileServices
 
 
 class BaseView(View):
@@ -47,22 +47,20 @@ class ProfileUpdateView(View):
     def post(self, request, *args, **kwargs):
         form = ProfileEditForm(request.POST, request.FILES)
 
-        if form.is_valid():
+        if not form.is_valid():
+            return None
+        else:
             # image = form.cleaned_data['image']
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
             phone = form.cleaned_data.get('phone')
             region = form.cleaned_data.get('region')
 
-            user = User.objects.get(id=request.user.id)
-            user.first_name = first_name
-            user.last_name = last_name
-            user.save(update_fields=['first_name', 'last_name', 'birthday'])
+            user_services = UserServices(request.user, User, last_name, first_name)
+            user_services.update_full_name(first_name, last_name)
 
-            user_profile = Profile.objects.get(user=request.user)
-            user_profile.phone = phone
-            user_profile.region = region
-            user_profile.save(update_fields=['phone', 'region'])
+            profile_services = ProfileServices(request.user, Profile, phone, region)
+            profile_services.update_profile(phone, region)
 
             # if user_profile.image:
             #     profile_file = File.objects.get(id=user_profile.image.id)
@@ -145,20 +143,9 @@ class CustomActionView(PermissionRequiredMixin, View):
 
         if form.is_valid():
             amount = form.cleaned_data.get('amount')
-            wallet = Wallet.objects.get(user=object_id)
-            wallet.increase_balance(amount)
-            wallet.save()
+
+            profile = Profile.objects.select_related('user__wallet').get(id=object_id)
+            wallet_user = profile.user.wallet
+            wallet_user.increase_balance(amount)
+            wallet_user.save()
             return redirect('../')
-
-
-# class ProfileUpdateView(UpdateView):
-#     model = Profile
-#     form_class = ProfileForm
-#     template_name = 'users/update_profile.html'
-#     success_url = '/'
-
-    # def get_object(self, **kwargs):
-    #     username = self.kwargs.get("username")
-    #     if username is None:
-    #         raise Http404
-    #     return get_object_or_404(Profile, user__username__iexact=username)

@@ -39,6 +39,7 @@ class User(AbstractUser):
         Transaction.objects.create(user=self,
                                    descriptions=f"списание счёта на самму {value} от пользователя {self.email}",
                                    amount=value)
+        #related name
         wallet = Wallet.objects.get(user=self)
         wallet.ballance -= value
         wallet.save()

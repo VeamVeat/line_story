@@ -1,0 +1,30 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+{% block content %}
+<h3 class="text-center mt-5 mb-5">Ordering</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">User</th>
+      <th scope="col">Price</th>
+      <th scope="col">Count</th>
+      <th scope="col">Total Price</th>
+      <th scope="col">Address</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in all_orders %}
+        <tr>
+          <th scope="row">{{ item.user }}</th>
+          <td>{{ item.price  }} RUB.</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.total_price }} RUB.</td>
+          <td>{{ item.created_at }}</td>
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<hr>
+<a href="{% url 'home' %}"><button class="btn btn-primary">Home</button></a>
+{% endblock content %}

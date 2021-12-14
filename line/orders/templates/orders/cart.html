@@ -25,15 +25,22 @@
                             <h5 class="card-title">{{ product_in_cart.product.title }}</h5>
                             <p class="card-text text-muted" style="font-size:12px">{{ product_in_cart.product.price }}</p>
                             <input type="number" value="{{ product_in_cart.quantity}}" min="0" max="1000"/>
-                            <a href="{% url 'orders:delete_product' product_id=product_in_cart.product.id %}">
-								<button class="btn btn-dark">Delete</button>
-							</a>
+
+                            <form action="{% url 'orders:delete_product' product_id=product_in_cart.product.id %}" method="POST">
+                                {% csrf_token %}
+                                <button class="btn btn-primary">Delete</button>
+                            </form>
                         </div>
 
                     </div>
                 </div>
             {% endfor %}
-            <a href="{% url 'orders:checkout' %}"><button class="btn btn-primary">Сheckout</button> </a>
+            {% if products_all %}
+            <form action="{% url 'orders:checkout' %}" method="POST">
+                {% csrf_token %}
+                 <button class="btn btn-primary">Сheckout</button>
+            </form>
+            {% endif %}
         </div>
 </div>
 

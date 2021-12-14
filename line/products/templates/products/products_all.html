@@ -19,55 +19,9 @@
     {% block content %}
         <div class="col-md-12">
             <div class="row">
-                {% for product in products %}
-                    <div class="card col-md-3 p-0 mb-3 mt-3">
-                        <a href="{{ product.get_absolute_url }}">
-                        <img src="{{ product.product_file.filter.first.image.url }}" class="card-img-top">
-                        </a>
-                        <div class="card-body text-center">
-
-                        <h5 class="card-title"><a href="{{ product.get_absolute_url }}" class="text-decoration-none">
-                            {{ product.title }}
-                        </a></h5>
-                        </div>
-
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Year: <strong>{{ product.year }}</strong></li>
-                        <li class="list-group-item">
-                            Наличие: {% if product.quantity %}<strong class="badge bg-success">
-                            Есть в наличии - {{ product.quantity }} шт.
-                        </strong>{% else %}
-                            <strong class="badge bg-danger">Нет в наличии</strong>
-                        {% endif %}
-
-                        </li>
-                    </ul>
-
-                    <div class="card-body text-center">
-
-                        {% if request.user.is_authenticated %}
-                            {% if product.quantity %}
-
-                                <a href="{% url 'products:add_to_cart' product_id=product.id %}">
-                                    <button class="btn btn-primary">Add to cart </button>
-                                </a>
-                                {% if product.id in all_product_in_cart %}
-                                    <a href="#" class="btn btn-default" disabled="">Added to cart</a>
-                                {% endif %}
-                            {% else %}
-							      <a href="#" class="btn btn-default" disabled="">product out of stock</a>
-                            {% endif %}
-                        {% else %}
-                            <a href="#" class="btn btn-default" disabled="">
-                            Авторизуйтесь или зарегистрируйтесь, только авторизованные пользователи
-                            могут осуществлять заказы
-                            </a>
-                        {% endif %}
-                    </div>
-
-                    </div>
-
-                {% endfor %}
+                    {% for product in products %}
+                        {% include 'products/products.html' %}
+                    {% endfor %}
             </div>
 
         </div>

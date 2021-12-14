@@ -1,6 +1,4 @@
 from decimal import Decimal
-
-from django.core.files.storage import FileSystemStorage
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.dispatch import receiver
@@ -11,9 +9,8 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
-from line.settings import STATIC_ROOT, STATIC_URL
+from products.managers import ProductManager
 from utils.mixins import CreatedAtMixin
-from line import settings
 
 
 class ProductType(models.Model):
@@ -65,7 +62,7 @@ class File(models.Model):
 
 
 class Product(CreatedAtMixin):
-    type = models.ForeignKey(ProductType, null=True, on_delete=models.SET_NULL)
+    type = models.ForeignKey(ProductType, null=True, on_delete=models.SET_NULL, related_name='product')
     slug = models.SlugField(null=False, unique=True)
     title = models.CharField(max_length=255, verbose_name=_('name of product'))
     description = models.TextField(verbose_name=_('name of description'))
@@ -73,6 +70,8 @@ class Product(CreatedAtMixin):
                                 validators=[MinValueValidator(Decimal('0.01'))], verbose_name=_('price of product'))
     year = models.IntegerField(db_index=True, verbose_name=_('year of product release'))
     quantity = models.PositiveIntegerField(default=1, verbose_name=_('number of products'))
+
+    objects = ProductManager()
 
     class Meta:
         verbose_name = _('product')
@@ -83,6 +82,21 @@ class Product(CreatedAtMixin):
 
     def get_absolute_url(self):
         return reverse('products:product', kwargs={'product_slug': self.slug})
+
+    @property
+    def get_product_in_the_dict(self):
+        product_images = ProductFile.objects.filter(product_id=self.pk)[:1].get()
+        product_in_the_dict = {
+            "id": self.pk,
+            "type": self.type.name,
+            "title": self.title,
+            "description": self.description,
+            "price": float(self.price),
+            "year": self.year,
+            "image": product_images.image.url,
+            'quantity': self.quantity
+        }
+        return product_in_the_dict
 
 
 class ProductFile(File):

@@ -13,6 +13,11 @@ class WalletInline(admin.StackedInline):
     extra = 0
 
 
+@admin.register(Wallet)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ['user', 'ballance']
+
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('id', 'email', 'full_name',
