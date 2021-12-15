@@ -14,13 +14,13 @@
     </tr>
   </thead>
   <tbody>
-    {% for item in products %}
+    {% for item in product_cart_items %}
         <tr>
-          <th scope="row">{{ item.title }}</th>
-          <td class="w-25"><img src="{{ item.image }}" class="img-fluid" style="width: 250px; height: 250px;"></td>
-          <td>{{ item.price  }} RUB.</td>
+          <th scope="row">{{ item.product.title }}</th>
+          <td class="w-25"><img src="{{ item.product.product_file.filter.first.image.url }}" class="img-fluid" style="width: 250px; height: 250px;"></td>
+          <td>{{ item.product.price  }} RUB.</td>
           <td>{{ item.quantity }}</td>
-            <td>{{ item.price }} RUB.</td>
+          <td>{{ item.get_total_price_product_by_quantity }} RUB.</td>
         </tr>
     {% endfor %}
         <tr>

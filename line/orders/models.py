@@ -11,7 +11,7 @@ from orders.managers import CartItemManager
 
 
 class Order(CreatedAtMixin):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='order')
     slug = models.SlugField(null=True, unique=True)
     quantity = models.PositiveIntegerField(default=1, verbose_name=_('number of products in the order'))
     final_price = models.DecimalField(max_digits=12, decimal_places=2,
@@ -37,6 +37,10 @@ class CartItem(models.Model):
     class Meta:
         verbose_name = _('cart item')
         verbose_name_plural = _('carts items')
+
+    @property
+    def get_total_price_product_by_quantity(self):
+        return self.quantity * self.product.price
 
     def __str__(self):
         return self.user.email

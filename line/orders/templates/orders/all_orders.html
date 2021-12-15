@@ -7,9 +7,9 @@
   <thead>
     <tr>
       <th scope="col">User</th>
-      <th scope="col">Price</th>
-      <th scope="col">Count</th>
-      <th scope="col">Total Price</th>
+      <th scope="col">Total price</th>
+      <th scope="col">Count products</th>
+      <th scope="col">Time create</th>
       <th scope="col">Address</th>
     </tr>
   </thead>
@@ -17,10 +17,11 @@
     {% for item in all_orders %}
         <tr>
           <th scope="row">{{ item.user }}</th>
-          <td>{{ item.price  }} RUB.</td>
+<!--          <td>{{ item.price  }} RUB.</td>-->
+          <td>{{ item.final_price }} RUB.</td>
           <td>{{ item.quantity }}</td>
-          <td>{{ item.total_price }} RUB.</td>
           <td>{{ item.created_at }}</td>
+          <td>{{ item.address }}</td>
         </tr>
     {% endfor %}
   </tbody>

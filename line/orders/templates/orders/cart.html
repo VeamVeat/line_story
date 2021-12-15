@@ -14,7 +14,7 @@
         <br>
         <div class="row">
 
-            {% for product_in_cart in products_all %}
+            {% for product_in_cart in products_all|dictsort:"pk" %}
                 <div class="col-sm-12 col-md-6 col-lg-4 pb-4">
                     <div class="h-100">
 
@@ -24,7 +24,26 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ product_in_cart.product.title }}</h5>
                             <p class="card-text text-muted" style="font-size:12px">{{ product_in_cart.product.price }}</p>
-                            <input type="number" value="{{ product_in_cart.quantity}}" min="0" max="1000"/>
+
+                            <div class="input-group quantity_goods">
+<!--                                <input type="button" value="-" id="button_minus">-->
+<!--                                <input class="btn btn-primary" type="button" value="-">-->
+                                {% if product_in_cart.quantity != 1 %}
+                                <form action="{% url 'orders:diminish_product' product_id=product_in_cart.product.id%}" method="POST">
+                                {% csrf_token%}
+                                <button type="submit" class="btn btn-dark"> - </button>
+                                </form>
+                                {% endif %}
+
+                                <p class="card-text text-muted" style="font-size:25px">{{ product_in_cart.quantity}}</p>
+
+                                {% if product_in_cart.quantity >= 1 %}
+                                <form action="{% url 'orders:increase_product' product_id=product_in_cart.product.id%}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-dark"> + </button>
+                                </form>
+                                 {% endif %}
+                            </div>
 
                             <form action="{% url 'orders:delete_product' product_id=product_in_cart.product.id %}" method="POST">
                                 {% csrf_token %}

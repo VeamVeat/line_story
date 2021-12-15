@@ -16,7 +16,18 @@ class CartView(ListView):
         context = super().get_context_data()
         queryset = self.get_queryset()
         cart_item_all = queryset.filter(user=self.request.user)
+
+        cart_item_services = CartItemServices(user=self.request.user, model=self.model)
+
+        form = OrderForm()
+
+        total_price_and_total_count = cart_item_services.get_total_price_and_total_count()
+        total_price_product = total_price_and_total_count['total_price']
+        total_count_product = total_price_and_total_count['total_count']
+
         context['products_all'] = cart_item_all
+        context['total_price_product'] = total_price_product
+        context['total_count_product'] = total_count_product
         return context
 
 
@@ -41,6 +52,7 @@ class CheckoutView(View):
 
         order_services = OrderServices(user=request.user, model=Order)
         cart_item_services = CartItemServices(user=request.user, model=self.model)
+        user_balance = request.user.wallet.ballance
 
         form = OrderForm()
 
@@ -48,12 +60,14 @@ class CheckoutView(View):
         total_price_product = total_price_and_total_count['total_price']
         total_count_product = total_price_and_total_count['total_count']
 
-        product_all = cart_item_services.get_products()
+        if total_price_product > user_balance:
+            return redirect('orders:not_money')
 
-        context = {'products': product_all, 'total_price': float(total_price_product),
+        # product_all = cart_item_services.get_products()
+        product_cart_items = cart_item_services.get_all_cart_item()
+
+        context = {'product_cart_items': product_cart_items, 'total_price': float(total_price_product),
                    'total_count': total_count_product, 'form': form}
-
-        order_services.order_create(total_price_product, total_count_product, product_all)
 
         return render(request, self.template_name, context)
 
@@ -71,11 +85,15 @@ class MakeOrderView(View):
             return redirect('orders:make_order')
         else:
             address = form.cleaned_data.get('address')
-            is_checkout = order_services.checkout(address)
-            if not is_checkout:
-                return redirect('orders:not_money')
 
-        cart_item_services.clear()
+            product_all = cart_item_services.get_products_list()
+
+            total_price_and_total_count = cart_item_services.get_total_price_and_total_count()
+            total_price_product = total_price_and_total_count['total_price']
+            total_count_product = total_price_and_total_count['total_count']
+            order_services.order_create(total_price_product, total_count_product, product_all, address)
+
+            cart_item_services.clear()
 
         return redirect('home')
 
@@ -98,3 +116,37 @@ class OrderView(ListView):
         cart_item_all = queryset.filter(user=self.request.user)
         context['all_orders'] = cart_item_all
         return context
+
+
+class DiminishProductView(View):
+    model = CartItem
+    template_name = 'orders/cart.html'
+
+    def post(self, request, *args, **kwargs):
+        cart_item_all = self.model.objects.filter(user=self.request.user)
+        product_id = kwargs.get('product_id')
+        cart_item_services = CartItemServices(user=self.request.user,
+                                              model=self.model,
+                                              product_id=product_id)
+        is_avaible = cart_item_services.diminish_product()
+
+        context = {'products_all': cart_item_all, 'is_avaible': is_avaible}
+
+        return render(request, self.template_name, context)
+
+
+class IncreaseProductView(ListView):
+    model = CartItem
+    template_name = 'orders/cart.html'
+
+    def post(self, request, *args, **kwargs):
+        cart_item_all = self.model.objects.filter(user=self.request.user)
+        product_id = kwargs.get('product_id')
+        cart_item_services = CartItemServices(user=self.request.user,
+                                              model=self.model,
+                                              product_id=product_id)
+        is_avaible = cart_item_services.increase_product()
+
+        context = {'products_all': cart_item_all, 'is_avaible': is_avaible}
+
+        return render(request, self.template_name, context)

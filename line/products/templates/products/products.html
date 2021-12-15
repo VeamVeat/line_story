@@ -14,7 +14,9 @@
                             <li class="list-group-item">
                                 Наличие: {% if product.quantity %}<strong class="badge bg-success">
                                 Есть в наличии - {{ product.quantity }} шт.
-                            </strong>{% else %}
+                            </strong>
+                                <li class="list-group-item">Price: <strong>{{ product.price }} RUB</strong></li>
+                                {% else %}
                                 <strong class="badge bg-danger">Нет в наличии</strong>
                             {% endif %}
 
@@ -22,7 +24,6 @@
                         </ul>
 
                         <div class="card-body text-center">
-
                             {% if request.user.is_authenticated %}
                                 {% if product.quantity %}
 

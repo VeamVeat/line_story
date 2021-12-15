@@ -9,6 +9,7 @@ class UserServices:
         self.first_name = first_name
 
     def update_full_name(self, first_name, last_name):
+        #пделать get_objects_or_404
         user = get_object_or_404(self.model, self.first_name, self.last_name)
         user.first_name = first_name
         user.last_name = last_name
@@ -23,6 +24,7 @@ class ProfileServices:
         self.region = region
 
     def update_profile(self, phone, region):
+        #get_object_or_404?
         user_profile = get_object_or_404(self.model, self.phone, self.region)
         user_profile.phone = phone
         user_profile.region = region
