@@ -1,4 +1,3 @@
-
 from django.utils.timezone import now
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
@@ -58,11 +57,12 @@ class ProfileAdminForm(forms.ModelForm):
 
 
 class ProfileEditForm(forms.ModelForm):
-    # image = forms.ImageField()
+    # доработать загрузку фото
+    image = forms.ImageField()
     first_name = forms.CharField(label=_('first name'), widget=forms.TextInput(attrs={'class': 'form-input'}))
     last_name = forms.CharField(label=_('last name'), widget=forms.TextInput(attrs={'class': 'form-input'}))
 
     class Meta:
         model = Profile
-        fields = ('first_name', 'last_name', 'phone', 'region')
+        fields = ('image', 'first_name', 'last_name', 'phone', 'region')
 

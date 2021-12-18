@@ -4,7 +4,13 @@ from django.utils.translation import ugettext_lazy as _
 
 from products.forms import ProductAdminForm
 from products.models import Product, ProductType, ProductFile
+from orders.models import Reservation
 from products.views import DeleteProductFile
+
+
+@admin.register(Reservation)
+class ReservationAdmin(admin.ModelAdmin):
+    list_display = ('user','product', 'quantity', 'is_reserved')
 
 
 @admin.register(ProductType)
@@ -18,7 +24,6 @@ class ProductAdmin(admin.ModelAdmin):
                     'year', 'created_at', 'type')
 
     list_filter = ('title', 'price', 'year')
-    # radio_fields = {"type": admin.VERTICAL}
     search_fields = ('title', 'price', 'year')
     actions = ["set_quantity_zero", ]
     prepopulated_fields = {'slug': ('title',)}

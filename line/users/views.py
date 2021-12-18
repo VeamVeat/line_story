@@ -1,5 +1,6 @@
 from io import StringIO
 from PIL import Image
+from django.core.files.storage import FileSystemStorage
 
 from django.http import Http404
 from django.utils.http import urlsafe_base64_encode
@@ -17,6 +18,7 @@ from django.template.loader import render_to_string
 from django.views import View
 from django.views.generic import  DetailView
 
+from line.settings import MEDIA_ROOT
 from users.forms import RegisterUserForm, GrantMoneyForm, ProfileEditForm
 from users.models import User, Profile
 from users.services import UserServices, ProfileServices
@@ -47,10 +49,10 @@ class ProfileUpdateView(View):
     def post(self, request, *args, **kwargs):
         form = ProfileEditForm(request.POST, request.FILES)
 
-        if not form.is_valid():
-            return None
-        else:
+        if form.is_valid():
             # image = form.cleaned_data['image']
+            image = request.FILES['image']
+
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
             phone = form.cleaned_data.get('phone')
@@ -62,16 +64,16 @@ class ProfileUpdateView(View):
             profile_services = ProfileServices(request.user, Profile, phone, region)
             profile_services.update_profile(phone, region)
 
-            # if user_profile.image:
-            #     profile_file = File.objects.get(id=user_profile.image.id)
-            #     profile_file.image = image
-            #     profile_file.save(update_fields=['image'])
-            # else:
-            #     profile_file = File.objects.create(image=g_image)
-            #     user_profile.image = profile_file
-            #     profile_file.save(update_fields=['image'])
+            if image:
+                filename = FileSystemStorage().save(MEDIA_ROOT)
 
+                user_services.update_image(filename)
+                print(filename)
+
+        else:
             return redirect('home')
+
+        return redirect('home')
 
 
 class ActivateAccount(View):

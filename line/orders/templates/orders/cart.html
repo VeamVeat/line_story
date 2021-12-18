@@ -1,5 +1,5 @@
 {% extends 'users/base.html' %}
-<!--{% load cart_tags %}-->
+{% load cart_tags %}
 {% load static %}
 
 {% block content %}
@@ -10,10 +10,8 @@
                 <h2 class="font-weight-bold pt-4">Cart</h2>
             </div>
     </div>
-
         <br>
         <div class="row">
-
             {% for product_in_cart in products_all|dictsort:"pk" %}
                 <div class="col-sm-12 col-md-6 col-lg-4 pb-4">
                     <div class="h-100">
@@ -23,12 +21,9 @@
                         </a>
                         <div class="card-body">
                             <h5 class="card-title">{{ product_in_cart.product.title }}</h5>
-                            <p class="card-text text-muted" style="font-size:12px">{{ product_in_cart.product.price }}</p>
-
+                             <p class="card-text text-muted" style="font-size:12px">{{product_in_cart.quantity}} ✕ {% total_quantity product_in_cart.product.price product_in_cart.quantity%} RUB </p>
                             <div class="input-group quantity_goods">
-<!--                                <input type="button" value="-" id="button_minus">-->
-<!--                                <input class="btn btn-primary" type="button" value="-">-->
-                                {% if product_in_cart.quantity != 1 %}
+                                {% if product_in_cart.quantity > 1 %}
                                 <form action="{% url 'orders:diminish_product' product_id=product_in_cart.product.id%}" method="POST">
                                 {% csrf_token%}
                                 <button type="submit" class="btn btn-dark"> - </button>
@@ -37,7 +32,7 @@
 
                                 <p class="card-text text-muted" style="font-size:25px">{{ product_in_cart.quantity}}</p>
 
-                                {% if product_in_cart.quantity >= 1 %}
+                                {% if  product_in_cart.product.quantity > 0 %}
                                 <form action="{% url 'orders:increase_product' product_id=product_in_cart.product.id%}" method="POST">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-dark"> + </button>
@@ -55,10 +50,18 @@
                 </div>
             {% endfor %}
             {% if products_all %}
-            <form action="{% url 'orders:checkout' %}" method="POST">
-                {% csrf_token %}
-                 <button class="btn btn-primary">Сheckout</button>
-            </form>
+            <table class="table">
+              <tbody>
+                    <tr>
+                      <td colspan="2"></td>
+                      <td>Total:</td>
+                      <td>{{ total_count_product }}</td>
+                      <td><strong>{{ total_price_product }} руб.</strong></td>
+                    </tr>
+              </tbody>
+            </table>
+            {% else %}
+            <h3 class="text-center mt-5 mb-5">Your cart is empty</h3>
             {% endif %}
         </div>
 </div>

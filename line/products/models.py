@@ -2,13 +2,14 @@ from decimal import Decimal
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 
+from line import settings
 from products.managers import ProductManager
 from utils.mixins import CreatedAtMixin
 
@@ -116,3 +117,4 @@ def send_mails(sender, instance, created, **kwargs):
                 'product': instance.title
             })
             user.email_user(subject, message)
+

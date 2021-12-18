@@ -1,7 +1,4 @@
-from datetime import datetime, date
-import time
 from django.utils.timezone import now
-from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -12,7 +9,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 
 from users.managers import UserManager
-from orders.models import CartItem
 from products.models import File
 
 
@@ -39,7 +35,7 @@ class User(AbstractUser):
         Transaction.objects.create(user=self,
                                    descriptions=f"списание счёта на самму {value} от пользователя {self.email}",
                                    amount=value)
-        #related name
+
         wallet = Wallet.objects.get(user=self)
         wallet.ballance -= value
         wallet.save()
@@ -80,7 +76,6 @@ class Profile(models.Model):
             return today.year - self.user.birthday.year - (
                     (today.month, today.day) < (self.user.birthday.month, self.user.birthday.day))
         return 0
-
 
     @property
     def balance_user(self):

@@ -59,38 +59,83 @@ class CartItemServices:
                                                                        total_count=models.Sum(F('quantity')))
         return total_price_and_total_count
 
-    #одним запросом
     def get_products_list(self):
         cart_item_current_user = self.get_all_cart_item()
         all_products_in_the_dict = [product.product.get_product_in_the_dict for product in cart_item_current_user]
         return all_products_in_the_dict
 
     def delete_product(self):
-        product = get_object_or_404(self.model, user=self.user, product_id=self.product_id)
-        product.delete()
+        product_in_cart = get_object_or_404(self.model, user=self.user, product_id=self.product_id)
+        product = get_object_or_404(Product, id=self.product_id)
+
+        product.quantity += product_in_cart.quantity
+        product.save()
+
+        product_in_cart.delete()
 
     def add_product(self):
         product = get_object_or_404(Product, id=self.product_id)
 
-        object_cart, create_cart = self.model.objects.get_or_create(user=self.user, product_id=product.id)
-        if not create_cart:
-            object_cart.quantity += 1
-            object_cart.save()
+        self.model.objects.create(user=self.user, product_id=product.id)
+        product.quantity -= 1
+        product.save()
 
     def increase_product(self):
         cart_item = self._get_cart_item_by_product_id()
-        increase_by_one = cart_item.quantity + 1
+        product = get_object_or_404(Product, id=self.product_id)
 
-        if not cart_item.product.quantity < increase_by_one:
+        if cart_item.product.quantity > 0:
+            product.quantity -= 1
+            product.save()
             cart_item.quantity += 1
             cart_item.save()
 
     def diminish_product(self):
         cart_item = self._get_cart_item_by_product_id()
+        product = get_object_or_404(Product, id=self.product_id)
 
-        if cart_item.quantity != 1:
+        if cart_item.quantity > 0:
+            product.quantity += 1
+            product.save()
             cart_item.quantity -= 1
             cart_item.save()
 
     def clear(self):
         self.model.objects.filter(user=self.user).delete()
+
+
+class ReservationServices:
+    def __init__(self, user, model=None, product_id=None):
+        self.user = user
+        self.model = model
+        self.product_id = product_id
+
+    def make_reservation(self):
+        product = get_object_or_404(Product, id=self.product_id)
+        object_reservation, create_reservation = self.model.objects.get_or_create(user=self.user,
+                                                                                  product_id=product.id)
+        if create_reservation and product.quantity > 0:
+            product.quantity -= 1
+            product.save()
+            object_reservation.is_reserved = True
+            object_reservation.save()
+
+        subject = 'your item is reserved'
+        message = render_to_string('orders/new_reserved_notification.html', {
+            'user': self.user,
+            'count': object_reservation.quantity,
+            'price': object_reservation.product.price,
+            'time': object_reservation.created_at
+        })
+
+        self.user.email_user(subject, message)
+
+    def deleting_reserved_product(self):
+        reserved_product = get_object_or_404(self.model, user=self.user, product_id=self.product_id)
+        product = get_object_or_404(Product, id=self.product_id)
+
+        product.quantity += reserved_product.quantity
+        product.save()
+
+        reserved_product.delete()
+

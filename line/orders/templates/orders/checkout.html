@@ -25,14 +25,14 @@
     {% endfor %}
         <tr>
           <td colspan="2"></td>
-          <td>Итого:</td>
+          <td>Total:</td>
           <td>{{ total_count }}</td>
           <td><strong>{{ total_price }} руб.</strong></td>
         </tr>
   </tbody>
 </table>
 <hr>
-<h3 class="text-center mt-5 mb-5">Форма заказа</h3>
+<h3 class="text-center mt-5 mb-5">Order form</h3>
 <form action="{% url 'orders:make_order' %}" method="POST">
   {% csrf_token %}
   {{ form.as_p }}

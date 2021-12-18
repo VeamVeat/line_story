@@ -1,11 +1,11 @@
 from django.db.models import Q
-from django.shortcuts import redirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView
 
-from orders.models import CartItem
-from orders.services import CartItemServices
+from orders.models import CartItem, Reservation
+from orders.services import CartItemServices, ReservationServices
 from products.models import ProductFile, Product, ProductType
 from products.services import ProductServices
 
@@ -32,6 +32,15 @@ class ProductView(TypeYearsProduct, ListView):
     template_name = 'products/products_all.html'
     context_object_name = 'products'
 
+    def get_context_data(self, **kwargs):
+        product_id = kwargs.get('product_id')
+        contex = super().get_context_data(**kwargs)
+        product_services = ProductServices(user=self.request.user,
+                                           model=self.model,
+                                           odject_id=product_id)
+        contex['all_product_in_cart'] = product_services.get_all_product_id_in_cart()
+        return contex
+
 
 class ShowProductView(DetailView):
     model = Product
@@ -51,6 +60,44 @@ class ShowProductView(DetailView):
         return contex
 
 
+class AddProduct(View):
+
+    def post(self, request, *args, **kwargs):
+        product_id = kwargs.get('product_id')
+        cart_item_services = CartItemServices(user=self.request.user,
+                                              model=CartItem,
+                                              product_id=product_id)
+
+        cart_item_services.add_product()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class MakeReservation(View):
+
+    def post(self, request, *args, **kwargs):
+        product_id = kwargs.get('product_id')
+        reservation_services = ReservationServices(user=self.request.user,
+                                                   model=Reservation,
+                                                   product_id=product_id)
+
+        reservation_services.make_reservation()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class FilterProductView(TypeYearsProduct, ListView):
+    model = Product
+    template_name = 'products/products_all.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(
+            Q(year__in=self.request.GET.getlist("year")) |
+            Q(type__name__in=self.request.GET.getlist("type"))
+        )
+        return queryset
+
+
 class SearchResultsView(TypeYearsProduct, ListView):
     model = Product
     template_name = 'products/products_all.html'
@@ -63,31 +110,4 @@ class SearchResultsView(TypeYearsProduct, ListView):
         if text_search:
             queryset = queryset.filter(Q(title__icontains=text_search) |
                                        Q(type__name__icontains=text_search))
-        return queryset
-
-
-class AddProduct(View):
-
-    def post(self, request, *args, **kwargs):
-        product_id = kwargs.get('product_id')
-        cart_item_services = CartItemServices(user=self.request.user,
-                                              model=CartItem,
-                                              product_id=product_id)
-
-        cart_item_services.add_product()
-        return redirect('orders:cart')
-
-
-class FilterProductView(TypeYearsProduct, ListView):
-    model = Product
-    template_name = 'products/products_all.html'
-    context_object_name = 'products'
-
-    def get_queryset(self):
-
-        queryset = super().get_queryset()
-        queryset = queryset.filter(
-            Q(year__in=self.request.GET.getlist("year")) |
-            Q(type__name__in=self.request.GET.getlist("type"))
-        )
         return queryset

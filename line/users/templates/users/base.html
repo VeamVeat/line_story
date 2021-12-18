@@ -39,6 +39,9 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'orders:all_orders' %}">My orders</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'orders:reserved_products' %}">Reserved products</a>
+      </li>
        {% endif %}
       </ul>
     </div>
@@ -54,12 +57,11 @@
             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
           </li>
           <li class="nav-item">
-              <p class="card-title font-weight-bold text-center">Hello, {{ user.email }}</p>
+              <p class="card-title font-weight-bold text-center">Hello, {{ user.email }} </p>
           </li>
         {% else %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">Login</a>
-          </li>
+            <a class="nav-link" href="{% url 'login' %}">Login</a></li>
           <li class="nav-item">
              <a class="nav-link" href="{% url 'register' %}">Register</a>
           </li>

@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from utils.mixins import CreatedAtMixin
 from line import settings
-from orders.managers import CartItemManager
+from orders.managers import CartItemManager, ReservationManager
 
 
 class Order(CreatedAtMixin):
@@ -44,3 +44,20 @@ class CartItem(models.Model):
 
     def __str__(self):
         return self.user.email
+
+
+class Reservation(CreatedAtMixin):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reservation')
+    product = models.ForeignKey("products.Product", null=True, on_delete=models.SET_NULL, related_name='reservation')
+    quantity = models.PositiveIntegerField(default=1, verbose_name=_('quantity of goods reserved'))
+    is_reserved = models.BooleanField(default=False)
+
+    objects = ReservationManager()
+
+    class Meta:
+        verbose_name = 'Reservation'
+        verbose_name_plural = 'Reservations'
+
+    def __str__(self):
+        return self.user.email
+

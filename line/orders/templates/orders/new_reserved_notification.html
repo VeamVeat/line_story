@@ -1,0 +1,9 @@
+{% autoescape off %}
+Hi {{ user.email }},
+
+New reserve:
+
+reserved goods in the amount of {{ count }} pieces in the amount of {{ price }} RUB.
+
+reserve creation time: {{ time }}
+{% endautoescape %}
