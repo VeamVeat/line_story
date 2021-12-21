@@ -78,7 +78,6 @@ class CheckoutView(View):
 
     def post(self, request, *args, **kwargs):
 
-        order_services = OrderServices(user=request.user, model=Order)
         cart_item_services = CartItemServices(user=request.user, model=self.model)
         user_balance = request.user.wallet.ballance
 

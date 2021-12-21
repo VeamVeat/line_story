@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import F
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 
 from products.models import Product
@@ -33,7 +33,7 @@ class OrderServices:
         self.user.email_user(subject, message)
 
         order_user.is_active = False
-        order_user.save(update_fields=['is_active'])
+        order_user.save()
 
 
 class CartItemServices:

@@ -20,55 +20,55 @@ msgstr ""
 
 #: line/settings.py:148
 msgid "Russia"
-msgstr ""
+msgstr "Русский"
 
 #: line/settings.py:149
 msgid "English"
-msgstr ""
+msgstr "Английский"
 
 #: orders/models.py:16
 msgid "number of products in the order"
-msgstr ""
+msgstr "Количество продуктов в заказе"
 
 #: orders/models.py:19
 msgid "total order price"
-msgstr ""
+msgstr "Общая цена заказа"
 
 #: orders/models.py:21
 msgid "address"
-msgstr ""
+msgstr "Адресс"
 
 #: orders/models.py:22
 msgid "active order"
-msgstr ""
+msgstr "Активный заказ"
 
 #: orders/models.py:25
 msgid "order"
-msgstr ""
+msgstr "Заказ"
 
 #: orders/models.py:26
 msgid "orders"
-msgstr ""
+msgstr "Заказы"
 
 #: orders/models.py:32
 msgid "quantity of product in the cart"
-msgstr ""
+msgstr "Количество продуктов в корзине"
 
 #: orders/models.py:33
 msgid "delivery address"
-msgstr ""
+msgstr "Адресс доставки"
 
 #: orders/models.py:38
 msgid "cart item"
-msgstr ""
+msgstr "Корзина"
 
 #: orders/models.py:39
 msgid "carts items"
-msgstr ""
+msgstr "Корзины"
 
 #: orders/models.py:52
 msgid "quantity of goods reserved"
-msgstr ""
+msgstr "Количество забронированных продуктов"
 
 #: products/admin.py:42
 msgid "reset the number of selected products"

@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 
+from products.models import File
 from users.models import User, Wallet, Profile
 
 
@@ -57,12 +58,19 @@ class ProfileAdminForm(forms.ModelForm):
 
 
 class ProfileEditForm(forms.ModelForm):
-    # доработать загрузку фото
-    image = forms.ImageField()
     first_name = forms.CharField(label=_('first name'), widget=forms.TextInput(attrs={'class': 'form-input'}))
     last_name = forms.CharField(label=_('last name'), widget=forms.TextInput(attrs={'class': 'form-input'}))
+    phone = forms.CharField(max_length=17)
+    region = forms.CharField(max_length=255)
 
     class Meta:
         model = Profile
-        fields = ('image', 'first_name', 'last_name', 'phone', 'region')
+        fields = ('first_name', 'last_name', 'phone', 'region')
 
+
+class ImageForm(forms.ModelForm):
+    image = forms.ImageField(label='Image')
+
+    class Meta:
+        model = File
+        fields = ('image', )

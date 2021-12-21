@@ -3,6 +3,7 @@ from PIL import Image
 from django.core.files.storage import FileSystemStorage
 
 from django.http import Http404
+from django.http import HttpResponseRedirect
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.utils.encoding import force_text
@@ -16,12 +17,11 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views import View
-from django.views.generic import  DetailView
+from django.views.generic import DetailView
 
-from line.settings import MEDIA_ROOT
-from users.forms import RegisterUserForm, GrantMoneyForm, ProfileEditForm
+from users.forms import RegisterUserForm, GrantMoneyForm, ProfileEditForm, ImageForm
 from users.models import User, Profile
-from users.services import UserServices, ProfileServices
+from users.services import UserServices
 
 
 class BaseView(View):
@@ -39,41 +39,46 @@ class ProfileView(DetailView):
 class ProfileUpdateView(View):
 
     def get(self, request, *args, **kwargs):
-        form = ProfileEditForm()
+
+        data_image = {
+            'image': request.user.profile.image.image,
+        }
+
+        data_profile = {
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
+                'phone': request.user.profile.phone,
+                'region': request.user.profile.region,
+                }
+
+        form_image = ImageForm(initial=data_image)
+        form_profile = ProfileEditForm(initial=data_profile)
         return render(
             request,
             'users/update_profile.html',
-            {'form': form}
+            {'form_image': form_image,
+             'form_profile': form_profile}
         )
 
     def post(self, request, *args, **kwargs):
-        form = ProfileEditForm(request.POST, request.FILES)
+        form = ImageForm(request.POST, request.FILES)
+        form_profile = ProfileEditForm(request.POST)
 
-        if form.is_valid():
-            # image = form.cleaned_data['image']
-            image = request.FILES['image']
+        if form.is_valid() and form_profile.is_valid():
 
-            first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
-            phone = form.cleaned_data.get('phone')
-            region = form.cleaned_data.get('region')
+            image = form.cleaned_data['image']
+            first_name = form_profile.cleaned_data.get('first_name')
+            last_name = form_profile.cleaned_data.get('last_name')
+            phone = form_profile.cleaned_data.get('phone')
+            region = form_profile.cleaned_data.get('region')
 
-            user_services = UserServices(request.user, User, last_name, first_name)
-            user_services.update_full_name(first_name, last_name)
-
-            profile_services = ProfileServices(request.user, Profile, phone, region)
-            profile_services.update_profile(phone, region)
-
-            if image:
-                filename = FileSystemStorage().save(MEDIA_ROOT)
-
-                user_services.update_image(filename)
-                print(filename)
+            user_services = UserServices(request.user, first_name, last_name, region, phone, image)
+            user_services.update_profile()
 
         else:
             return redirect('home')
 
-        return redirect('home')
+        return HttpResponseRedirect(reverse('users:profile', args=(request.user.profile.id,)))
 
 
 class ActivateAccount(View):

@@ -5,11 +5,11 @@
 {% block content %}
 
 <div class="col-sm-12 col-md-12 col-lg-9 pb-4">
-    <div class="row">
-            <div class="col-6 my-auto">
-                <h2 class="font-weight-bold pt-4">Cart</h2>
-            </div>
-    </div>
+    {% if products_all%}
+    <h3 class="text-center mt-5 mb-5">Cart</h3>
+    {% else %}
+    <h3 class="text-center mt-5 mb-5">Your cart is empty</h3>
+    {% endif %}
         <br>
         <div class="row">
             {% for product_in_cart in products_all|dictsort:"pk" %}
@@ -60,8 +60,10 @@
                     </tr>
               </tbody>
             </table>
-            {% else %}
-            <h3 class="text-center mt-5 mb-5">Your cart is empty</h3>
+            <form action="{% url 'orders:checkout' %}" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-primary">Proceed to Checkout</button>
+            </form>
             {% endif %}
         </div>
 </div>
