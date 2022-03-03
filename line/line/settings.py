@@ -14,7 +14,7 @@ import os
 from pathlib import Path
 from logger.logging import logging
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from dotenv import load_dotenv
 
@@ -91,7 +91,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv("DB_NAME", "online_shope"),
-        'USER': os.getenv("DB_USER", "postgres"),
+        'USER': os.getenv("DB_USER", "vadim"),
         'PASSWORD': os.getenv("DB_PASSWORD", "veamveat"),
         'HOST': os.getenv("DB_HOST", "localhost"),
         'PORT': os.getenv("DB_PORT", "5432")

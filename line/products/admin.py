@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from products.forms import ProductAdminForm
 from products.models import Product, ProductType, ProductFile
@@ -54,7 +54,6 @@ class ProductAdmin(admin.ModelAdmin):
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         all_product_photo = ProductFile.objects.filter(product_id=object_id)
-        print(all_product_photo)
         if extra_context is None:
             extra_context = {"all_photo_product": all_product_photo}
         return super(ProductAdmin, self).change_view(

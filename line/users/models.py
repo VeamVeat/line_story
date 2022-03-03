@@ -5,7 +5,7 @@ from django.dispatch import receiver
 from django.contrib import admin
 from django.utils import timezone
 from django.core.validators import RegexValidator, MinValueValidator
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 
 from users.managers import UserManager
@@ -19,7 +19,7 @@ class User(AbstractUser):
         max_length=255,
         unique=True,
     )
-    birthday = models.DateField(_('birthday'))
+    birthday = models.DateField(_('birthday'), null = True)
 
     objects = UserManager()
 

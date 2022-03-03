@@ -6,10 +6,10 @@ from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.urls import reverse_lazy, reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import login, tokens
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
@@ -84,7 +84,7 @@ class ProfileUpdateView(View):
 class ActivateAccount(View):
     def get(self, request, uidb64, token, *args, **kwargs):
         try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
+            uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError):
             user = None
@@ -154,5 +154,5 @@ class CustomActionView(PermissionRequiredMixin, View):
             profile = Profile.objects.select_related('user__wallet').get(id=object_id)
             wallet_user = profile.user.wallet
             wallet_user.increase_balance(amount)
-            wallet_user.save()
+            wallet_user.save() # не сохранять
             return redirect('../')
