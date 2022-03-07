@@ -49,7 +49,7 @@ class ProfileUpdateView(View):
                 'last_name': request.user.last_name,
                 'phone': request.user.profile.phone,
                 'region': request.user.profile.region,
-                }
+        }
 
         form_image = ImageForm(initial=data_image)
         form_profile = ProfileEditForm(initial=data_profile)

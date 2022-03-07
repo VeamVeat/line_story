@@ -1,7 +1,11 @@
 {% extends 'users/base.html' %}
+{% load static %}
+
+{% block link-style %}
+  <link href="{% static 'css/login.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
-<h2>Login</h2>
 
 {% if messages %}
 <ul class="messages">
@@ -11,25 +15,36 @@
 </ul>
 {% endif %}
 
-<form method="post">{% csrf_token %}
-  <div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <input type="email" class="form-control" id="{{ form.email.id_for_label }}" aria-describedby="emailHelp" placeholder="Enter email" name="{{ form.username.html_name }}" value="{{ form.email.value }}">
-    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-  </div>
-  <div class="form-group">
-    <label for="exampleInputPassword1">Password</label>
-    <input type="password" class="form-control" id="{{ form.password.id_for_label }}" value="{{ form.password.value }}" name="{{ form.password.html_name }}" placeholder="Password">
-  </div>
-  <div class="form-check">
-    <input type="checkbox" class="form-check-input">
-    <label class="form-check-label" for="exampleCheck1">Check me out</label>
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
 
-<a href="{% url 'password_reset' %}">Reset password</a>
-<a href="{% url 'register' %}">Register</a>
+<div class="page-content-login">
+  <header class="section-header">
+    <h1 class="section-header__title">LOGIN</h1>
+  </header>
 
-<a href="{% url 'home' %}">Back to Home</a>
+  <div class="login-container">
+    <div class="login-content">
+      <form id="customer-login" method="post">
+        {% csrf_token %}
+
+        <p class="login-item label-login">Email</p>
+        <input type="email" class="login-item input-login" id="{{ form.email.id_for_label }}" aria-describedby="emailHelp" placeholder="Enter email" name="{{ form.username.html_name }}" value="{{ form.email.value }}">
+
+        <div class="login-item password-item">
+          <p class="label-login">Password</p>
+          <a class="label-password-info" href="{% url 'password_reset' %}">Reset the password? </a>
+        </div>
+
+        <input type="password" class="login-item input-login" id="{{ form.password.id_for_label }}" value="{{ form.password.value }}" name="{{ form.password.html_name }}" placeholder="Password">
+
+        <div class="login-item login-form-btn">
+          <button type="submit" class="login-btn">LOG IN</button>
+        </div>
+
+        <a class="login-item create-account" href="{% url 'register' %}">Create an account</a>
+
+      </form>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
