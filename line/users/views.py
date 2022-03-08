@@ -154,5 +154,4 @@ class CustomActionView(PermissionRequiredMixin, View):
             profile = Profile.objects.select_related('user__wallet').get(id=object_id)
             wallet_user = profile.user.wallet
             wallet_user.increase_balance(amount)
-            wallet_user.save() # не сохранять
             return redirect('../')
