@@ -2,27 +2,67 @@
 {% load product_tags %}
 {% load static %}
 
-{% block search %}
-<form action="{% url 'products:search' %}" method="get" class="d-flex editContent">
-    {% csrf_token %}
-    <div class="form-group">
-        <input type="text" class="form-control" name="search" id="search exampleInputPassword1" placeholder="Search a Product">
-    </div>
-    <button type="submit" class="btn btn-dark">
-        <span class="fa fa-search">Search</span>
-    </button>
-</form>
-{% include 'products/sidebar.html' %}
+{% block link-style %}
+  <link href="{% static 'css/product_page_content.css' %}" rel="stylesheet">
+  <link href="{% static 'css/filter_top.css' %}" rel="stylesheet">
 {% endblock %}
 
-<div class="container">
-    {% block content %}
-        <div class="col-md-12">
-            <div class="row">
-                    {% for product in products|dictsort:"pk" %}
-                        {% include 'products/products.html' %}
-                    {% endfor %}
+
+<!--<form action="{% url 'products:search' %}" method="get" class="d-flex editContent">-->
+<!--    {% csrf_token %}-->
+<!--    <div class="form-group">-->
+<!--        <input type="text" class="form-control" name="search" id="search exampleInputPassword1" placeholder="Search a Product">-->
+<!--    </div>-->
+<!--    <button type="submit" class="btn btn-dark">-->
+<!--        <span class="fa fa-search">Search</span>-->
+<!--    </button>-->
+<!--</form>-->
+
+
+
+<!--<div class="container">-->
+
+<!--        <div class="col-md-12">-->
+<!--            <div class="row">-->
+<!--                    {% for product in products|dictsort:"pk" %}-->
+<!--                        {% include 'products/products.html' %}-->
+<!--                    {% endfor %}-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--</div>-->
+
+{% block content %}
+<div class="main_content">
+    <div class="filter_container">
+        <div class="filter_content">
+            <div class="filter_content_main">
+                <div class="filter_content_type">
+                    <p> Type:</p>
+                    <select name="product_type_drop_down" class="type_drop_down">
+                        <option value="black_and_white">black_and_white</option>
+                        <option value="colored">colored</option>
+                    </select>
+                </div>
+                <div class="filter_content_year">
+                    <p> Year:</p>
+                    <select name="product_year_drop_down" class="year_drop_down">
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                    </select>
+                </div>
+                 <div class="filter_content_btn">
+                     <button type="submit" class="filter_btn">Search</button>
+                 </div>
             </div>
+
+
         </div>
-    {% endblock content %}
+    </div>
+    <div class="products_container">
+            {% for product in products|dictsort:"pk" %}
+                {% include 'products/products.html' %}
+            {% endfor %}
+    </div>
 </div>
+{% endblock %}

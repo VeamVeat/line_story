@@ -107,7 +107,6 @@ p{
 .header-user-table-element{
     color:white;
     font-size: 12px;
-
 }
 .header-element-in-user-btn{
     display: inline-block;
@@ -193,7 +192,7 @@ p{
 }
 
 /* FOOTER */
-.footer-container{
+.footer{
     height: 300px;
     width: 100%;
     background-color: #1d1c1c;

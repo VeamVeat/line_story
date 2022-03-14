@@ -1,71 +1,115 @@
 {% load product_tags %}
-<div class="card col-md-3 p-0 mb-3 mt-3">
-        <a href="{{ product.get_absolute_url }}">
-        <img src="{{ product.product_file.filter.first.image.url }}" class="card-img-top">
-        </a>
-        <div class="card-body text-center">
+<!--<div class="card col-md-3 p-0 mb-3 mt-3">-->
+<!--        <a href="{{ product.get_absolute_url }}">-->
+<!--        <img src="{{ product.product_file.filter.first.image.url }}" class="card-img-top">-->
+<!--        </a>-->
+<!--        <div class="card-body text-center">-->
 
-        <h5 class="card-title"><a href="{{ product.get_absolute_url }}" class="text-decoration-none">
-            {{ product.title }}
-        </a></h5>
-        </div>
+<!--        <h5 class="card-title"><a href="{{ product.get_absolute_url }}" class="text-decoration-none">-->
+<!--            {{ product.title }}-->
+<!--        </a></h5>-->
+<!--        </div>-->
 
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">Year: <strong>{{ product.year }}</strong></li>
-        <li class="list-group-item">Наличие:
-            {% if product.quantity %}
-                <strong class="badge bg-success">
-                In stock {{ product.quantity }} product.
-                </strong>
-            {% else %}
-            <strong class="badge bg-danger">product out of stock</strong>
-            {% endif %}
+<!--    <ul class="list-group list-group-flush">-->
+<!--        <li class="list-group-item">Year: <strong>{{ product.year }}</strong></li>-->
+<!--        <li class="list-group-item">Наличие:-->
+<!--            {% if product.quantity %}-->
+<!--                <strong class="badge bg-success">-->
+<!--                In stock {{ product.quantity }} product.-->
+<!--                </strong>-->
+<!--            {% else %}-->
+<!--            <strong class="badge bg-danger">product out of stock</strong>-->
+<!--            {% endif %}-->
 
-            {% product_is_reserved product.reservation request.user as is_reserved%}
-            {% if is_reserved %}
-                 <strong class="badge bg-success">
-                     {% reserved_product_quantity product.reservation request.user as reserved_quantity %}
-                     You have reserved {{ reserved_quantity }} items.
-                </strong>
-            {% endif %}
-            <li class="list-group-item"> Price: <strong>{{ product.price }} RUB</strong></li>
+<!--            {% product_is_reserved product.reservation request.user as is_reserved%}-->
+<!--            {% if is_reserved %}-->
+<!--                 <strong class="badge bg-success">-->
+<!--                     {% reserved_product_quantity product.reservation request.user as reserved_quantity %}-->
+<!--                     You have reserved {{ reserved_quantity }} items.-->
+<!--                </strong>-->
+<!--            {% endif %}-->
+<!--            <li class="list-group-item"> Price: <strong>{{ product.price }} RUB</strong></li>-->
 
 
-        </li>
-    </ul>
+<!--        </li>-->
+<!--    </ul>-->
 
-    <div class="card-body text-center">
-        {% if request.user.is_authenticated %}
-            {% if product.quantity %}
-                {% if product.id in all_product_in_cart %}
-                    <a href="{% url 'orders:cart' %}">
-                     <p>Added to cart</p>
-                 </a>
-                {% else %}
-                    <form action="{% url 'products:add_to_cart' product_id=product.id %}" method="POST">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button class="btn btn-primary">Add to cart </button>
-                    </form>
-                {% endif %}
+<!--    <div class="card-body text-center">-->
+<!--        {% if request.user.is_authenticated %}-->
+<!--            {% if product.quantity %}-->
+<!--                {% if product.id in all_product_in_cart %}-->
+<!--                    <a href="{% url 'orders:cart' %}">-->
+<!--                     <p>Added to cart</p>-->
+<!--                 </a>-->
+<!--                {% else %}-->
+<!--                    <form action="{% url 'products:add_to_cart' product_id=product.id %}" method="POST">-->
+<!--                        {% csrf_token %}-->
+<!--                        {{ form.as_p }}-->
+<!--                        <button class="btn btn-primary">Add to cart </button>-->
+<!--                    </form>-->
+<!--                {% endif %}-->
 
-                {% product_is_reserved product.reservation request.user as is_reserved%}
-                {% if is_reserved %}
-                     <strong class="badge bg-danger">Product reserved</strong>
-                {% else %}
-                <form action="{% url 'products:make_reservation' product_id=product.id %}" method="POST">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button class="btn btn-primary mt-1">Make a reservation</button>
-                </form>
-                {% endif %}
+<!--                {% product_is_reserved product.reservation request.user as is_reserved%}-->
+<!--                {% if is_reserved %}-->
+<!--                     <strong class="badge bg-danger">Product reserved</strong>-->
+<!--                {% else %}-->
+<!--                <form action="{% url 'products:make_reservation' product_id=product.id %}" method="POST">-->
+<!--                    {% csrf_token %}-->
+<!--                    {{ form.as_p }}-->
+<!--                    <button class="btn btn-primary mt-1">Make a reservation</button>-->
+<!--                </form>-->
+<!--                {% endif %}-->
 
-            {% else %}
-                <strong class="badge bg-danger">product out of stock</strong>
-            {% endif %}
-        {% else %}
-            <p>Авторизуйтесь или зарегистрируйтесь, только авторизованные пользователи
-            могут осуществлять заказы</p>
-        {% endif %}
-    </div>
+<!--            {% else %}-->
+<!--                <strong class="badge bg-danger">product out of stock</strong>-->
+<!--            {% endif %}-->
+<!--        {% else %}-->
+<!--            <p>Авторизуйтесь или зарегистрируйтесь, только авторизованные пользователи-->
+<!--            могут осуществлять заказы</p>-->
+<!--        {% endif %}-->
+<!--    </div>-->
+<!--</div>-->
+<div class="product_content">
+    <table class="table_product" border="1" cellpadding="4" cellspacing="0">
+    <tr>
+        <td colspan="2" class="table_product_item product_title">
+            <strong>{{ product.title }}</strong>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="table_product_item ">
+            <a href="{{ product.get_absolute_url }}">
+                <img src="{{ product.product_file.filter.first.image.url }}" width="350" height="350" class="product_image" >
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="table_product_item">
+           Year: <span class="product_year"> {{ product.year }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="table_product_item">
+            In stock: <span class="product_in_stock"> {{ product.quantity }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="table_product_item">
+           Price: <span class="product_price"> {{ product.price }} RUB</span>
+        </td>
+    </tr>
+    <tr>
+       <td class="table_product_btn">
+            <div class="table_product_content_btn">
+                <button type="submit" class="add_cart_btn">Add to cart</button>
+            </div>
+       </td>
+
+       <td class="table_product_btn">
+            <div class="table_product_content_btn">
+                <button type="submit" class="reserved_btn">Reserved</button>
+            </div>
+       </td>
+    </tr>
+    </table>
 </div>
