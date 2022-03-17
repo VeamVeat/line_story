@@ -160,7 +160,7 @@ class ReservationView(ListView):
 
 class DeleteReservationProduct(View):
     model = Reservation
-    template_name = 'orders/cart.html'
+    template_name = 'orders/reserved_products.html'
 
     def post(self, request, *args, **kwargs):
         product_id = kwargs.get('product_id')

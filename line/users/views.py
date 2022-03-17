@@ -1,8 +1,3 @@
-from io import StringIO
-from PIL import Image
-from django.core.files.storage import FileSystemStorage
-
-from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -22,6 +17,7 @@ from django.views.generic import DetailView
 from users.forms import RegisterUserForm, GrantMoneyForm, ProfileEditForm, ImageForm
 from users.models import User, Profile
 from users.services import UserServices
+from products.models import Product
 
 
 class BaseView(View):
@@ -155,3 +151,4 @@ class CustomActionView(PermissionRequiredMixin, View):
             wallet_user = profile.user.wallet
             wallet_user.increase_balance(amount)
             return redirect('../')
+

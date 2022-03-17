@@ -197,3 +197,225 @@ p{
     width: 100%;
     background-color: #1d1c1c;
 }
+
+/* Базовые стили слоя затемнения и модального окна  */
+.overlay {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    visibility: hidden;
+    /* фон затемнения */
+    background-color: rgba(0, 0, 0, 0.7);
+
+    position: fixed; /* фиксированное поцизионирование */
+    cursor: default; /* тип курсара */
+    -webkit-transition: opacity .5s;
+    -moz-transition: opacity .5s;
+    -ms-transition: opacity .5s;
+    -o-transition: opacity .5s;
+    transition: opacity .5s;
+}
+
+.overlay:target {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+/*** Формируем стили модального окна ***/
+.popup-reserve-product {
+    top: 0;
+    right: 0;
+    left: 0;
+    font-size: 14px;
+    z-index: 10;
+    display: block;
+    visibility: hidden;
+    margin: 0 auto;
+    width: 90%;
+    min-width: 320px;
+    max-width: 600px;
+    /* фиксированное позиционирование, окно стабильно при прокрутке */
+    position: fixed;
+    padding: 15px;
+    border: 1px solid #383838;
+    /* скругление углов */
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    border-radius: 4px;
+    background-color:  #212021;
+    /* внешняя тень блока */
+    -webkit-box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+    -moz-box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+    -ms-box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+    -o-box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.8);
+    /* полная прозрачность окна, появление при клике */
+    opacity: 0;
+    /* эффект перехода (появление) */
+    -webkit-transition: all ease .5s;
+    -moz-transition: all ease .5s;
+    -ms-transition: all ease .5s;
+    -o-transition: all ease .5s;
+    transition: all ease .5s;
+}
+/* активируем появление окна и затемнение фона */
+.overlay:target+.popup-reserve-product {
+    top: 20%; /* положение окна от верха страницы при появлении */
+    visibility: visible;
+    opacity: 1; /* убираем прозрачность */
+}
+/* формируем кнопку закрытия */
+.close-reserve-product {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+    border-radius: 15px;
+    background-color: rgba(61, 61, 61, 0.8);
+    -webkit-box-shadow: 0px 0px 10px #000;
+    -moz-box-shadow: 0px 0px 10px #000;
+    box-shadow: 0px 0px 10px #000;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    line-height: 20px;
+    /* задаём значения и эффект перехода при наведении */
+    -webkit-transition: all ease .8s;
+    -moz-transition: all ease .8s;
+    -ms-transition: all ease .8s;
+    -o-transition: all ease .8s;
+    transition: all ease .8s;
+}
+.close-reserve-product:before {
+    color: rgba(255, 255, 255, 0.9);
+    content: "X";
+    text-shadow: 0 -1px rgba(0, 0, 0, 0.9);
+    font-size: 12px;
+}
+.close-reserve-product:hover {
+    background-color: rgba(252, 20, 0, 0.8);
+    /* крутим кнопку при наведении */
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+}
+/* опционально при добавлении вложений */
+.popup-reserve-product p, .popup-reserve-product div {
+    text-align: center;
+
+}
+
+
+/* button */
+
+.button {
+  font-size: 20px;
+  color: white;
+  width: 270px;
+  text-decoration: none;
+  padding: 10px 5px;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  font-family: Helvetica, Arial, sans-serif;
+  transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  cursor: pointer;
+
+}
+.button-blue {
+  background-color: #0600FF;
+  }
+.button:hover {
+  background-color: #5555ff;
+  box-shadow:0 0 10px 10px #b7b7ff inset;
+}
+.button:active {
+    background-color: #0000ff;
+    box-shadow:0 0 0 0 #ffffff;
+}
+
+.popup-container-reserve-product{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color:  #212021;
+}
+
+.popup-item-reserve-product{
+    margin: 10px;
+}
+
+.label-popup-reserve-product{
+    color: white;
+}
+
+#notification_reserved{
+    color: green;
+}
+
+.input-popup-reserve-product{
+    height:50px;
+    width: 405px;
+    border: 1px solid;
+    border-color: var(--colorBorder);
+    padding: 8px 10px;
+    border-radius: 0;
+}
+.reserve-btn-popup-form{
+    align-items:center;
+}
+
+
+.reserve-btn-popup-form{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.reserve-btn-popup-form{
+    display: inline-block;
+    width: 100%;
+    height:50px;
+	box-sizing: border-box;
+	margin-top: 10px;
+	outline: none;
+	border: none;
+	border-radius: 3px;
+	line-height: 30px;
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: none;
+	color: white;
+	background-color: #c20000;
+	cursor: pointer;
+	user-select: none;
+	appearance: none;
+	touch-action: manipulation;
+}
+
+.reserve-btn-popup-form {
+	box-shadow: 0 0 0 2px #666;
+}
+
+.reserve-btn-popup-form:active {
+	transform: scale(0.96);
+}
+.reserve-btn-popup-form:disabled {
+	pointer-events: none;
+	opacity: 0.65;
+}

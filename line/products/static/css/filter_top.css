@@ -1,0 +1,105 @@
+.type_drop_down, .year_drop_down {
+    display: block;
+    font-size: 16px;
+    font-family: sans-serif;
+    font-weight: 700;
+    text-align: center;
+    color: #444;
+    line-height: 1.3;
+    padding: .6em 1.4em .5em .8em; width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    border: 1px solid #aaa;
+     box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
+    border-radius: .5em;
+     -moz-appearance: none;
+     -webkit-appearance: none;
+     appearance: none;
+     background-color: #fff;
+    background-repeat: no-repeat, repeat;
+    background-position: right .7em top 50%, 0 0;
+    background-size: .65em auto, 100%;
+}
+ .type_drop_down::-ms-expand, .year_drop_down::-ms-expand { display: none; }
+ .type_drop_down:hover, .year_drop_down:hover { border-color: #888; }
+ .type_drop_down:focus, .year_drop_down:focus {
+     border-color: #aaa;
+     box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
+     box-shadow: 0 0 0 3px -moz-mac-focusring;
+     color: #222;
+     outline: none;
+}
+ .type_drop_down option, .year_drop_down option { font-weight:normal; }
+.type_drop_down, .year_drop_down {
+background-position: left .7em top 50%, 0 0;
+padding: 7px;
+}
+
+.filter_content_main{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+    margin: 5px;
+}
+
+.filter_content_type p, .filter_content_year p{
+    text-align: center
+}
+
+.filter_content_type{
+    margin: 5px;
+}
+.filter_content_year{
+    margin: 5px;
+}
+
+.filter_container{
+    margin: auto 300px;
+    border-radius: 10px;
+    margin-top: 20px;
+    border: 1px double #302f2f;
+}
+
+.filter_content_btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.filter_btn{
+    display: inline-block;
+    width: 90px;
+    height:40px;
+	box-sizing: border-box;
+	margin-top: 10px;
+	outline: none;
+	border: none;
+	border-radius: 3px;
+	line-height: 30px;
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: none;
+	color: white;
+	background-color: #c20000;
+	cursor: pointer;
+	user-select: none;
+	appearance: none;
+	touch-action: manipulation;
+	margin-bottom: 10px;
+	padding: 3px;
+}
+
+.filter_btn:focus-visible {
+	box-shadow: 0 0 0 2px #666;
+}
+
+.filter_btn:active {
+	transform: scale(0.96);
+}
+.filter_btn:disabled {
+	pointer-events: none;
+	opacity: 0.65;
+}

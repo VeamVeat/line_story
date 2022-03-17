@@ -49,7 +49,7 @@ class CartItem(models.Model):
 class Reservation(CreatedAtMixin):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reservation')
     product = models.ForeignKey("products.Product", null=True, on_delete=models.SET_NULL, related_name='reservation')
-    quantity = models.PositiveIntegerField(default=1, verbose_name=_('quantity of goods reserved'))
+    quantity = models.PositiveIntegerField(default=0, verbose_name=_('quantity of goods reserved'))
     is_reserved = models.BooleanField(default=False)
 
     objects = ReservationManager()

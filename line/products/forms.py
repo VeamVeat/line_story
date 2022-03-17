@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from products.models import Product
+from orders.models import Reservation
 
 
 class ProductAdminForm(forms.ModelForm):
@@ -14,3 +15,20 @@ class ProductAdminForm(forms.ModelForm):
     class Meta:
         fields = '__all__'
         model = Product
+
+
+class NumberOfProductForm(forms.ModelForm):
+
+    quantity = forms.NumberInput()
+
+    class Meta:
+        model = Reservation
+        fields = ['quantity']
+        widgets = {
+            'quantity': forms.NumberInput(attrs={
+                'id': 'post-number',
+                'required': True,
+            }),
+        }
+
+

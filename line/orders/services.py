@@ -7,9 +7,14 @@ from products.models import Product
 
 
 class OrderServices:
-    def __init__(self, user, model=None, product_id=None, odject_id=None):
+    def __init__(self,
+                 user,
+                 model=None,
+                 product_id=None,
+                 object_id=None):
+
         self.user = user
-        self.object_id = odject_id
+        self.object_id = object_id
         self.model = model
         self.product_id = product_id
 
@@ -37,9 +42,14 @@ class OrderServices:
 
 
 class CartItemServices:
-    def __init__(self, user, model=None, product_id=None, odject_id=None):
+    def __init__(self,
+                 user,
+                 model=None,
+                 product_id=None,
+                 object_id=None):
+
         self.user = user
-        self.object_id = odject_id
+        self.object_id = object_id
         self.model = model
         self.product_id = product_id
 
@@ -105,30 +115,41 @@ class CartItemServices:
 
 
 class ReservationServices:
-    def __init__(self, user, model=None, product_id=None):
+    def __init__(self,
+                 user,
+                 model=None,
+                 product_id=None,
+                 count_product=None):
+
         self.user = user
         self.model = model
         self.product_id = product_id
+        self.count_product = count_product
 
     def make_reservation(self):
+        reservation_success = True
         product = get_object_or_404(Product, id=self.product_id)
-        object_reservation, create_reservation = self.model.objects.get_or_create(user=self.user,
-                                                                                  product_id=product.id)
-        if create_reservation and product.quantity > 0:
-            product.quantity -= 1
+        if product.quantity >= self.count_product:
+            object_reservation = self.model(user=self.user, quantity=self.count_product, product_id=product.id)
+
+            product.quantity -= self.count_product
             product.save()
+
             object_reservation.is_reserved = True
             object_reservation.save()
 
-        subject = 'your item is reserved'
-        message = render_to_string('orders/new_reserved_notification.html', {
-            'user': self.user,
-            'count': object_reservation.quantity,
-            'price': object_reservation.product.price,
-            'time': object_reservation.created_at
-        })
+            subject = 'your item is reserved'
+            message = render_to_string('orders/new_reserved_notification.html', {
+                'user': self.user,
+                'count': object_reservation.quantity,
+                'price': object_reservation.product.price,
+                'time': object_reservation.created_at
+            })
 
-        self.user.email_user(subject, message)
+            self.user.email_user(subject, message)
+            return reservation_success
+        else:
+            return not reservation_success
 
     def deleting_reserved_product(self):
         reserved_product = get_object_or_404(self.model, user=self.user, product_id=self.product_id)

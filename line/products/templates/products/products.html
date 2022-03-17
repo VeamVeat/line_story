@@ -1,14 +1,5 @@
 {% load product_tags %}
-<!--<div class="card col-md-3 p-0 mb-3 mt-3">-->
-<!--        <a href="{{ product.get_absolute_url }}">-->
-<!--        <img src="{{ product.product_file.filter.first.image.url }}" class="card-img-top">-->
-<!--        </a>-->
-<!--        <div class="card-body text-center">-->
 
-<!--        <h5 class="card-title"><a href="{{ product.get_absolute_url }}" class="text-decoration-none">-->
-<!--            {{ product.title }}-->
-<!--        </a></h5>-->
-<!--        </div>-->
 
 <!--    <ul class="list-group list-group-flush">-->
 <!--        <li class="list-group-item">Year: <strong>{{ product.year }}</strong></li>-->
@@ -29,8 +20,6 @@
 <!--                </strong>-->
 <!--            {% endif %}-->
 <!--            <li class="list-group-item"> Price: <strong>{{ product.price }} RUB</strong></li>-->
-
-
 <!--        </li>-->
 <!--    </ul>-->
 
@@ -53,11 +42,7 @@
 <!--                {% if is_reserved %}-->
 <!--                     <strong class="badge bg-danger">Product reserved</strong>-->
 <!--                {% else %}-->
-<!--                <form action="{% url 'products:make_reservation' product_id=product.id %}" method="POST">-->
-<!--                    {% csrf_token %}-->
-<!--                    {{ form.as_p }}-->
-<!--                    <button class="btn btn-primary mt-1">Make a reservation</button>-->
-<!--                </form>-->
+<!--
 <!--                {% endif %}-->
 
 <!--            {% else %}-->
@@ -88,9 +73,18 @@
            Year: <span class="product_year"> {{ product.year }}</span>
         </td>
     </tr>
+     <tr>
+        <td colspan="2" class="table_product_item">
+           Type: <span class="product_type"> {{ product.type }}</span>
+        </td>
+    </tr>
     <tr>
         <td colspan="2" class="table_product_item">
-            In stock: <span class="product_in_stock"> {{ product.quantity }}</span>
+            {% if product.quantity %}
+                In stock: <span class="product_in_stock"> {{ product.quantity }}</span>
+            {% else %}
+                <span class="product_in_stock">product out of stock</span>
+            {% endif %}
         </td>
     </tr>
     <tr>
@@ -107,7 +101,10 @@
 
        <td class="table_product_btn">
             <div class="table_product_content_btn">
-                <button type="submit" class="reserved_btn">Reserved</button>
+                <a href="#reservation">
+                    <input type="hidden" id="url_reserve_product" data-url="{% url 'products:reserve_product' %}" />
+                    <input type="button" id="reserved_btn" class="reserved_product" data-id="{{ product.pk }}" value="Reserve"/>
+                </a>
             </div>
        </td>
     </tr>
