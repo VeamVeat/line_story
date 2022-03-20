@@ -1,55 +1,5 @@
 {% load product_tags %}
 
-
-<!--    <ul class="list-group list-group-flush">-->
-<!--        <li class="list-group-item">Year: <strong>{{ product.year }}</strong></li>-->
-<!--        <li class="list-group-item">Наличие:-->
-<!--            {% if product.quantity %}-->
-<!--                <strong class="badge bg-success">-->
-<!--                In stock {{ product.quantity }} product.-->
-<!--                </strong>-->
-<!--            {% else %}-->
-<!--            <strong class="badge bg-danger">product out of stock</strong>-->
-<!--            {% endif %}-->
-
-
-<!--            {% if is_reserved %}-->
-<!--                 <strong class="badge bg-success">-->
-<!--                     {% reserved_product_quantity product.reservation request.user as reserved_quantity %}-->
-<!--                     You have reserved {{ reserved_quantity }} items.-->
-<!--                </strong>-->
-<!--            {% endif %}-->
-<!--            <li class="list-group-item"> Price: <strong>{{ product.price }} RUB</strong></li>-->
-<!--        </li>-->
-<!--    </ul>-->
-
-<!--    <div class="card-body text-center">-->
-<!--        {% if request.user.is_authenticated %}-->
-<!--            {% if product.quantity %}-->
-<!--                {% if product.id in all_product_in_cart %}-->
-<!--                    <a href="{% url 'orders:cart' %}">-->
-<!--                     <p>Added to cart</p>-->
-<!--                 </a>-->
-<!--                {% else %}-->
-<!--
-<!--                {% endif %}-->
-
-
-<!--                {% if is_reserved %}-->
-<!--                     <strong class="badge bg-danger">Product reserved</strong>-->
-<!--                {% else %}-->
-<!--                                   KL -->
-<!--                {% endif %}-->
-
-<!--            {% else %}-->
-<!--                <strong class="badge bg-danger">product out of stock</strong>-->
-<!--            {% endif %}-->
-<!--        {% else %}-->
-<!--            <p>Авторизуйтесь или зарегистрируйтесь, только авторизованные пользователи-->
-<!--            могут осуществлять заказы</p>-->
-<!--        {% endif %}-->
-<!--    </div>-->
-<!--</div>-->
 <div class="product_content">
     <table class="table_product" border="1" cellpadding="4" cellspacing="0">
     <tr>
@@ -77,7 +27,7 @@
     <tr>
         <td colspan="2" class="table_product_item">
             {% if product.quantity %}
-                In stock: <span class="product_in_stock"> {{ product.quantity }}</span>
+                In stock: <span data-in-stock="product.pk" class="product_in_stock"> {{ product.quantity }}</span>
             {% else %}
                 <span class="product_in_stock">product out of stock</span>
             {% endif %}
@@ -88,45 +38,46 @@
            Price: <span class="product_price"> {{ product.price }} RUB</span>
         </td>
     </tr>
-    <tr class="button_product">
-       <td class="table_product_btn">
-            <div data-container-cart="{{ product.pk }}" class="table_product_content_btn">
-                <input type="hidden" id="url_add_cart" data-url="{% url 'products:add_to_cart' %}" />
-                {% if product.pk in all_product_in_cart %}
-                    <a href="{% url 'orders:cart' %}" data-link-to-cart="{{ product.pk }}" class="go_to_cart">go to cart</a>
-                {% else %}
-                    <button data-add-cart="{{ product.pk }}" type="submit" class="add_cart_btn">In cart</button>
-                {% endif %}
-            </div>
-       </td>
-
-       <td class="table_product_btn">
-            <div class="table_product_content_btn">
-                <a href="#reservation">
-                    <input type="hidden" id="url_reserve_product" data-url="{% url 'products:reserve_product' %}" />
-                    {% product_is_reserved product.reservation request.user as is_reserved%}
-                    {% if is_reserved %}
+    {% if request.user.is_authenticated %}
+        <tr class="button_product">
+           <td class="table_product_btn">
+                <div data-container-cart="{{ product.pk }}" class="table_product_content_btn">
+                    <input type="hidden" id="url_add_cart" data-url="{% url 'products:add_to_cart' %}" />
+                    {% if product.pk in all_product_in_cart %}
+                        <a href="{% url 'orders:cart' %}" data-link-to-cart="{{ product.pk }}" class="go_to_cart">go to cart</a>
                     {% else %}
-                         <input type="button" id="reserved_btn" class="reserved_product" data-id="{{ product.pk }}" value="Reserve"/>
+                        <button data-add-cart="{{ product.pk }}" type="submit" class="add_cart_btn">In cart</button>
                     {% endif %}
-                </a>
-            </div>
-       </td>
+                </div>
+           </td>
 
-    </tr>
+           <td class="table_product_btn">
+                <div class="table_product_content_btn">
+                    <a href="#reservation">
+                        <input type="hidden" id="url_reserve_product" data-url="{% url 'products:reserve_product' %}" />
+                        {% product_is_reserved product.reservation request.user as is_reserved%}
+                        {% if is_reserved %}
+                        {% else %}
+                             <input type="button" id="reserved_btn" class="reserved_product" data-id="{{ product.pk }}" value="Reserve"/>
+                        {% endif %}
+                    </a>
+                </div>
+           </td>
 
-    <tr>
-        <td class="table_product_item">
-            {% product_is_reserved product.reservation request.user as is_reserved%}
-            {% if is_reserved %}
-                {% get_quantity_reserved_product product.reservation request.user as quantity_reserved%}
-                 <span data-info="{{ product.pk }}" class="info_product_reserved">you have reserved {{quantity_reserved}} products</span>
-            {% else %}
-                 <span data-info="{{ product.pk }}" class="info_product_reserved">you have reserved 0 products</span>
-            {% endif %}
-       </td>
-    </tr>
+        </tr>
 
+        <tr>
+            <td class="table_product_item">
+                {% product_is_reserved product.reservation request.user as is_reserved%}
+                {% if is_reserved %}
+                    {% get_quantity_reserved_product product.reservation request.user as quantity_reserved%}
+                     <span data-info="{{ product.pk }}" class="info_product_reserved">you have reserved {{quantity_reserved}} products</span>
+                {% else %}
+                     <span data-info="{{ product.pk }}" class="info_product_reserved">you have reserved 0 products</span>
+                {% endif %}
+           </td>
+        </tr>
+    {% endif %}
 
     </table>
 </div>
