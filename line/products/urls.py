@@ -15,7 +15,7 @@ urlpatterns = [
     # path("make_reservation/<int:product_id>/", MakeReservation.as_view(), name="make_reservation"),
     path("products/<slug:product_slug>", ShowProductView.as_view(), name="product"),
 
-    path('add-to-cart/<int:product_id>/', AddProduct.as_view(), name='add_to_cart')
+    path('add-to-cart/', AddProduct.as_view(), name='add_to_cart')
 ]
 
 

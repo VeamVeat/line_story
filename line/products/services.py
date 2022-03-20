@@ -17,3 +17,6 @@ class ProductServices:
         current_product = self.model.objects.get_product_files(self.object_id)
         all_photo_product = current_product.product_file.all()
         return all_photo_product
+
+    def get_product(self):
+        return self.model.objects.get(id=self.product_id)

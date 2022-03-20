@@ -15,7 +15,7 @@
 <div class="main-container">
         <div class="header">
             <div class="header-top">
-                <div class="wrap">
+                <div class="header_wrap">
                     <div class="header-inner">
                         <div class="header-item header-top-search">
                             <form action="{% url 'products:search' %}" method="get" class="header-top-search-bar">
@@ -92,7 +92,6 @@
     {% endblock %}
 </div>
 
-
     <footer class="footer">
         <div class="footer-wrap">
             <div class="footer__inner">
@@ -111,24 +110,25 @@
                     <div class="footer__line">
                         <div class="footer__block">
                             <div class="footer__block">
-                                <a class="footer__number">89525863782</a>
-                                <a class="footer__email">vv1629728@gmail.com</a>
+                                <p class="footer__number">89525863782</p>
+                                <p class="footer__email">vv1629728@gmail.com</p>
                             </div>
                             <div class="footer__mode">
                                 <p class="footer_subtitle">время работы</p>
                                 <p class="footer__text">пн-вс 10:00 - 20:00</p>
                             </div>
                             <div class="footer__block">
-                                <p class="footer__subtitle">Медиа</p>
+                                <p class="footer_subtitle">Медиа</p>
                                 <div class="footer__social__icon social__icon">
-                                    <a class="social-icons__item" href="#"></a>
-                                    <a class="social-icons__item" href="#"></a>
+                                    <a class="social-icons__item" href="#">
+                                        <img src="{% static 'img/footer/ic-insta.svg' %}">
+                                        <img src="{% static 'img/footer/ic-youtube.svg' %}">
+                                    </a>
                                 </div>
                             </div>
                         </div>
                         <div class="footer__block footer__block_right">
                             <div class="footer__logo">
-                                <img src="#">
                             </div>
                         </div>
                     </div>

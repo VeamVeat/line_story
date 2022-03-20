@@ -37,11 +37,9 @@ class ProductView(TypeYearsProduct, ListView):
     context_object_name = 'product'
 
     def get_context_data(self, **kwargs):
-        product_id = kwargs.get('product_id')
         contex = super(ProductView, self).get_context_data(**kwargs)
         product_services = ProductServices(user=self.request.user,
-                                           model=self.model,
-                                           odject_id=product_id)
+                                           model=self.model)
 
         contex['all_product_in_cart'] = product_services.get_all_product_id_in_cart()
         contex['form'] = NumberOfProductForm()
@@ -69,25 +67,25 @@ class ShowProductView(DetailView):
 class AddProduct(View):
 
     def post(self, request, *args, **kwargs):
-        product_id = kwargs.get('product_id')
-        cart_item_services = CartItemServices(user=self.request.user,
-                                              model=CartItem,
-                                              product_id=product_id)
+        data_message = {'message': ''}
+        if is_ajax(request=request):
+            data = json.load(request)
+            product_id = data.get('product_id')
+            product_services = ProductServices(user=self.request.user,
+                                               model=Product,
+                                               product_id=product_id)
 
-        cart_item_services.add_product()
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            cart_item_services = CartItemServices(user=self.request.user,
+                                                  model=CartItem,
+                                                  product_id=product_id)
 
+            cart_item_services.add_product()
 
-# class MakeReservation(View):
-#
-#     def post(self, request, *args, **kwargs):
-#         product_id = kwargs.get('product_id')
-#         reservation_services = ReservationServices(user=self.request.user,
-#                                                    model=Reservation,
-#                                                    product_id=product_id)
-#
-#         reservation_services.make_reservation()
-#         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            product = product_services.get_product()
+
+            data_message['message'] = f'the product {product.title} was successfully added to the cart'
+
+        return JsonResponse(data_message)
 
 
 class FilterProductView(TypeYearsProduct, ListView):
@@ -126,24 +124,22 @@ def is_ajax(request):
 class MakeReservation(View):
 
     def post(self, request, *args, **kwargs):
-        data_message = {'message': ''}
+        data_message = {'message': '', 'error': False}
 
         if is_ajax(request=request):
             data = json.load(request)
             product_id = data.get('product_id')
             number_product = data.get('number_product')
 
-            if number_product.isdigit():
-                number_product = int(number_product)
-                reservation_services = ReservationServices(user=request.user,
-                                                           model=Reservation,
-                                                           count_product=number_product,
-                                                           product_id=product_id)
+            number_product = int(number_product)
+            reservation_services = ReservationServices(user=request.user,
+                                                       model=Reservation,
+                                                       count_product=number_product,
+                                                       product_id=product_id)
 
-                reservation_success = reservation_services.make_reservation()
-                if not reservation_success:
-                    data_message['message'] = 'the selected quantity exceeds the quantity in stock'
-            else:
-                data_message['message'] = 'check the correctness of the entered data'
+            reservation_success = reservation_services.make_reservation()
+            if not reservation_success:
+                data_message['error'] = True
+                data_message['message'] = 'the selected quantity exceeds the quantity in stock'
 
         return JsonResponse(data_message)

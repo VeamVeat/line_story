@@ -8,8 +8,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="main_content">
-    <div class="filter_container">
+<div class="filter_container">
         <div class="filter_content">
             <div class="filter_content_main">
                 <form action="{% url 'products:filter' %}" method="get">
@@ -36,11 +35,15 @@
             </div>
         </div>
     </div>
+
+<div class="main_content">
+
     <div class="products_container">
             {% for product in product|dictsort:"pk" %}
                 {% include 'products/products.html' %}
             {% endfor %}
     </div>
+
     <a href="#x" class="overlay" id="reservation"></a>
        <div class="popup-reserve-product">
            <div class="popup-container-reserve-product">
@@ -51,11 +54,12 @@
                     <input type="number" class="popup-item-reserve-product input-popup-reserve-product" id="{{ form.quantity.id_for_label }}" placeholder="number of product" name="{{ form.quantity.html_name }}">
 
                     <div class="popup-item-reserve-product popup-form-reserve-product-btn">
-                      <button type="submit" class="reserve-btn-popup-form">Reserved</button>
+                        <button type="button" id="close-modal" data-dismiss="modal" style="display: none">Close</button>
+                        <button type="submit" class="reserve-btn-popup-form"  id="btnSave" >Reserved</button>
                     </div>
               </form>
            </div>
-            <a class="close-reserve-product" title="close" href="#close"></a>
+           <a id="close_reserve_form" class="close-reserve-product" title="close" href="#close"></a>
        </div>
 </div>
 {% endblock %}

@@ -28,7 +28,7 @@ class Order(CreatedAtMixin):
 
 class CartItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='cart_item')
-    product = models.ForeignKey("products.Product", null=True, on_delete=models.SET_NULL, related_name='+')
+    product = models.ForeignKey("products.Product", on_delete=models.CASCADE, related_name='+')
     quantity = models.PositiveIntegerField(default=1, verbose_name=_('quantity of product in the cart'))
     address = models.CharField(max_length=1800, null=True, blank=True, verbose_name=_('delivery address'))
 
@@ -48,7 +48,7 @@ class CartItem(models.Model):
 
 class Reservation(CreatedAtMixin):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reservation')
-    product = models.ForeignKey("products.Product", null=True, on_delete=models.SET_NULL, related_name='reservation')
+    product = models.ForeignKey("products.Product", on_delete=models.CASCADE, related_name='reservation')
     quantity = models.PositiveIntegerField(default=0, verbose_name=_('quantity of goods reserved'))
     is_reserved = models.BooleanField(default=False)
 

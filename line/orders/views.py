@@ -92,8 +92,10 @@ class CheckoutView(View):
 
         product_cart_items = cart_item_services.get_all_cart_item()
 
-        context = {'product_cart_items': product_cart_items, 'total_price': float(total_price_product),
-                   'total_count': total_count_product, 'form': form}
+        context = {'product_cart_items': product_cart_items,
+                   'total_price': float(total_price_product),
+                   'total_count': total_count_product,
+                   'form': form}
 
         return render(request, self.template_name, context)
 
@@ -152,7 +154,8 @@ class ReservationView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         queryset = self.get_queryset()
-        all_product_reservation = queryset.filter(user=self.request.user, is_reserved=True)
+        all_product_reservation = queryset.filter(user=self.request.user,
+                                                  is_reserved=True)
 
         context['products_all'] = all_product_reservation
         return context

@@ -12,7 +12,7 @@
 <!--            <strong class="badge bg-danger">product out of stock</strong>-->
 <!--            {% endif %}-->
 
-<!--            {% product_is_reserved product.reservation request.user as is_reserved%}-->
+
 <!--            {% if is_reserved %}-->
 <!--                 <strong class="badge bg-success">-->
 <!--                     {% reserved_product_quantity product.reservation request.user as reserved_quantity %}-->
@@ -31,18 +31,14 @@
 <!--                     <p>Added to cart</p>-->
 <!--                 </a>-->
 <!--                {% else %}-->
-<!--                    <form action="{% url 'products:add_to_cart' product_id=product.id %}" method="POST">-->
-<!--                        {% csrf_token %}-->
-<!--                        {{ form.as_p }}-->
-<!--                        <button class="btn btn-primary">Add to cart </button>-->
-<!--                    </form>-->
+<!--
 <!--                {% endif %}-->
 
-<!--                {% product_is_reserved product.reservation request.user as is_reserved%}-->
+
 <!--                {% if is_reserved %}-->
 <!--                     <strong class="badge bg-danger">Product reserved</strong>-->
 <!--                {% else %}-->
-<!--
+<!--                                   KL -->
 <!--                {% endif %}-->
 
 <!--            {% else %}-->
@@ -64,7 +60,7 @@
     <tr>
         <td colspan="2" class="table_product_item ">
             <a href="{{ product.get_absolute_url }}">
-                <img src="{{ product.product_file.filter.first.image.url }}" width="350" height="350" class="product_image" >
+                <img src="{{ product.product_file.filter.first.image.url }}" width="130" height="130" class="product_image" >
             </a>
         </td>
     </tr>
@@ -92,10 +88,15 @@
            Price: <span class="product_price"> {{ product.price }} RUB</span>
         </td>
     </tr>
-    <tr>
+    <tr class="button_product">
        <td class="table_product_btn">
-            <div class="table_product_content_btn">
-                <button type="submit" class="add_cart_btn">Add to cart</button>
+            <div data-container-cart="{{ product.pk }}" class="table_product_content_btn">
+                <input type="hidden" id="url_add_cart" data-url="{% url 'products:add_to_cart' %}" />
+                {% if product.pk in all_product_in_cart %}
+                    <a href="{% url 'orders:cart' %}" data-link-to-cart="{{ product.pk }}" class="go_to_cart">go to cart</a>
+                {% else %}
+                    <button data-add-cart="{{ product.pk }}" type="submit" class="add_cart_btn">In cart</button>
+                {% endif %}
             </div>
        </td>
 
@@ -103,10 +104,29 @@
             <div class="table_product_content_btn">
                 <a href="#reservation">
                     <input type="hidden" id="url_reserve_product" data-url="{% url 'products:reserve_product' %}" />
-                    <input type="button" id="reserved_btn" class="reserved_product" data-id="{{ product.pk }}" value="Reserve"/>
+                    {% product_is_reserved product.reservation request.user as is_reserved%}
+                    {% if is_reserved %}
+                    {% else %}
+                         <input type="button" id="reserved_btn" class="reserved_product" data-id="{{ product.pk }}" value="Reserve"/>
+                    {% endif %}
                 </a>
             </div>
        </td>
+
     </tr>
+
+    <tr>
+        <td class="table_product_item">
+            {% product_is_reserved product.reservation request.user as is_reserved%}
+            {% if is_reserved %}
+                {% get_quantity_reserved_product product.reservation request.user as quantity_reserved%}
+                 <span data-info="{{ product.pk }}" class="info_product_reserved">you have reserved {{quantity_reserved}} products</span>
+            {% else %}
+                 <span data-info="{{ product.pk }}" class="info_product_reserved">you have reserved 0 products</span>
+            {% endif %}
+       </td>
+    </tr>
+
+
     </table>
 </div>

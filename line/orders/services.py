@@ -95,6 +95,7 @@ class CartItemServices:
         product = get_object_or_404(Product, id=self.product_id)
 
         if cart_item.product.quantity > 0:
+
             product.quantity -= 1
             product.save()
             cart_item.quantity += 1
@@ -127,10 +128,11 @@ class ReservationServices:
         self.count_product = count_product
 
     def make_reservation(self):
-        reservation_success = True
         product = get_object_or_404(Product, id=self.product_id)
         if product.quantity >= self.count_product:
-            object_reservation = self.model(user=self.user, quantity=self.count_product, product_id=product.id)
+            object_reservation = self.model(user=self.user,
+                                            quantity=self.count_product,
+                                            product_id=product.id)
 
             product.quantity -= self.count_product
             product.save()
@@ -147,9 +149,9 @@ class ReservationServices:
             })
 
             self.user.email_user(subject, message)
-            return reservation_success
+            return True
         else:
-            return not reservation_success
+            return False
 
     def deleting_reserved_product(self):
         reserved_product = get_object_or_404(self.model, user=self.user, product_id=self.product_id)
