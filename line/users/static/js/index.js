@@ -68,7 +68,8 @@ $(document).ready(function (){
 
     $('.add_cart_btn').click(function(e){
            product_id = $(this).attr("data-add-cart");
-           var url = $("#url_add_cart").attr("data-url");
+           var url_add_cart = $("#url_add_cart").attr("data-url");
+           var url_to_cart = $("#url_go_to_cart").attr("data-url");
            var in_stock = $("[data-in-stock="+product_id+"]").text();
 
            console.log('product_id', product_id, 'in_stock', in_stock);
@@ -79,7 +80,7 @@ $(document).ready(function (){
 
             $.ajax({
                 type: "POST",
-                url: url,
+                url: url_add_cart,
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(data),
                 dataType: 'JSON',
@@ -90,7 +91,7 @@ $(document).ready(function (){
                 success: function(response){
                         alert(response.message);
                         $("[data-add-cart="+product_id+"]").hide();
-                        $("[data-container-cart="+product_id+"]").append('<a href="#" data-link-to-cart="'+product_id+'" class="go_to_cart">go to cart</a>');
+                        $("[data-container-cart="+product_id+"]").append('<a href="'+url_to_cart+'" data-link-to-cart="'+product_id+'" class="go_to_cart">go to cart</a>');
                     },
                 error: function (response) {
                     }

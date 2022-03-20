@@ -44,6 +44,8 @@
            <td class="table_product_btn">
                 <div data-container-cart="{{ product.pk }}" class="table_product_content_btn">
                     <input type="hidden" id="url_add_cart" data-url="{% url 'products:add_to_cart' %}" />
+                    <input type="hidden" id="url_go_to_cart" data-url="{% url 'orders:cart' %}" />
+
                     {% if product.pk in all_product_in_cart %}
                         <a href="{% url 'orders:cart' %}" data-link-to-cart="{{ product.pk }}" class="go_to_cart">go to cart</a>
                     {% else %}
@@ -67,14 +69,18 @@
 
         </tr>
 
-        <tr>
-            <td class="table_product_item">
+        <tr >
+            <td colspan="2" class="table_product_item">
                 {% product_is_reserved product.reservation request.user as is_reserved%}
                 {% if is_reserved %}
                     {% get_quantity_reserved_product product.reservation request.user as quantity_reserved%}
+                    <a href="{% url 'orders:reserved_products' %}">
                      <span data-info="{{ product.pk }}" class="info_product_reserved">you have reserved {{quantity_reserved}} products</span>
+                     </a>
                 {% else %}
+                     <a href="{% url 'orders:reserved_products' %}">
                      <span data-info="{{ product.pk }}" class="info_product_reserved">you have reserved 0 products</span>
+                     </a>
                 {% endif %}
            </td>
         </tr>
