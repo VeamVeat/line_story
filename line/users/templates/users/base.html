@@ -41,7 +41,7 @@
                                         <td class="header-user-table-element header-logout">{{ user.wallet.ballance }} RUB</td>
                                         <td>
                                              <a href="{% url 'users:profile' pk=user.profile.id %}" class="header-top-element-profile">
-                                                <img src="{% static 'img/header/profile/profile.png' %}" width="23" height="23" alt="profile">
+                                                <img src="{% static 'img/header/profile/profile.png' %}" width="27" height="27" alt="profile">
                                              </a>
                                         </td>
                                     </tr>
@@ -54,7 +54,7 @@
                                         </td>
                                         <td>
                                              <a href="{% url 'orders:cart' %}" class="header-top-element-cart">
-                                                <img src="{% static 'img/header/cart/cart.png' %}" width="21" height="21" alt="profile">
+                                                <img src="{% static 'img/header/cart/cart.png' %}" width="25" height="25" alt="profile">
                                              </a>
                                         </td>
                                     </tr>
@@ -89,6 +89,7 @@
 
 <div class="main-content">
     {% block content %}
+        <h1 class="title_content"> There is nothing here yet </h1>
     {% endblock %}
 </div>
 
@@ -141,6 +142,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="{% static 'js/index.js' %}"></script>
-  
+{% block js_script%}
+{% endblock %}
 </body>
 </html>

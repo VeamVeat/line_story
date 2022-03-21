@@ -80,7 +80,6 @@ class AddProduct(View):
                                                   product_id=product_id)
 
             cart_item_services.add_product()
-
             product = product_services.get_product()
 
             data_message['message'] = f'the product {product.title} was successfully added to the cart'

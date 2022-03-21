@@ -1,5 +1,4 @@
 .main_content{
-    margin: auto 150px;
     background-color: #212021;
 }
 
@@ -43,8 +42,13 @@
 .product_content{
     text-align: center;
     margin: 10px;
-    border: 1px double #302f2f;
-    border-radius:20px;
+    border: 1px double #3d3309;
+    border-radius: 20px;
+    background-color: #292c29;
+}
+
+.table_product_item{
+    align-items: center;
 }
 
 .add_cart_btn{
@@ -106,4 +110,6 @@
 	opacity: 0.65;
 }
 
-
+.info_product_reserved{
+    color:#ff8400;
+}

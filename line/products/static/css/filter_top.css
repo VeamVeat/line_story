@@ -57,7 +57,8 @@ padding: 7px;
 }
 
 .filter_container{
-    margin: auto 300px;
+    height: 90%;
+    margin-left: 50px;
     border-radius: 10px;
     margin-top: 20px;
     border: 1px double #302f2f;

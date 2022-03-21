@@ -25,9 +25,9 @@ def product_is_reserved(queryset, user):
 
 
 @register.simple_tag
-def get_quantity_reserved_product(queryset, user):
+def get_quantity_reserved_product(queryset, user, product_id):
     try:
-        quantity_reserved = queryset.get(user=user, is_reserved=True).quantity
+        quantity_reserved = queryset.get(user=user, product_id=product_id, is_reserved=True).quantity
     except ObjectDoesNotExist:
         quantity_reserved = 0
         return quantity_reserved

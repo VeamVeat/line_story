@@ -1,11 +1,15 @@
+import json
+
 from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import ListView
 from django.shortcuts import render
+from django.http import HttpResponseRedirect, JsonResponse
 
 from orders.models import CartItem, Order, Reservation
 from orders.forms import OrderForm
 from orders.services import OrderServices, CartItemServices, ReservationServices
+from products.views import is_ajax
 
 
 class CartView(ListView):
@@ -44,32 +48,52 @@ class DeleteProduct(View):
 
 class DiminishProductView(View):
     model = CartItem
-    template_name = 'orders/cart.html'
 
     def post(self, request, *args, **kwargs):
-        cart_item_all = self.model.objects.filter(user=self.request.user)
-        product_id = kwargs.get('product_id')
-        cart_item_services = CartItemServices(user=self.request.user,
-                                              model=self.model,
-                                              product_id=product_id)
-        cart_item_services.diminish_product()
+        data_message = {'message': ''}
 
-        return redirect('orders:cart')
+        if is_ajax(request=request):
+            data = json.load(request)
+            product_id = data.get('product_id')
+            cart_item_services = CartItemServices(user=self.request.user,
+                                                  model=self.model,
+                                                  product_id=product_id)
+
+            increase_product_success, product_quantity, cart_item_quantity, \
+            total_price_and_total_count = cart_item_services.calculate_product(param='diminish')
+
+            data_message['increase_product_success'] = increase_product_success
+            data_message['product_quantity'] = product_quantity
+            data_message['cart_item_quantity'] = cart_item_quantity
+            data_message['total_price'] = total_price_and_total_count['total_price']
+            data_message['total_count'] = total_price_and_total_count['total_count']
+
+        return JsonResponse(data_message)
 
 
-class IncreaseProductView(ListView):
+class IncreaseProductView(View):
     model = CartItem
-    template_name = 'orders/cart.html'
 
     def post(self, request, *args, **kwargs):
-        cart_item_all = self.model.objects.filter(user=self.request.user)
-        product_id = kwargs.get('product_id')
-        cart_item_services = CartItemServices(user=self.request.user,
-                                              model=self.model,
-                                              product_id=product_id)
-        cart_item_services.increase_product()
+        data_message = {'message': ''}
 
-        return redirect('orders:cart')
+        if is_ajax(request=request):
+            data = json.load(request)
+            product_id = data.get('product_id')
+            cart_item_services = CartItemServices(user=self.request.user,
+                                                  model=self.model,
+                                                  product_id=product_id)
+
+            increase_product_success, product_quantity, cart_item_quantity, \
+            total_price_and_total_count = cart_item_services.calculate_product(param='increase')
+
+            data_message['increase_product_success'] = increase_product_success
+            data_message['product_quantity'] = product_quantity
+            data_message['cart_item_quantity'] = cart_item_quantity
+            data_message['total_price'] = total_price_and_total_count['total_price']
+            data_message['total_count'] = total_price_and_total_count['total_count']
+
+        return JsonResponse(data_message)
 
 
 class CheckoutView(View):
@@ -77,7 +101,6 @@ class CheckoutView(View):
     template_name = 'orders/checkout.html'
 
     def post(self, request, *args, **kwargs):
-
         cart_item_services = CartItemServices(user=request.user, model=self.model)
         user_balance = request.user.wallet.ballance
 

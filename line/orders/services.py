@@ -69,6 +69,40 @@ class CartItemServices:
                                                                        total_count=models.Sum(F('quantity')))
         return total_price_and_total_count
 
+    def calculate_product(self, param='increase'):
+        product_success = True
+        cart_item = self._get_cart_item_by_product_id()
+        product = get_object_or_404(Product, id=self.product_id)
+
+        if not cart_item.product.quantity == 0:
+            product_success = False
+            return product_success
+
+        if param == 'increase':
+            product.quantity -= 1
+            product.save()
+
+            cart_item.quantity += 1
+            cart_item.save()
+
+            product_quantity = product.quantity
+            cart_item_quantity = cart_item.quantity
+            total_price_and_total_count = self.get_total_price_and_total_count()
+
+            return product_success, product_quantity, cart_item_quantity, total_price_and_total_count
+        elif param == 'diminish':
+            product.quantity += 1
+            product.save()
+
+            cart_item.quantity -= 1
+            cart_item.save()
+
+            product_quantity = product.quantity
+            cart_item_quantity = cart_item.quantity
+            total_price_and_total_count = self.get_total_price_and_total_count()
+
+            return product_success, product_quantity, cart_item_quantity, total_price_and_total_count
+
     def get_products_list(self):
         cart_item_current_user = self.get_all_cart_item()
         all_products_in_the_dict = [product.product.get_product_in_the_dict for product in cart_item_current_user]
@@ -89,27 +123,6 @@ class CartItemServices:
         self.model.objects.create(user=self.user, product_id=product.id)
         product.quantity -= 1
         product.save()
-
-    def increase_product(self):
-        cart_item = self._get_cart_item_by_product_id()
-        product = get_object_or_404(Product, id=self.product_id)
-
-        if cart_item.product.quantity > 0:
-
-            product.quantity -= 1
-            product.save()
-            cart_item.quantity += 1
-            cart_item.save()
-
-    def diminish_product(self):
-        cart_item = self._get_cart_item_by_product_id()
-        product = get_object_or_404(Product, id=self.product_id)
-
-        if cart_item.quantity > 0:
-            product.quantity += 1
-            product.save()
-            cart_item.quantity -= 1
-            cart_item.save()
 
     def clear(self):
         self.model.objects.filter(user=self.user).delete()
@@ -161,4 +174,3 @@ class ReservationServices:
         product.save()
 
         reserved_product.delete()
-
