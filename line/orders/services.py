@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import F
+from django.db.models import F, QuerySet
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 
@@ -53,55 +53,59 @@ class CartItemServices:
         self.model = model
         self.product_id = product_id
 
-    def get_all_cart_item(self):
+    def get_all_cart_item(self) -> QuerySet:
         return self.model.objects.filter(user=self.user).select_related('product')
 
-    def _get_cart_item_by_product_id(self):
-        cart_item = get_object_or_404(self.model.objects.select_related('product'),
+    def __get_product_in_cart_by_product_id(self):
+        cart_product = get_object_or_404(self.model.objects.select_related('product'),
                                       user=self.user,
                                       product_id=self.product_id)
-        return cart_item
+        return cart_product
 
-    def get_total_price_and_total_count(self):
+    def get_total_price(self) -> int:
         cart_item_current_user = self.get_all_cart_item()
-        total_price_and_total_count = cart_item_current_user.aggregate(total_price=models.Sum(F('product__price')
-                                                                                              * F('quantity')),
-                                                                       total_count=models.Sum(F('quantity')))
-        return total_price_and_total_count
+        total_price = cart_item_current_user.aggregate(total_price=models.Sum(F('product__price') * F('quantity')))
+        return total_price['total_price']
+
+    def get_total_count(self) -> int:
+        cart_item_current_user = self.get_all_cart_item()
+        total_count = cart_item_current_user.aggregate(total_count=models.Sum(F('quantity')))
+        return total_count['total_count']
+
+    def get_quantity_product_in_cart(self):
+        product = self.__get_product_in_cart_by_product_id()
+        return product.quantity
 
     def calculate_product(self, param='increase'):
         product_success = True
-        cart_item = self._get_cart_item_by_product_id()
+
+        product_in_cart = self.__get_product_in_cart_by_product_id()
         product = get_object_or_404(Product, id=self.product_id)
 
-        if not cart_item.product.quantity == 0:
-            product_success = False
-            return product_success
-
         if param == 'increase':
+            if not product.is_stock:
+                product_success = False
+                return product_success
+
             product.quantity -= 1
             product.save()
 
-            cart_item.quantity += 1
-            cart_item.save()
+            product_in_cart.quantity += 1
+            product_in_cart.save()
 
-            product_quantity = product.quantity
-            cart_item_quantity = cart_item.quantity
-            total_price_and_total_count = self.get_total_price_and_total_count()
-
-            return product_success, product_quantity, cart_item_quantity, total_price_and_total_count
+            return product_success
         elif param == 'diminish':
+            if product_in_cart.quantity == 1:
+                product_success = False
+                return product_success
+
             product.quantity += 1
             product.save()
 
-            cart_item.quantity -= 1
-            cart_item.save()
+            product_in_cart.quantity -= 1
+            product_in_cart.save()
 
-            product_quantity = product.quantity
-            cart_item_quantity = cart_item.quantity
-            total_price_and_total_count = self.get_total_price_and_total_count()
-
-            return product_success, product_quantity, cart_item_quantity, total_price_and_total_count
+            return product_success
 
     def get_products_list(self):
         cart_item_current_user = self.get_all_cart_item()

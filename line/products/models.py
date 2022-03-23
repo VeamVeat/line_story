@@ -99,6 +99,10 @@ class Product(CreatedAtMixin):
         }
         return product_in_the_dict
 
+    @property
+    def is_stock(self) -> bool:
+        return True if self.quantity > 0 else False
+
 
 class ProductFile(File):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_file')

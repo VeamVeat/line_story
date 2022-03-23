@@ -17,5 +17,3 @@ urlpatterns = [
 
     path('add-to-cart/', AddProduct.as_view(), name='add_to_cart')
 ]
-
-

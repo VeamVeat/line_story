@@ -8,4 +8,3 @@ class ProductManager(models.Manager):
             return self.prefetch_related('product_file').get(id=object_id)
         except ObjectDoesNotExist:
             return None
-
