@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import ListView
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponse, HttpResponseServerError
+from django.http import JsonResponse
 
 from orders.models import CartItem, Order, Reservation
 from orders.forms import OrderForm

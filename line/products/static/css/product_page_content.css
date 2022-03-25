@@ -57,10 +57,11 @@
 
 .add_cart_btn{
     display: inline-block;
-     width: 90px;
-     height:35px;
+    width: 90px;
+    height:35px;
 	box-sizing: border-box;
 	margin-top: 10px;
+	margin-right: 5px;
 	outline: none;
 	border: none;
 	border-radius: 3px;

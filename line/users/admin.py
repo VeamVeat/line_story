@@ -6,9 +6,6 @@ from users.views import CustomActionView
 from users.forms import ProfileAdminForm
 from users.models import User, Profile, Wallet
 from products.models import File
-from django.contrib.auth.models import Permission
-
-admin.site.register(Permission)
 
 
 class WalletInline(admin.StackedInline):

@@ -1,4 +1,3 @@
-
 var product_id = 1;
 
 function getCookie(name) {
