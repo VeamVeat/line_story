@@ -89,7 +89,108 @@
 
 <div class="main-content">
     {% block content %}
-        <h1 class="title_content"> There is nothing here yet </h1>
+        <div class="promo__home">
+            <div class="promo__wrap">
+                <h1 class="promo__title">Line Story</h1>
+                <p class="promo__subtitle">a picture of threads from your photo</p>
+                <p class="promo__text">Get inspired by handmade creativity</p>
+                <button class="promo__button">Go to products</button>
+            </div>
+            <div class="promo__img">
+                <img src="{% static 'img/promo/deva.jpg' %}" width="300px" height="300px" alt="promo__img">
+            </div>
+        </div>
+        <div class="tutorial">
+            <div class="wrap__tutorial">
+                <div class="tutorial__title">
+                    <h2 class="tutorial__title__text">See how to assemble a picture with threads from your own photo</h2>
+                </div>
+                <div class="tutorial__video">
+                    <iframe width="1000" height="600" src="https://www.youtube.com/embed/XJRVqzoQUG0">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+        <div class="section__attr">
+            <div class="section__attr__wrap">
+                <div class="section__right">
+                    <div class="section__attr__elem">
+                        <h3 class="section__attr__title"> Detailing </h3>
+                        <p class="section__attr__content">Thread intersection density ensures high resolution of the collected picture</p>
+                    </div>
+                    <div class="section__attr__elem">
+                        <h3 class="section__attr__title"> Balance </h3>
+                        <p class="section__attr__content">Black thread and white base is a classic combination that will fit into any interior and look expensive.</p>
+                    </div>
+                </div>
+                <div class="section__center">
+                    <img src="{% static 'img/section/section__img.jpeg' %}" class="section__img" width="380px" height="380px" alt="section__attr__img">
+                </div>
+                <div class="section__left">
+                    <div class="section__attr__elem">
+                        <h3 class="section__attr__title"> Quality </h3>
+                        <p class="section__attr__content">We paid special attention to the components of the set so that you can get real pleasure from interacting with it.</p>
+                    </div>
+                    <div class="section__attr__elem">
+                        <h3 class="section__attr__title"> Meditation </h3>
+                        <p class="section__attr__content">Relaxing background music, pleasant voices of the announcers and the pleasure of the assembly process</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="middle__banner">
+            <img src="{% static 'img/middel_banner/tiger.jpg' %}" class="middel__banner__img"  alt="section__attr__img">
+        </div>
+
+        <div class="wrap__gift">
+            <div class="gift__section">
+                <div class="gift__section__title">
+                    <h1 class="gift__section__text">DON'T KNOW WHAT TO GIVE?</h1>
+                </div>
+                <div class="gift__section__sub__title">
+                    <p class="gift__section_sub__title__text">LineStory is a universal gift that will definitely not leave anyone indifferent, you can give both a packaged picture and an assembled portrait!</p>
+                </div>
+                <div class="gift__section__list">
+                    <div class="gs__list__items gs__list__items__1">
+                        <div class="gs__list__section gs__list__left__section__1">
+                            <p class="gs__list__items__text">Your favorite photo</p>
+                            <p class="gs__list__items__subtitle">You can create a picture with threads from absolutely any photo and decorate the interior with it</p>
+                        </div>
+                         <div class="gs__list__right__section">
+                            <img src="{% static 'img/section/picture-17.jpg' %}"  class="gs__list__img" width="300px" height="300px" alt="promo__img">
+                        </div>
+                    </div>
+                    <div class="gs__list__items gs__list__items__2">
+                        <div class="gs__list__left__section">
+                            <img src="{% static 'img/section/picture-22.jpg' %}" class="gs__list__img" width="300px" height="300px" alt="promo__img">
+                        </div>
+                         <div class="gs__list__section gs__list__left__section__2">
+                            <p class="gs__list__items__text">Gift with meaning</p>
+                            <p class="gs__list__items__subtitle">With LinStory, you can not only assemble your own unique masterpiece, but also relax in the process of assembling</p>
+                        </div>
+                    </div>
+                    <div class="gs__list__items gs__list__items__3">
+                        <div class="gs__list__section gs__list__right__section__3">
+                            <p class="gs__list__items__text">Attention to detail</p>
+                            <p class="gs__list__items__subtitle">We took care of every little thing, you can choose a pleasant voice, speed and background music, the generator adapts to you</p>
+                        </div>
+                         <div class="gs__list__right__section">
+                             <img src="{% static 'img/section/picture-23.jpg' %}" class="gs__list__img" width="300px" height="300px" alt="promo__img">
+                        </div>
+                    </div>
+                    <div class="gs__list__items gs__list__items__4">
+                        <div class="gs__list__left__section">
+                            <img src="{% static 'img/section/picture-24.jpeg' %}" class="gs__list__img" width="300px" height="300px" alt="promo__img">
+                        </div>
+                         <div class="gs__list__section gs__list__right__section__4">
+                            <p class="gs__list__items__text">Easy assembly</p>
+                            <p class="gs__list__items__subtitle">Detailed paper instructions, intuitive generator and complete assembly instructions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endblock %}
 </div>
 
@@ -98,9 +199,9 @@
             <div class="footer__inner">
                 <div class="footer__left">
                     <div class="footer__links">
-                        <a class="footer__link" href="#">PRODUCT</a>
-                        <a class="footer__link" href="#">ORDERS</a>
-                        <a class="footer__link" href="#">RESERVED PRODUCTS</a>
+                        <a class="footer__link" href="{% url 'products:products_all' %}">PRODUCT</a>
+                        <a class="footer__link" href="{% url 'orders:all_orders' %}">ORDERS</a>
+                        <a class="footer__link" href="{% url 'orders:reserved_products' %}">RESERVED PRODUCTS</a>
                         <a class="footer__link" href="#">CONTACT</a>
                     </div>
                 </div>

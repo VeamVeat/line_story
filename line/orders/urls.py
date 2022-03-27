@@ -2,7 +2,7 @@ from django.urls import path
 
 from orders.views import DeleteReservationProduct, ReservationView
 from orders.views import CartView, DeleteProduct,\
-     OrderView, NotMoneyView, DiminishProductView, IncreaseProductView, MakeOrderView
+     OrderView, DiminishProductView, IncreaseProductView, MakeOrderView
 
 app_name = "orders"
 
@@ -17,6 +17,5 @@ urlpatterns = [
     path("reserved-products/", ReservationView.as_view(), name="reserved_products"),
     path("deleting-reserved-product/<int:product_id>/", DeleteReservationProduct.as_view(), name="deleting_reserved"),
 
-    path('make-order/', MakeOrderView.as_view(), name='make_order'),
-    path('not-money/', NotMoneyView.as_view(), name='not_money')
+    path('make-order/', MakeOrderView.as_view(), name='make_order')
 ]

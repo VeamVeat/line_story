@@ -49,15 +49,11 @@ padding: 7px;
     text-align: center
 }
 
-.filter_content_type{
-    margin: 5px;
-}
-.filter_content_year{
-    margin: 5px;
-}
+
 
 .filter_container{
     height: 90%;
+    width: 50%;
     margin-left: 50px;
     border-radius: 10px;
     margin-top: 20px;

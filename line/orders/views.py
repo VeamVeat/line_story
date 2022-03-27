@@ -132,7 +132,6 @@ class MakeOrderView(View):
 
             order_services.order_create(total_price, total_count, product_all, address)
             cart_item_services.clear()
-
             return redirect('products:products_all')
 
 

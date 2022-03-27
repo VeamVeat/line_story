@@ -7,6 +7,7 @@
     display:inline-table;
     text-align: center;
     border: none;
+    font-size:17px;
 }
 
 .product_title{
@@ -23,8 +24,10 @@
 }
 
 .product_price{
-    font-weight: lighter;
+    font-weight: bolder;
     color: red;
+    font-size: 20px;
+
 }
 
 .product_in_stock{
