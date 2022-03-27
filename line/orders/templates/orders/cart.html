@@ -1,0 +1,118 @@
+{% extends 'users/base.html' %}
+{% load cart_tags %}
+{% load static %}
+
+{% block link-style %}
+    <link href="{% static 'css/cart.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="cart__container">
+    <div class="cart__content">
+        {% for product_in_cart in products_all|dictsort:"pk" %}
+        <table class="cart__container__table">
+            <tbody class="cart__content__table">
+                <tr class="cart__item__table">
+                    <td colspan="4" class="table__cart__title_td table__cart__top__element">
+                         <h5 class="card-title">{{ product_in_cart.product.title }}</h5>
+                    </td>
+                </tr>
+                <tr class="cart__item__table">
+                    <td class="table__cart__top__element">
+                        <a href="{{ product_in_cart.product.get_absolute_url }}">
+                            <img src="{{ product_in_cart.product.product_file.filter.first.image.url }}" class="card-img" alt="{{ product_in_cart.product.title }}">
+                        </a>
+                    </td>
+                    <td class="table__cart__top__element">
+                        <div class="count__product_and__total__price_product">
+                             <p data-product-cart-quantity="{{ product_in_cart.product.id }}" class="product_cart_quantity cart__item__text" style="font-size:12px">{{product_in_cart.quantity}}</p>
+                             <p class="cart__item__text" style="font-size:12px">✕</p>
+                             <p data-product_cart_total_quantity="{{ product_in_cart.product.id }}" class="cart__item__text product_cart_total_quantity" style="font-size:12px">{% total_quantity product_in_cart.product.price product_in_cart.quantity%} RUB</p>
+                        </div>
+                    </td>
+                    <td class="table__cart__top__element">
+                        <div class="calculate__product">
+                            <div class="calculate__product__container">
+                                <input type="hidden" id="url_diminish_product" data-url="{% url 'orders:diminish_product' %}"/>
+                                <button data-diminish-product="{{ product_in_cart.product.id }}" type="submit" class="cart__btn diminish_product"> - </button>
+
+                                <p data-product-cart-quantity="{{ product_in_cart.product.id }}" class="cart__item__text product_cart_quantity" style="font-size:17px">{{ product_in_cart.quantity}}</p>
+
+                                <input type="hidden" id="url_increase_product" data-url="{% url 'orders:increase_product' %}" />
+                                <button data-increase-product="{{ product_in_cart.product.id }}" type="submit" class="cart__btn increase_product"> + </button>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="table__cart__top__element">
+                        <div class="delete__product">
+                            <form action="{% url 'orders:delete_product' product_id=product_in_cart.product.id %}" method="POST">
+                                {% csrf_token %}
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        {% endfor %}
+
+        {% if products_all %}
+        <table class="total__tabel__all__element__cart">
+            <tbody class="total__all__element__cart">
+                <tr class="total__element__cart__item total__title__cart">
+                     <td>
+                        <h5 class="total__title cart__item__text">Total count</h5>
+                    </td>
+                     <td>
+                        <h5 class="total__title cart__item__text">Total price</h5>
+                    </td>
+                    <td rowspan="2">
+                        <a href="#popup_window">
+                            <input type="hidden" id="url_checkout" data-url="{% url 'orders:make_order' %}"/>
+                            <input type="hidden" id="url_products" data-url="{% url 'products:products_all' %}"/>
+                            <button type="submit" class="btn btn-danger"> Checkout </button>
+                        </a>
+                    </td>
+                </tr>
+                <tr class="total__element__cart__item">
+                    <td class="cart__item total__all__count_element">
+                        <h4 class="table__cart__total__count cart__item__text">{{ total_count_product }}</h4>
+                    </td>
+                    <td class="cart__item total__all_price_element">
+                        <h4 class="table__cart__total__price cart__item__text">{{ total_price_product }} руб.</h4>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        {% else%}
+        <div class="cart__empty">
+            <h1>Cart is empty</h1>
+        </div>
+        {% endif %}
+
+
+    </div>
+</div>
+
+<a href="#x" class="overlay" id="popup_window"></a>
+       <div class="popup-container">
+           <div class="popup-content">
+               <form id="popup-form" method="POST">
+                    {% csrf_token %}
+                    <p id="notification" class="label-popup"></p>
+                    <p class="label-popup">Enter shipping address</p>
+                    <input type="text" class="popup-item input-popup" id="{{ form.address.id_for_label }}" placeholder="delivery address " name="{{ form.address.html_name }}">
+
+                    <div class="popup-item">
+                        <button type="button" id="close-modal" data-dismiss="modal" style="display: none"> Close </button>
+                        <button type="submit" class="btn-popup-form"  id="btnSave" > Checkout </button>
+                    </div>
+              </form>
+           </div>
+           <a id="close_form" class="close-popup-form" title="close" href="#close"></a>
+       </div>
+{% endblock %}
+
+{% block js_script%}
+    <script src="{% static 'js/cart.js' %}"></script>
+{% endblock %}

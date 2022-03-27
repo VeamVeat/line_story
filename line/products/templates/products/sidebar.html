@@ -1,0 +1,28 @@
+<form action="{% url 'products:filter' %}" method="get">
+    <div class="left-side my-4">
+        <h3 class="sear-head editContent">Type Product</h3>
+        <ul class="w3layouts-box-list">
+            {% for type in view.get_type %}
+                <li class="editContent">
+                    <input type="checkbox" class="checked" name="type" value="{{ type.name }}">
+                    <span class="span editContent">{{ type.name }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <!-- // preference -->
+    <!-- discounts -->
+
+    <div class="left-side">
+        <h3 class="sear-head editContent">Year</h3>
+        <ul class="w3layouts-box-list">
+            {% for product in view.get_years %}
+                <li class="editContent">
+                    <input type="checkbox" class="checked" name="year" value="{{ product.year }}">
+                    <span class="span editContent">{{ product.year }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <button type="submit">Search</button>
+</form>

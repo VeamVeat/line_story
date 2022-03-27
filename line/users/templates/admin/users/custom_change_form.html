@@ -1,0 +1,10 @@
+{% extends "admin/change_form.html" %}
+
+{% block content %}
+
+<a href="{% url 'admin:grant_money' object_id  %}">
+  <button type="button" class="button">top up an account</button>
+</a>
+
+  {{ block.super }}
+{% endblock content %}

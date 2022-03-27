@@ -1,0 +1,89 @@
+{% load product_tags %}
+
+<div class="product_content">
+    <table class="table_product" border="1" cellpadding="4" cellspacing="0">
+    <tr>
+        <td colspan="2" class="table_product_item product_title">
+            <strong>{{ product.title }}</strong>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="table_product_item ">
+            <a href="{{ product.get_absolute_url }}">
+                <img src="{{ product.product_file.filter.first.image.url }}" width="190" height="190" class="product_image" >
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="table_product_item">
+           Year: <span class="product_year"> {{ product.year }}</span>
+        </td>
+
+    </tr>
+     <tr>
+        <td colspan="2" class="table_product_item">
+           Type: <span class="product_type"> {{ product.type }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="table_product_item">
+            {% if product.quantity %}
+                In stock: <span data-in-stock="product.pk" class="product_in_stock"> {{ product.quantity }}</span>
+            {% else %}
+                <span class="product_in_stock">product out of stock</span>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="table_product_item">
+           Price: <span class="product_price"> {{ product.price }} RUB</span>
+        </td>
+    </tr>
+    {% if request.user.is_authenticated %}
+        <tr class="button_product">
+           <td class="table_product_btn">
+                <div data-container-cart="{{ product.pk }}" class="table_product_content_btn">
+                    <input type="hidden" id="url_add_cart" data-url="{% url 'products:add_to_cart' %}" />
+                    <input type="hidden" id="url_go_to_cart" data-url="{% url 'orders:cart' %}" />
+
+                    {% if product.pk in all_product_in_cart %}
+                        <a href="{% url 'orders:cart' %}" data-link-to-cart="{{ product.pk }}" class="go_to_cart">go to cart</a>
+                    {% else %}
+                        <button data-add-cart="{{ product.pk }}" type="submit" class="add_cart_btn">In cart</button>
+                    {% endif %}
+                </div>
+           </td>
+
+           <td class="table_product_btn">
+                <div class="table_product_content_btn">
+                    <a href="#popup_window">
+                        <input type="hidden" id="url_reserve_product" data-url="{% url 'products:reserve_product' %}" />
+                        {% product_is_reserved product.reservation request.user as is_reserved%}
+                        {% if is_reserved %}
+                        {% else %}
+                             <input type="button" id="reserved_btn" class="reserved_product" data-id="{{ product.pk }}" value="Reserve"/>
+                        {% endif %}
+                    </a>
+                </div>
+           </td>
+        </tr>
+
+        <tr >
+            <td colspan="2" class="table_product_item">
+                {% product_is_reserved product.reservation request.user as is_reserved%}
+                {% if is_reserved %}
+                    {% get_quantity_reserved_product product.reservation request.user product.pk as quantity_reserved%}
+                    <a href="{% url 'orders:reserved_products' %}">
+                     <span data-info="{{ product.pk }}" class="info_product_reserved">you have reserved {{quantity_reserved}} products</span>
+                     </a>
+                {% else %}
+                     <a href="{% url 'orders:reserved_products' %}">
+                     <span data-info="{{ product.pk }}" class="info_product_reserved">you have reserved 0 products</span>
+                     </a>
+                {% endif %}
+           </td>
+        </tr>
+    {% endif %}
+
+    </table>
+</div>

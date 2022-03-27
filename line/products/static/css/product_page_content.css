@@ -1,0 +1,119 @@
+.main_content{
+    background-color: #212021;
+}
+
+.table_product{
+    margin: 10px;
+    display:inline-table;
+    text-align: center;
+    border: none;
+    font-size:17px;
+}
+
+.product_title{
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+.product_image{
+    border-radius: 50%;
+}
+
+.table_product_item{
+    color: white;
+}
+
+.product_price{
+    font-weight: bolder;
+    color: red;
+    font-size: 20px;
+
+}
+
+.product_in_stock{
+    color: green;
+    font-weight: bold;
+}
+
+.products_container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 15px auto;
+}
+
+.product_content{
+    text-align: center;
+    margin: 10px;
+    border: 1px double #3d3309;
+    border-radius: 20px;
+    background-color: #292c29;
+}
+
+.table_product_item{
+    align-items: center;
+}
+
+.add_cart_btn{
+    display: inline-block;
+    width: 90px;
+    height:35px;
+	box-sizing: border-box;
+	margin-top: 10px;
+	margin-right: 5px;
+	outline: none;
+	border: none;
+	border-radius: 3px;
+	line-height: 30px;
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: none;
+	color: white;
+	background-color: green;
+	cursor: pointer;
+	user-select: none;
+	appearance: none;
+	touch-action: manipulation;
+	margin-bottom: 10px;
+	padding: 3px;
+}
+
+#reserved_btn{
+    display: inline-block;
+    width: 90px;
+    height:35px;
+	box-sizing: border-box;
+	margin-top: 10px;
+	outline: none;
+	border: none;
+	border-radius: 3px;
+	line-height: 30px;
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration: none;
+	color: white;
+	background-color: red;
+	cursor: pointer;
+	user-select: none;
+	appearance: none;
+	touch-action: manipulation;
+	margin-bottom: 10px;
+	padding: 3px;
+}
+
+.add_cart_btn:focus-visible, #reserved_btn:focus-visible {
+	box-shadow: 0 0 0 2px #666;
+}
+
+.add_cart_btn:active , #reserved_btn:active {
+	transform: scale(0.96);
+}
+
+.add_cart_btn:disabled, #reserved_btn:disabled {
+	pointer-events: none;
+	opacity: 0.65;
+}
+
+.info_product_reserved{
+    color:#ff8400;
+}

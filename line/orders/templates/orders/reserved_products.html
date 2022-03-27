@@ -1,0 +1,41 @@
+{% extends 'users/base.html' %}
+<!--{% load cart_tags %}-->
+{% load static %}
+
+{% block content %}
+{% if products_all %}
+  <h3 class="text-center mt-5 mb-5">Product reserved</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Image</th>
+        <th scope="col">Price</th>
+        <th scope="col">Count</th>
+        <th scope="col">Time reserved</th>
+        <th scope="col">Delete reserved</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products_all|dictsort:"pk" %}
+          <tr>
+            <th scope="row">{{ product.product.title }}</th>
+            <td class="w-15 h-15"><img src="{{ product.product.product_file.filter.first.image.url }}" class="img-fluid" style="width: 250px; height: 250px;"></td>
+            <td>{{ product.product.price  }} RUB.</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ product.created_at }}</td>
+            <td>
+                <form action="{% url 'orders:deleting_reserved' product_id=product.product.id %}" method="POST">
+                  {% csrf_token %}
+                  <button class="btn btn-primary">Deleting reserved</button>
+                 </form>
+            </td>
+          </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <hr>
+{% else %}
+<h3 class="text-center mt-5 mb-5">No reserved products</h3>
+{% endif %}
+{% endblock %}

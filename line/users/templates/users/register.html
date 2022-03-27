@@ -1,13 +1,47 @@
 {% extends 'users/base.html' %}
+{% load static %}
 
-{% block content %}l
-<h2>Register</h2>
+{% block link-style %}
+  <link href="{% static 'css/register.css' %}" rel="stylesheet">
+{% endblock %}
 
-<form method="post">
-   {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Register">
-</form>
 
-<a href="{% url 'login' %}">Back to login</a>
+{% block content %}
+<div class="page-content-register">
+  <div class="register-container">
+    <header class="section-header">
+    <h1 class="section-header__title">REGISTRATION</h1>
+    </header>
+    <div class="login-content">
+      <form id="customer-register" method="post">
+        {% csrf_token %}
+
+        <p class="register-item label-register">Email</p>
+        <input type="email" class="register-item input-register" id="{{ form.email.id_for_label }}" aria-describedby="emailHelp" placeholder="email" name="{{ form.username.html_name }}">
+
+        <p class="register-item label-register">First name</p>
+        <input type="text" class="register-item input-register" id="{{ form.first_name.id_for_label }}"  name="{{ form.first_name.html_name }}" placeholder="first_name">
+
+        <p class="register-item label-register">Last name</p>
+        <input type="text" class="register-item input-register" id="{{ form.last_name.id_for_label }}"  name="{{ form.last_name.html_name }}" placeholder="last_name">
+
+        <p class="register-item label-register">Birthday</p>
+        <input type="date" class="register-item input-register" id="{{ form.birthday.id_for_label }}" name="{{ form.birthday.html_name }}" placeholder="birthday">
+
+        <p class="register-item label-register">Password</p>
+        <input type="password" class="register-item input-register" id="{{ form.password1.id_for_label }}" name="{{ form.password1.html_name }}" placeholder="Password">
+
+        <p class="register-item label-register">Confirm password</p>
+        <input type="password" class="register-item input-register" id="{{ form.password2.id_for_label }}" name="{{ form.password2.html_name }}" placeholder="Confirm password">
+
+        <div class="register-item register-form-btn">
+          <button type="submit" class="register-btn">REGISTER</button>
+        </div>
+
+        <a class="register-item login" href="{% url 'login' %}">log in</a>
+
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

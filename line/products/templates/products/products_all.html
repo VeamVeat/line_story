@@ -1,0 +1,69 @@
+{% extends 'users/base.html' %}
+{% load product_tags %}
+{% load static %}
+
+{% block link-style %}
+  <link href="{% static 'css/product_page_content.css' %}" rel="stylesheet">
+  <link href="{% static 'css/filter_top.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="filter_container">
+        <div class="filter_content">
+            <div class="filter_content_main">
+                <form action="{% url 'products:filter' %}" method="get">
+                    <div class="filter_content_type">
+                        <p> Type:</p>
+                        <select name="type" class="type_drop_down">
+                            {% for type in view.get_type %}
+                            <option name="{{ type.name }}" value="{{ type.name }}">{{ type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter_content_year">
+                        <p> Year:</p>
+                        <select name="year" class="year_drop_down">
+                            {% for product in view.get_years %}
+                                <option value="{{ product.year }}">{{ product.year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                     <div class="filter_content_btn">
+                         <button type="submit" class="filter_btn">Search</button>
+                     </div>
+                  </form>
+            </div>
+        </div>
+</div>
+
+<div class="main_content">
+
+    <div class="products_container">
+            {% for product in product|dictsort:"pk" %}
+                {% include 'products/products.html' %}
+            {% endfor %}
+    </div>
+
+    <a href="#x" class="overlay" id="popup_window"></a>
+       <div class="popup-container">
+           <div class="popup-content">
+               <form id="popup-form" method="POST">
+                    {% csrf_token %}
+                    <p id="notification" class="label-popup"></p>
+                    <p class="label-popup">Enter the number of products you want to reserve</p>
+                    <input type="number" class="popup-item input-popup" id="{{ form.quantity.id_for_label }}" placeholder="number of product" name="{{ form.quantity.html_name }}">
+
+                    <div class="popup-item">
+                        <button type="button" id="close-modal" data-dismiss="modal" style="display: none">Close</button>
+                        <button type="submit" class="btn-popup-form"  id="btnSave" >Reserved</button>
+                    </div>
+              </form>
+           </div>
+           <a id="close_form" class="close-popup-form" title="close" href="#close"></a>
+       </div>
+</div>
+{% endblock %}
+
+{% block js_script%}
+    <script src="{% static 'js/products.js' %}"></script>
+{% endblock %}

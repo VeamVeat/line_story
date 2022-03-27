@@ -1,23 +1,249 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="{% static 'css/index.css' %}" rel="stylesheet">
+    {% block link-style %}
+    {% endblock %}
 </head>
 <body>
 
-<style>
-    label, input {
-        display: block;
-    }
-    span.helptext {
-        display: none;
-    }
-</style>
+<div class="main-container">
+        <div class="header">
+            <div class="header-top">
+                <div class="header_wrap">
+                    <div class="header-inner">
+                        <div class="header-item header-top-search">
+                            <form action="{% url 'products:search' %}" method="get" class="header-top-search-bar">
+                                {% csrf_token %}
+                                <input type="text" class="header-top-search-input" name="search" id="search exampleInputPassword1" placeholder="search a product">
 
-<h1>Welcome to my website</h1>
+                                <button type="submit" class="header-top-search-btn"></button>
+                            </form>
+                        </div>
+                        <p class="header-item header-top-work-time">Пн-вс 10:00 - 20:00</p>
+                        <a class="header-item header-top-logo" href="/">
+                            <img src="{% static 'img/header/logo/logo.png' %}" alt="logo">
+                        </a>
 
-{% block content %}
+                        <p class="header-item header-top-phone">89545663782</p>
+                        <div class="header-item header-element-in-user">
+                                {% if user.is_authenticated %}
+                                <table class="header-user-table">
+                                    <tr>
+                                        <td colspan="2" class="header-user-table-element header-email">{{ user.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="header-user-table-element header-logout">{{ user.wallet.ballance }} RUB</td>
+                                        <td>
+                                             <a href="{% url 'users:profile' pk=user.profile.id %}" class="header-top-element-profile">
+                                                <img src="{% static 'img/header/profile/profile.png' %}" width="27" height="27" alt="profile">
+                                             </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a class="header-user-table-element" href="{% url 'logout' %}">
+                                                <button type="submit" class="header-element-in-user-btn">
+                                                    <span>logout</span>
+                                                </button>
+                                            </a>
+                                        </td>
+                                        <td>
+                                             <a href="{% url 'orders:cart' %}" class="header-top-element-cart">
+                                                <img src="{% static 'img/header/cart/cart.png' %}" width="25" height="25" alt="profile">
+                                             </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                {% else %}
+                                <a class="header-top-element-login" href="{% url 'login' %}">
+                                    <button type="submit" class="header-element-in-user-btn">
+                                        <span>login</span>
+                                    </button>
+                                </a>
+                                {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="header-bottom">
+            <div class="wrap">
+                <nav class="header-nav">
+                    <ul class="header-menu">
+                        <li><a class="menu-item" href="{% url 'products:products_all' %}">PRODUCT</a></li>
+                        <li><a class="menu-item" href="{% url 'orders:all_orders' %}">ORDERS</a></li>
+                        <li><a class="menu-item" href="{% url 'orders:reserved_products' %}">RESERVED PRODUCTS</a></li>
+                        <li><a class="menu-item" href="#">CONTACT</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    {% block search %}
+    {% endblock %}
+
+<div class="main-content">
+    {% block content %}
+        <div class="promo__home">
+            <div class="promo__wrap">
+                <h1 class="promo__title">Line Story</h1>
+                <p class="promo__subtitle">a picture of threads from your photo</p>
+                <p class="promo__text">Get inspired by handmade creativity</p>
+                <button class="promo__button">Go to products</button>
+            </div>
+            <div class="promo__img">
+                <img src="{% static 'img/promo/deva.jpg' %}" width="300px" height="300px" alt="promo__img">
+            </div>
+        </div>
+        <div class="tutorial">
+            <div class="wrap__tutorial">
+                <div class="tutorial__title">
+                    <h2 class="tutorial__title__text">See how to assemble a picture with threads from your own photo</h2>
+                </div>
+                <div class="tutorial__video">
+                    <iframe width="1000" height="600" src="https://www.youtube.com/embed/XJRVqzoQUG0">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+        <div class="section__attr">
+            <div class="section__attr__wrap">
+                <div class="section__right">
+                    <div class="section__attr__elem">
+                        <h3 class="section__attr__title"> Detailing </h3>
+                        <p class="section__attr__content">Thread intersection density ensures high resolution of the collected picture</p>
+                    </div>
+                    <div class="section__attr__elem">
+                        <h3 class="section__attr__title"> Balance </h3>
+                        <p class="section__attr__content">Black thread and white base is a classic combination that will fit into any interior and look expensive.</p>
+                    </div>
+                </div>
+                <div class="section__center">
+                    <img src="{% static 'img/section/section__img.jpeg' %}" class="section__img" width="380px" height="380px" alt="section__attr__img">
+                </div>
+                <div class="section__left">
+                    <div class="section__attr__elem">
+                        <h3 class="section__attr__title"> Quality </h3>
+                        <p class="section__attr__content">We paid special attention to the components of the set so that you can get real pleasure from interacting with it.</p>
+                    </div>
+                    <div class="section__attr__elem">
+                        <h3 class="section__attr__title"> Meditation </h3>
+                        <p class="section__attr__content">Relaxing background music, pleasant voices of the announcers and the pleasure of the assembly process</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="middle__banner">
+            <img src="{% static 'img/middel_banner/tiger.jpg' %}" class="middel__banner__img"  alt="section__attr__img">
+        </div>
+
+        <div class="wrap__gift">
+            <div class="gift__section">
+                <div class="gift__section__title">
+                    <h1 class="gift__section__text">DON'T KNOW WHAT TO GIVE?</h1>
+                </div>
+                <div class="gift__section__sub__title">
+                    <p class="gift__section_sub__title__text">LineStory is a universal gift that will definitely not leave anyone indifferent, you can give both a packaged picture and an assembled portrait!</p>
+                </div>
+                <div class="gift__section__list">
+                    <div class="gs__list__items gs__list__items__1">
+                        <div class="gs__list__section gs__list__left__section__1">
+                            <p class="gs__list__items__text">Your favorite photo</p>
+                            <p class="gs__list__items__subtitle">You can create a picture with threads from absolutely any photo and decorate the interior with it</p>
+                        </div>
+                         <div class="gs__list__right__section">
+                            <img src="{% static 'img/section/picture-17.jpg' %}"  class="gs__list__img" width="300px" height="300px" alt="promo__img">
+                        </div>
+                    </div>
+                    <div class="gs__list__items gs__list__items__2">
+                        <div class="gs__list__left__section">
+                            <img src="{% static 'img/section/picture-22.jpg' %}" class="gs__list__img" width="300px" height="300px" alt="promo__img">
+                        </div>
+                         <div class="gs__list__section gs__list__left__section__2">
+                            <p class="gs__list__items__text">Gift with meaning</p>
+                            <p class="gs__list__items__subtitle">With LinStory, you can not only assemble your own unique masterpiece, but also relax in the process of assembling</p>
+                        </div>
+                    </div>
+                    <div class="gs__list__items gs__list__items__3">
+                        <div class="gs__list__section gs__list__right__section__3">
+                            <p class="gs__list__items__text">Attention to detail</p>
+                            <p class="gs__list__items__subtitle">We took care of every little thing, you can choose a pleasant voice, speed and background music, the generator adapts to you</p>
+                        </div>
+                         <div class="gs__list__right__section">
+                             <img src="{% static 'img/section/picture-23.jpg' %}" class="gs__list__img" width="300px" height="300px" alt="promo__img">
+                        </div>
+                    </div>
+                    <div class="gs__list__items gs__list__items__4">
+                        <div class="gs__list__left__section">
+                            <img src="{% static 'img/section/picture-24.jpeg' %}" class="gs__list__img" width="300px" height="300px" alt="promo__img">
+                        </div>
+                         <div class="gs__list__section gs__list__right__section__4">
+                            <p class="gs__list__items__text">Easy assembly</p>
+                            <p class="gs__list__items__subtitle">Detailed paper instructions, intuitive generator and complete assembly instructions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+</div>
+
+    <footer class="footer">
+        <div class="footer-wrap">
+            <div class="footer__inner">
+                <div class="footer__left">
+                    <div class="footer__links">
+                        <a class="footer__link" href="{% url 'products:products_all' %}">PRODUCT</a>
+                        <a class="footer__link" href="{% url 'orders:all_orders' %}">ORDERS</a>
+                        <a class="footer__link" href="{% url 'orders:reserved_products' %}">RESERVED PRODUCTS</a>
+                        <a class="footer__link" href="#">CONTACT</a>
+                    </div>
+                </div>
+                <div class="footer__right">
+                    <div class="footer__img">
+                    </div>
+
+                    <div class="footer__line">
+                        <div class="footer__block">
+                            <div class="footer__block">
+                                <p class="footer__number">89535853782</p>
+                                <p class="footer__email">vb16227284@gmail.com</p>
+                            </div>
+                            <div class="footer__mode">
+                                <p class="footer_subtitle">время работы</p>
+                                <p class="footer__text">пн-вс 10:00 - 20:00</p>
+                            </div>
+                            <div class="footer__block">
+                                <p class="footer_subtitle">Медиа</p>
+                                <div class="footer__social__icon social__icon">
+                                    <a class="social-icons__item" href="#">
+                                        <img src="{% static 'img/footer/ic-insta.svg' %}">
+                                        <img src="{% static 'img/footer/ic-youtube.svg' %}">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="footer__block footer__block_right">
+                            <div class="footer__logo">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{% static 'js/index.js' %}"></script>
+{% block js_script%}
 {% endblock %}
 </body>
 </html>
