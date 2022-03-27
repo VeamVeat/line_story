@@ -56,7 +56,7 @@
 
            <td class="table_product_btn">
                 <div class="table_product_content_btn">
-                    <a href="#reservation">
+                    <a href="#popup_window">
                         <input type="hidden" id="url_reserve_product" data-url="{% url 'products:reserve_product' %}" />
                         {% product_is_reserved product.reservation request.user as is_reserved%}
                         {% if is_reserved %}

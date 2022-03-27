@@ -20,6 +20,7 @@ class CartView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
         queryset = self.get_queryset()
+        form = OrderForm()
         cart_item_all = queryset.filter(user=self.request.user)
 
         cart_item_services = CartItemServices(user=self.request.user, model=self.model)
@@ -27,6 +28,7 @@ class CartView(ListView):
         total_price = cart_item_services.get_total_price()
         total_count = cart_item_services.get_total_count()
 
+        context['form'] = form
         context['products_all'] = cart_item_all
         context['total_price_product'] = total_price
         context['total_count_product'] = total_count
@@ -103,64 +105,35 @@ class IncreaseProductView(View):
             return JsonResponse(data_message)
 
 
-class CheckoutView(View):
-    model = CartItem
-    template_name = 'orders/checkout.html'
-
-    def post(self, request, *args, **kwargs):
-        cart_item_services = CartItemServices(user=request.user, model=self.model)
-        user_balance = request.user.wallet.ballance
-
-        form = OrderForm()
-
-        total_price_all_cart = cart_item_services.get_total_price()
-        total_count_all_cart = cart_item_services.get_total_count()
-
-        if total_price_all_cart > user_balance:
-            return redirect('orders:not_money')
-
-        product_cart_items = cart_item_services.get_all_cart_item()
-
-        context = {'product_cart_items': product_cart_items,
-                   'total_price': float(total_price_all_cart),
-                   'total_count': total_count_all_cart,
-                   'form': form}
-
-        return render(request, self.template_name, context)
-
-
 class MakeOrderView(View):
     model = Order
 
     def post(self, request, *args, **kwargs):
+        data_message = {'message': '', 'error': False}
+
         order_services = OrderServices(user=request.user, model=self.model)
         cart_item_services = CartItemServices(user=request.user, model=CartItem)
 
-        form = OrderForm(request.POST or None)
+        total_price = cart_item_services.get_total_price()
 
-        if not form.is_valid():
-            return redirect('orders:make_order')
+        user_balance = request.user.wallet.ballance
+        is_user_money = user_balance < total_price
+
+        form = OrderForm(request.POST)
+        if not form.is_valid() and not is_user_money:
+            data_message['error'] = True
+            data_message['message'] = 'You don`t have enough money in your account'
+            return JsonResponse(data_message)
         else:
             address = form.cleaned_data.get('address')
 
             product_all = cart_item_services.get_products_list()
+            total_count = cart_item_services.get_total_count()
 
-            total_price_all_cart = cart_item_services.get_total_price()
-            total_count_all_cart = cart_item_services.get_total_count()
-
-            order_services.order_create(total_price_all_cart, total_count_all_cart, product_all, address)
-
+            order_services.order_create(total_price, total_count, product_all, address)
             cart_item_services.clear()
 
-        return redirect('home')
-
-
-class NotMoneyView(View):
-    model = Order
-    template_name = 'orders/not_money_notification.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, context={})
+            return redirect('products:products_all')
 
 
 class OrderView(ListView):

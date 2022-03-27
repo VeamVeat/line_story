@@ -44,22 +44,22 @@
             {% endfor %}
     </div>
 
-    <a href="#x" class="overlay" id="reservation"></a>
-       <div class="popup-reserve-product">
-           <div class="popup-container-reserve-product">
-               <form id="popup-form-reserve-product" method="POST">
+    <a href="#x" class="overlay" id="popup_window"></a>
+       <div class="popup-container">
+           <div class="popup-content">
+               <form id="popup-form" method="POST">
                     {% csrf_token %}
-                    <p id="notification_reserved" class="label-popup-reserve-product popup-item-reserve-product"></p>
-                    <p class="popup-item-reserve-product label-popup-reserve-product">Enter the number of products you want to reserve</p>
-                    <input type="number" class="popup-item-reserve-product input-popup-reserve-product" id="{{ form.quantity.id_for_label }}" placeholder="number of product" name="{{ form.quantity.html_name }}">
+                    <p id="notification" class="label-popup"></p>
+                    <p class="label-popup">Enter the number of products you want to reserve</p>
+                    <input type="number" class="popup-item input-popup" id="{{ form.quantity.id_for_label }}" placeholder="number of product" name="{{ form.quantity.html_name }}">
 
-                    <div class="popup-item-reserve-product popup-form-reserve-product-btn">
+                    <div class="popup-item">
                         <button type="button" id="close-modal" data-dismiss="modal" style="display: none">Close</button>
-                        <button type="submit" class="reserve-btn-popup-form"  id="btnSave" >Reserved</button>
+                        <button type="submit" class="btn-popup-form"  id="btnSave" >Reserved</button>
                     </div>
               </form>
            </div>
-           <a id="close_reserve_form" class="close-reserve-product" title="close" href="#close"></a>
+           <a id="close_form" class="close-popup-form" title="close" href="#close"></a>
        </div>
 </div>
 {% endblock %}

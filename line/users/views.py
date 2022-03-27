@@ -17,7 +17,6 @@ from django.views.generic import DetailView
 from users.forms import RegisterUserForm, GrantMoneyForm, ProfileEditForm, ImageForm
 from users.models import User, Profile
 from users.services import UserServices
-from products.models import Product
 
 
 class BaseView(View):

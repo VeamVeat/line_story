@@ -66,6 +66,12 @@
                      <td>
                         <h5 class="total__title cart__item__text">Total price</h5>
                     </td>
+                    <td rowspan="2">
+                        <a href="#popup_window">
+                            <input type="hidden" id="url_checkout" data-url="{% url 'orders:make_order' %}"/>
+                            <button type="submit" class="btn btn-danger"> Checkout </button>
+                        </a>
+                    </td>
                 </tr>
                 <tr class="total__element__cart__item">
                     <td class="cart__item total__all__count_element">
@@ -82,8 +88,28 @@
             <h1>Cart is empty</h1>
         </div>
         {% endif %}
+
+
     </div>
 </div>
+
+<a href="#x" class="overlay" id="popup_window"></a>
+       <div class="popup-container">
+           <div class="popup-content">
+               <form id="popup-form" method="POST">
+                    {% csrf_token %}
+                    <p id="notification" class="label-popup"></p>
+                    <p class="label-popup">Enter shipping address</p>
+                    <input type="text" class="popup-item input-popup" id="{{ form.address.id_for_label }}" placeholder="delivery address " name="{{ form.address.html_name }}">
+
+                    <div class="popup-item">
+                        <button type="button" id="close-modal" data-dismiss="modal" style="display: none"> Close </button>
+                        <button type="submit" class="btn-popup-form"  id="btnSave" > Checkout </button>
+                    </div>
+              </form>
+           </div>
+           <a id="close_form" class="close-popup-form" title="close" href="#close"></a>
+       </div>
 {% endblock %}
 
 {% block js_script%}
