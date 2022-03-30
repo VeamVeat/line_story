@@ -1,30 +1,33 @@
 {% extends "users/base.html" %}
+{% load static %}
 
+{% block link-style %}
+    <link href="{% static 'css/profile.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
 
-<!--Profile-->
 <br><br>
 <div class="container mx-auto">
     <div class="row">
-        <div class="col-sm-12 col-md-12 col-lg-3 pb-4">
-            <div class="card p-3">
-                 <img src="{{ user_profile.image.image.url }}" class="card-img-top" style="width: auto; height: 225px; object-fit: scale-down;">
+        <div class="col-sm-12 col-md-12 col-lg-3 pb-4 profile__container">
+            <div class="card p-3 profile__content">
+                 <img src="{{ user_profile.image.image.url }}" class="card-img-top">
                 <hr>
-                <div class="card-text">
-                    <p class="text-muted mb-0" style="font-size: 12px">Name:</p>
-                    <p>{{ user_profile.user.first_name }} {{ user_profile.user.last_name }}</p>
-                    <p class="text-muted mb-0" style="font-size: 12px">Email:</p>
-                    <p>{{ user_profile.user.email }} </p>
-					<p class="text-muted mb-0" style="font-size: 12px">Phone:</p>
-                    <p>{{ user_profile.phone }} </p>
-					<p class="text-muted mb-0" style="font-size: 12px">Age:</p>
-                    <p>{{ user_profile.age }} </p>
-					<p class="text-muted mb-0" style="font-size: 12px">Region:</p>
-                    <p>{{ user_profile.region }} </p>
+                <div class="card-text mb-10">
+                    <p class="text-muted mb-0" style="font-size: 15px">Name:</p>
+                    <p class="profile__text__info">{{ user_profile.user.first_name }} {{ user_profile.user.last_name }}</p>
+                    <p class="text-muted mb-0" style="font-size: 15px">Email:</p>
+                    <p class="profile__text__info">{{ user_profile.user.email }} </p>
+					<p class="text-muted mb-0" style="font-size: 15px">Phone:</p>
+                    <p class="profile__text__info">{{ user_profile.phone}}</p>
+					<p class="text-muted mb-0" style="font-size: 15px">Age:</p>
+                    <p class="profile__text__info">{{ user_profile.age }} </p>
+					<p class="text-muted mb-0" style="font-size: 15px">Region:</p>
+                    <p class="profile__text__info">{{ user_profile.region}} </p>
                 </div>
 
-				<a href="{% url 'users:profile_update' id=user_profile.id %}"><button class="btn btn-dark">Edit</button></a>
+				<a href="{% url 'users:profile_update' id=user_profile.id %}"><button class="btn btn-dark text-center">Edit</button></a>
 
             </div>
         </div>

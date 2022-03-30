@@ -94,7 +94,9 @@
                 <h1 class="promo__title">Line Story</h1>
                 <p class="promo__subtitle">a picture of threads from your photo</p>
                 <p class="promo__text">Get inspired by handmade creativity</p>
-                <button class="promo__button">Go to products</button>
+                <a href="{% url 'products:products_all' %}">
+                    <button class="promo__button">Go to products</button>
+                </a>
             </div>
             <div class="promo__img">
                 <img src="{% static 'img/promo/deva.jpg' %}" width="300px" height="300px" alt="promo__img">

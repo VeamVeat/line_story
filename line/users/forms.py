@@ -58,10 +58,10 @@ class ProfileAdminForm(forms.ModelForm):
 
 
 class ProfileEditForm(forms.ModelForm):
-    first_name = forms.CharField(label=_('first name'), widget=forms.TextInput(attrs={'class': 'form-input'}))
-    last_name = forms.CharField(label=_('last name'), widget=forms.TextInput(attrs={'class': 'form-input'}))
-    phone = forms.CharField(max_length=17)
-    region = forms.CharField(max_length=255)
+    first_name = forms.CharField(label=_('first name'), widget=forms.TextInput(attrs={'class': 'form-input'}), required=False)
+    last_name = forms.CharField(label=_('last name'), widget=forms.TextInput(attrs={'class': 'form-input'}), required=False)
+    phone = forms.CharField(max_length=17, required=False)
+    region = forms.CharField(max_length=255, required=False)
 
     class Meta:
         model = Profile
@@ -69,7 +69,7 @@ class ProfileEditForm(forms.ModelForm):
 
 
 class ImageForm(forms.ModelForm):
-    image = forms.ImageField(label='Image')
+    image = forms.ImageField(label='Image', required=False)
 
     class Meta:
         model = File

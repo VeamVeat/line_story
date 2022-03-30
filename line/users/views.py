@@ -48,26 +48,32 @@ class ProfileUpdateView(View):
 
         form_image = ImageForm(initial=data_image)
         form_profile = ProfileEditForm(initial=data_profile)
+
+        data = {'form_image': form_image,
+                'form_profile': form_profile,
+                'id': request.user.profile.id
+        }
+
         return render(
             request,
             'users/update_profile.html',
-            {'form_image': form_image,
-             'form_profile': form_profile}
+            data
         )
 
     def post(self, request, *args, **kwargs):
         form = ImageForm(request.POST, request.FILES)
         form_profile = ProfileEditForm(request.POST)
 
-        if form.is_valid() and form_profile.is_valid():
+        if form_profile.is_valid() or form.is_valid():
 
-            image = form.cleaned_data['image']
+            image = request.FILES.get("image")
+
             first_name = form_profile.cleaned_data.get('first_name')
             last_name = form_profile.cleaned_data.get('last_name')
             phone = form_profile.cleaned_data.get('phone')
+            print(phone, type(phone))
             region = form_profile.cleaned_data.get('region')
-
-            user_services = UserServices(request.user, first_name, last_name, region, phone, image)
+            user_services = UserServices(request.user, last_name, first_name, phone, region, image)
             user_services.update_profile()
 
         else:

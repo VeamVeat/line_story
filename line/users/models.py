@@ -56,7 +56,7 @@ class Profile(models.Model):
                                            'requires country code.'
                                            ' eg : +79546748973'))
 
-    phone = models.CharField(validators=[phone_regex], max_length=17, blank=True, verbose_name=_('phone'))
+    phone = models.CharField(validators=[phone_regex], max_length=50, verbose_name=_('phone'))
     region = models.CharField(max_length=255, verbose_name=_('region of residence'))
     user = models.OneToOneField(User,
                                 on_delete=models.CASCADE,

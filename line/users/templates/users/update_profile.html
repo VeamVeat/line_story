@@ -1,11 +1,36 @@
 {% extends "users/base.html" %}
 
-
 {% block content %}
-<form method="post" action="" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form_image.as_p }}
-  {{ form_profile.as_p }}
-  <button type="submit">Save</button>
-</form>
+<div class="page-content-edit-profile">
+  <div class="edit-profile-container">
+    <header class="section-header">
+    <h1 class="section-header-title">EDIT PROFILE</h1>
+    </header>
+    <div class="edit-profile-content">
+      <form action="{% url 'users:profile_update' id=id %}" enctype='multipart/form-data' id="customer-edit-profile" method="post">
+        {% csrf_token %}
+
+        <p class="edit-profile-item label-edit-profile">Image</p>
+        <p class="edit-profile-item input-edit-profile">{{ form_image.image}} {{ form_image.image.html_name }} </p>
+
+        <p class="edit-profile-item label-edit-profile">First name</p>
+        <input type="text" class="edit-profile-item input-edit-profile" id="{{ form_profile.first_name.id_for_label }}"  name="{{ form_profile.first_name.html_name }}" value="{{form_profile.first_name.value}}" placeholder="first_name">
+
+        <p class="edit-profile-item label-edit-profile">Last name</p>
+        <input type="text" class="edit-profile-item input-edit-profile" id="{{ form_profile.last_name.id_for_label }}"  name="{{ form_profile.last_name.html_name }}" value="{{form_profile.last_name.value}}" placeholder="last_name">
+
+        <p class="edit-profile-item label-edit-profile">Phone</p>
+        <input type="number" class="edit-profile-item input-edit-profile" id="{{ form_profile.phone.id_for_label }}" name="{{ form_profile.phone.html_name }}" value="{{form_profile.phone.value}}" placeholder="Phone">
+
+        <p class="edit-profile-item label-edit-profile">Region</p>
+        <input type="text" class="edit-profile-item input-edit-profile" id="{{ form_profile.region.id_for_label }}" name="{{ form_profile.region.html_name }}" placeholder="Region" value="{{form_profile.region.value}}">
+
+        <div class="edit-profile-item edit-profile-form-btn">
+          <button type="submit" class="edit-profile-btn">Save</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

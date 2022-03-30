@@ -2,40 +2,57 @@
 <!--{% load cart_tags %}-->
 {% load static %}
 
+{% block link-style %}
+    <link href="{% static 'css/reserved.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block content %}
-{% if products_all %}
-  <h3 class="text-center mt-5 mb-5">Product reserved</h3>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Image</th>
-        <th scope="col">Price</th>
-        <th scope="col">Count</th>
-        <th scope="col">Time reserved</th>
-        <th scope="col">Delete reserved</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for product in products_all|dictsort:"pk" %}
-          <tr>
-            <th scope="row">{{ product.product.title }}</th>
-            <td class="w-15 h-15"><img src="{{ product.product.product_file.filter.first.image.url }}" class="img-fluid" style="width: 250px; height: 250px;"></td>
-            <td>{{ product.product.price  }} RUB.</td>
-            <td>{{ product.quantity }}</td>
-            <td>{{ product.created_at }}</td>
-            <td>
-                <form action="{% url 'orders:deleting_reserved' product_id=product.product.id %}" method="POST">
-                  {% csrf_token %}
-                  <button class="btn btn-primary">Deleting reserved</button>
-                 </form>
-            </td>
-          </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <hr>
-{% else %}
-<h3 class="text-center mt-5 mb-5">No reserved products</h3>
-{% endif %}
+<div class="reserved__container">
+    <div class="reserved__content">
+      {% if products_all %}
+          {% for product in products_all|dictsort:"pk" %}
+            <table class="reserved__container__table">
+              <tbody class="reserved__content__table">
+                  <tr class="reserved__title__table">
+                    <th scope="col" class="reserved__item__text">Name</th>
+                    <th scope="col" class="reserved__item__text">Image</th>
+                    <th scope="col" class="reserved__item__text">Price</th>
+                    <th scope="col" class="reserved__item__text">Count</th>
+                    <th scope="col" class="reserved__item__text">Time reserved</th>
+                  </tr>
+                  <tr class="reserved__column__table">
+                      <td class="table__reserved__title_td table__reserved__top__element">
+                           <h5 class="reserved__title">{{ product.product.title }}</h5>
+                      </td>
+                      <td class="table__reserved__top__element">
+                          <a href="{{ product_in_cart.product.get_absolute_url }}">
+                              <img src="{{ product.product.product_file.filter.first.image.url }}" class="reserved__img">
+                          </a>
+                      </td>
+                      <td class="table__reserved__top__element">
+                          <p class="reserved__item__text">{{ product.product.price }} RUB.</p>
+                      </td>
+                      <td class="table__reserved__top__element">
+                          <p class="reserved__item__text product_cart_quantity">{{ product.quantity }}</p>
+                      </td>
+                      <td class="table__reserved__top__element">
+                          <p class="reserved__item__text product_cart_quantity">{{ product.created_at }}</p>
+                      </td>
+                      <td rowspan="2" class="table__reserved__top__element">
+                          <div class="delete__product__reserved">
+                              <form action="{% url 'orders:deleting_reserved' product_id=product.product.id %}" method="POST">
+                                  {% csrf_token %}
+                                  <button class="btn btn-danger">Delete</button>
+                              </form>
+                          </div>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+          {% endfor %}
+      {% else %}
+        <h3 class="text-center mt-5 mb-5">No reserved products</h3>
+      {% endif %}
+    </div>
+</div>
 {% endblock %}
