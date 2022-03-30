@@ -31,6 +31,7 @@ Product reservation page
 ![Screenshot from 2022-03-31 01-08-13](https://user-images.githubusercontent.com/67123448/160939575-ef2ea233-8f5c-4301-a7fa-6388f7fa1a47.png)
 
 Profile page
-![Screenshot from 2022-03-31 01-15-12](https://user-images.githubusercontent.com/67123448/160940073-99cf04e9-419a-4f10-b783-f610e1cc26b8.png)
+
+![Screenshot from 2022-03-31 01-17-36](https://user-images.githubusercontent.com/67123448/160940346-3ec0104c-c9ce-4003-bdf7-fa478afcf315.png)
 
 
