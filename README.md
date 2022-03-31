@@ -14,6 +14,10 @@ Register page
 
 ![Screenshot from 2022-03-27 15-31-40](https://user-images.githubusercontent.com/67123448/160281565-6dbb4495-4745-4341-ae01-6229a089964a.png)
 
+Edit profile page
+
+![Screenshot from 2022-03-31 16-13-00](https://user-images.githubusercontent.com/67123448/161063053-4ffa0e80-b9d7-4313-bf01-3eadd941ced6.png)
+
 Products page
 
 ![Screenshot from 2022-03-27 15-30-03](https://user-images.githubusercontent.com/67123448/160281534-2e4b475f-5ebc-4838-9abf-e3eb637288fb.png)
