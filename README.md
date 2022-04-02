@@ -1,5 +1,7 @@
 # line_story
 
+![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=VeamVeat&show_icons=true&theme=dracula)
+
 Internet shop Line Story
 
 Home page
