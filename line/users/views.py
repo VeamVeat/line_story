@@ -17,6 +17,7 @@ from django.views.generic import DetailView
 from users.forms import RegisterUserForm, GrantMoneyForm, ProfileEditForm, ImageForm
 from users.models import User, Profile
 from users.services import UserServices
+from users.tasks import send_verification_email, supper_sum
 
 
 class BaseView(View):
@@ -71,8 +72,8 @@ class ProfileUpdateView(View):
             first_name = form_profile.cleaned_data.get('first_name')
             last_name = form_profile.cleaned_data.get('last_name')
             phone = form_profile.cleaned_data.get('phone')
-            print(phone, type(phone))
             region = form_profile.cleaned_data.get('region')
+
             user_services = UserServices(request.user, last_name, first_name, phone, region, image)
             user_services.update_profile()
 
@@ -110,24 +111,14 @@ class SignUpView(View):
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
+        print(form.is_valid())
         if form.is_valid():
-
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-
-            current_site = get_current_site(request)
-            subject = 'Activate Your MySite Account'
-            message = render_to_string('registration/account_active_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': tokens.default_token_generator.make_token(user),
-            })
-            user.email_user(subject, message)
-
-            messages.success(request, _('Please Confirm your email to complete registration.'))
-
+            # send_verification_email.delay(request)
+            print('iii')
+            supper_sum.delay(2, 3)
             return redirect('login')
 
         return render(request, self.template_name, {'form': form})

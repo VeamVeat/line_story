@@ -1,4 +1,10 @@
 {% extends "users/base.html" %}
+{% load static %}
+
+
+{% block link-style %}
+  <link href="{% static 'css/update_profile.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
 <div class="page-content-edit-profile">
@@ -11,19 +17,19 @@
         {% csrf_token %}
 
         <p class="edit-profile-item label-edit-profile">Image</p>
-        <p class="edit-profile-item input-edit-profile">{{ form_image.image}} {{ form_image.image.html_name }} </p>
+        <p class="edit-profile-item input-edit-profile">{{ form_image.image}}</p>
 
         <p class="edit-profile-item label-edit-profile">First name</p>
-        <input type="text" class="edit-profile-item input-edit-profile" id="{{ form_profile.first_name.id_for_label }}"  name="{{ form_profile.first_name.html_name }}" value="{{form_profile.first_name.value}}" placeholder="first_name">
+        <input type="text" class="edit-profile-item input-edit-profile text-input" id="{{ form_profile.first_name.id_for_label }}"  name="{{ form_profile.first_name.html_name }}" value="{{form_profile.first_name.value}}" placeholder="first_name">
 
         <p class="edit-profile-item label-edit-profile">Last name</p>
-        <input type="text" class="edit-profile-item input-edit-profile" id="{{ form_profile.last_name.id_for_label }}"  name="{{ form_profile.last_name.html_name }}" value="{{form_profile.last_name.value}}" placeholder="last_name">
+        <input type="text" class="edit-profile-item input-edit-profile text-input" id="{{ form_profile.last_name.id_for_label }}"  name="{{ form_profile.last_name.html_name }}" value="{{form_profile.last_name.value}}" placeholder="last_name">
 
         <p class="edit-profile-item label-edit-profile">Phone</p>
-        <input type="number" class="edit-profile-item input-edit-profile" id="{{ form_profile.phone.id_for_label }}" name="{{ form_profile.phone.html_name }}" value="{{form_profile.phone.value}}" placeholder="Phone">
+        <input type="number" class="edit-profile-item input-edit-profile text-input" id="{{ form_profile.phone.id_for_label }}" name="{{ form_profile.phone.html_name }}" value="{{form_profile.phone.value}}" placeholder="Phone">
 
         <p class="edit-profile-item label-edit-profile">Region</p>
-        <input type="text" class="edit-profile-item input-edit-profile" id="{{ form_profile.region.id_for_label }}" name="{{ form_profile.region.html_name }}" placeholder="Region" value="{{form_profile.region.value}}">
+        <input type="text" class="edit-profile-item input-edit-profile text-input" id="{{ form_profile.region.id_for_label }}" name="{{ form_profile.region.html_name }}" placeholder="Region" value="{{form_profile.region.value}}">
 
         <div class="edit-profile-item edit-profile-form-btn">
           <button type="submit" class="edit-profile-btn">Save</button>

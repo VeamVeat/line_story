@@ -129,6 +129,21 @@ else:
     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
     EMAIL_USE_TLS = bool(int(os.getenv("EMAIL_USE_TLS")))
 
+USE_L10N = False
+
+DATE_INPUT_FORMATS = ['%d/%m/%Y']
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = '6379'
+
+BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_IGNORE_RESULT = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

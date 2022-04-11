@@ -1,8 +1,11 @@
+from django.core.exceptions import ValidationError
 from django.utils.timezone import now
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import authenticate, get_user_model, password_validation
 from django import forms
 
+from line import settings
 from products.models import File
 from users.models import User, Wallet, Profile
 
@@ -20,12 +23,15 @@ class ProfileForm(forms.ModelForm):
 
 
 class RegisterUserForm(UserCreationForm):
-    email = forms.EmailField(label=_('Email'), widget=forms.EmailInput(attrs={'class': 'form-input'}))
-    first_name = forms.CharField(label=_('first name'), widget=forms.TextInput(attrs={'class': 'form-input'}))
-    last_name = forms.CharField(label=_('last name'), widget=forms.TextInput(attrs={'class': 'form-input'}))
-    birthday = forms.DateField(label=_('date of birthday'), widget=forms.SelectDateWidget(years=range(1900, now().year)))
-    password1 = forms.CharField(label=_('password'), widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-    password2 = forms.CharField(label=_('repeat password'), widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-input'}))
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-input'}))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-input'}))
+    birthday = forms.DateField(required=True,
+                               widget=forms.DateInput(attrs={
+                                   'placeholder': 'Birth Date',
+                                   'class': 'form-control',
+                                   'type': 'date',
+                               }))
 
     class Meta:
         model = User
@@ -33,9 +39,11 @@ class RegisterUserForm(UserCreationForm):
 
     def clean_birthday(self):
         dob = self.cleaned_data['birthday']
+        print(dob)
         today = now()
         age = today.year - dob.year - (
                 (today.month, today.day) < (dob.month, dob.day))
+        print(age)
         if age < 18:
             raise forms.ValidationError('Must be at least 18 years old to register')
         return dob

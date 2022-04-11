@@ -70,19 +70,18 @@
                     </div>
                 </div>
             </div>
-        <div class="header-bottom">
+            <div class="header-bottom">
             <div class="wrap">
                 <nav class="header-nav">
                     <ul class="header-menu">
                         <li><a class="menu-item" href="{% url 'products:products_all' %}">PRODUCT</a></li>
                         <li><a class="menu-item" href="{% url 'orders:all_orders' %}">ORDERS</a></li>
                         <li><a class="menu-item" href="{% url 'orders:reserved_products' %}">RESERVED PRODUCTS</a></li>
-                        <li><a class="menu-item" href="#">CONTACT</a></li>
                     </ul>
                 </nav>
             </div>
         </div>
-    </div>
+        </div>
 
     {% block search %}
     {% endblock %}
