@@ -10,7 +10,7 @@ from django.contrib.auth.models import AbstractUser
 
 from users.managers import UserManager
 from products.models import File
-from users.tasks import send_verification_email
+# from users.tasks import send_verification_email
 
 
 class User(AbstractUser):

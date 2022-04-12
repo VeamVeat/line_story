@@ -1,3 +1,5 @@
+import logging
+
 from django.http import HttpResponseRedirect
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -13,11 +15,12 @@ from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views import View
 from django.views.generic import DetailView
+from django.contrib.sites.models import Site
 
 from users.forms import RegisterUserForm, GrantMoneyForm, ProfileEditForm, ImageForm
 from users.models import User, Profile
 from users.services import UserServices
-from users.tasks import send_verification_email, supper_sum
+from users.tasks import send_confirmation_mail_task
 
 
 class BaseView(View):
@@ -111,14 +114,12 @@ class SignUpView(View):
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
-        print(form.is_valid())
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
             user.save()
-            # send_verification_email.delay(request)
-            print('iii')
-            supper_sum.delay(2, 3)
+
+            form.send_email()
             return redirect('login')
 
         return render(request, self.template_name, {'form': form})

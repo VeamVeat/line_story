@@ -2,3 +2,5 @@ Django==4.0.3
 psycopg2-binary==2.9.1
 python-dotenv==0.19.1
 Pillow==8.4.0
+celery==5.2.6
+redis==4.2.2

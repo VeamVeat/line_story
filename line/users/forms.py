@@ -8,6 +8,7 @@ from django import forms
 from line import settings
 from products.models import File
 from users.models import User, Wallet, Profile
+from users.tasks import send_confirmation_mail_task
 
 
 class UserForm(forms.ModelForm):
@@ -47,6 +48,11 @@ class RegisterUserForm(UserCreationForm):
         if age < 18:
             raise forms.ValidationError('Must be at least 18 years old to register')
         return dob
+
+    def send_email(self):
+        send_confirmation_mail_task.delay(
+            self.cleaned_data['email']
+        )
 
 
 class GrantMoneyForm(forms.Form):
