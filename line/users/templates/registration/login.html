@@ -23,7 +23,7 @@
 
   <div class="login-container">
     <div class="login-content">
-      <form id="customer-login" method="post">
+      <form action="{% url 'login' %}" id="customer-login" method="post">
         {% csrf_token %}
 
         <p class="login-item label-login">Email</p>

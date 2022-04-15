@@ -1,9 +1,10 @@
 from django.db import models
 from django.db.models import F, QuerySet
 from django.shortcuts import get_object_or_404
-from django.template.loader import render_to_string
 
 from products.models import Product
+from products.tasks import send_notification_reserved_product_task
+from orders.tasks import send_purchase_of_goods_notification_task
 
 
 class OrderServices:
@@ -12,7 +13,6 @@ class OrderServices:
                  model=None,
                  product_id=None,
                  object_id=None):
-
         self.user = user
         self.object_id = object_id
         self.model = model
@@ -24,21 +24,13 @@ class OrderServices:
             quantity=total_count_product,
             final_price=total_price_product,
             product_list={'products': product_all},
-            address=address
+            address=address,
+            is_active=True
         )
-        order_user = get_object_or_404(self.model, user=self.user, is_active=True)
 
-        subject = 'your order has been completed'
-        message = render_to_string('orders/new_order_notification.html', {
-            'user': self.user,
-            'count': order_user.quantity,
-            'price': order_user.final_price
-        })
-
-        self.user.email_user(subject, message)
-
-        order_user.is_active = False
-        order_user.save()
+        send_purchase_of_goods_notification_task.delay(self.user.email,
+                                                       total_price_product,
+                                                       total_count_product)
 
 
 class CartItemServices:
@@ -58,8 +50,8 @@ class CartItemServices:
 
     def __get_product_in_cart_by_product_id(self):
         cart_product = get_object_or_404(self.model.objects.select_related('product'),
-                                      user=self.user,
-                                      product_id=self.product_id)
+                                         user=self.user,
+                                         product_id=self.product_id)
         return cart_product
 
     def get_total_price(self) -> int:
@@ -145,7 +137,9 @@ class ReservationServices:
         self.count_product = count_product
 
     def make_reservation(self):
+        is_make_reservation = True
         product = get_object_or_404(Product, id=self.product_id)
+
         if product.quantity >= self.count_product:
             object_reservation = self.model(user=self.user,
                                             quantity=self.count_product,
@@ -157,18 +151,17 @@ class ReservationServices:
             object_reservation.is_reserved = True
             object_reservation.save()
 
-            subject = 'your item is reserved'
-            message = render_to_string('orders/new_reserved_notification.html', {
-                'user': self.user,
-                'count': object_reservation.quantity,
-                'price': object_reservation.product.price,
-                'time': object_reservation.created_at
-            })
+            args_message_notification = (self.user.id,
+                                         object_reservation.quantity,
+                                         object_reservation.product.price,
+                                         object_reservation.product.title,
+                                         object_reservation.created_at)
 
-            self.user.email_user(subject, message)
-            return True
+            send_notification_reserved_product_task.delay(*args_message_notification)
+            return is_make_reservation
         else:
-            return False
+            is_make_reservation = False
+            return is_make_reservation
 
     def deleting_reserved_product(self):
         reserved_product = get_object_or_404(self.model, user=self.user, product_id=self.product_id)

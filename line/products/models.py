@@ -2,14 +2,11 @@ from decimal import Decimal
 from django.core.validators import MinValueValidator
 from django.core.exceptions import ValidationError
 from django.dispatch import receiver
-from django.db.models.signals import post_save, post_delete
-from django.template.loader import render_to_string
+from django.db.models.signals import post_save
 from django.urls import reverse
-from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 
-from line import settings
 from products.managers import ProductManager
 from utils.mixins import CreatedAtMixin
 
@@ -110,15 +107,7 @@ class ProductFile(File):
 
 @receiver(post_save, sender=Product)
 def send_mails(sender, instance, created, **kwargs):
-    User = get_user_model()
-    all_user = User.objects.all()
-
     if created:
-        subject = 'New Product'
-        for user in all_user:
-            message = render_to_string('products/new_product_notification.html', {
-                'user': user,
-                'product': instance.title
-            })
-            user.email_user(subject, message)
-
+        from products.tasks import send_notification_new_product_task
+        send_notification_new_product_task.delay(instance.title,
+                                                 instance.price)

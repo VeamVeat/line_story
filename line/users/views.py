@@ -1,26 +1,18 @@
-import logging
-
 from django.http import HttpResponseRedirect
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import login, tokens
-from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
 from django.views import View
 from django.views.generic import DetailView
-from django.contrib.sites.models import Site
 
 from users.forms import RegisterUserForm, GrantMoneyForm, ProfileEditForm, ImageForm
 from users.models import User, Profile
 from users.services import UserServices
-from users.tasks import send_confirmation_mail_task
 
 
 class BaseView(View):
@@ -115,11 +107,13 @@ class SignUpView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
+            print('good')
             user = form.save(commit=False)
             user.is_active = False
             user.save()
 
-            form.send_email()
+            form.send_email(request, user)
+
             return redirect('login')
 
         return render(request, self.template_name, {'form': form})

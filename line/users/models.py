@@ -10,7 +10,6 @@ from django.contrib.auth.models import AbstractUser
 
 from users.managers import UserManager
 from products.models import File
-# from users.tasks import send_verification_email
 
 
 class User(AbstractUser):
@@ -119,4 +118,8 @@ def create_profile_and_wallet(sender, instance, created, **kwargs):
         file = File.objects.create(image='users/photo_profile/default.jpg')
         Profile.objects.create(user=instance, image=file)
         Wallet.objects.create(user=instance)
-
+    if not instance.is_active:
+        from users.tasks import send_confirmation_mail_task
+        send_confirmation_mail_task.delay(
+            instance.id
+        )

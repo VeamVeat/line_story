@@ -1,14 +1,22 @@
+import logging
+
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import authenticate, get_user_model, password_validation
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
 from django import forms
+from django.contrib.auth import login, tokens
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+
 
 from line import settings
 from products.models import File
 from users.models import User, Wallet, Profile
-from users.tasks import send_confirmation_mail_task
+# from users.tasks import send_confirmation_mail_task
 
 
 class UserForm(forms.ModelForm):
@@ -49,10 +57,23 @@ class RegisterUserForm(UserCreationForm):
             raise forms.ValidationError('Must be at least 18 years old to register')
         return dob
 
-    def send_email(self):
-        send_confirmation_mail_task.delay(
-            self.cleaned_data['email']
-        )
+    @staticmethod
+    def send_email(request, user):
+        domain = get_current_site(request).domain
+        title_message = 'Activate your mySite account'
+        html_page = 'registration/account_active_email.html'
+
+        try:
+            message = render_to_string(html_page, {
+                'user': user,
+                'domain': domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.id)),
+                'token': tokens.default_token_generator.make_token(user),
+            })
+            user.email_user(title_message, message)
+
+        except Exception:
+            logging.warning("Tried to send verification email to non-existing user '%s'" % user.id)
 
 
 class GrantMoneyForm(forms.Form):
